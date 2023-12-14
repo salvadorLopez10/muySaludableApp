@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 import { RoundedButton } from '../../components/RoundedButton';
 import { MyColors } from '../../theme/AppTheme';
 import { StackScreenProps } from '@react-navigation/stack';
+import { MuySaludableApi } from '../../api/MuySaludableApi';
 
 interface Props extends StackScreenProps<any,any>{};
 
@@ -15,20 +16,52 @@ interface Characteristic {
   characteristics: string[];
 }
 
+interface Planes {
+  id: number;
+  nombre: string;
+  resumen: string;
+  descripcion_detallada: string;
+  duracion: string;
+  precio: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedView, setSelectedView] = useState<Characteristic | null>(null);
+    const [selectedView, setSelectedView] = useState<Planes | null>(null);
+    const [planes, setPlanes] = useState<Planes[]>([]);
 
 
-  const handleOpenModal = ( view: Characteristic ) => {
-    setSelectedView(view);
+  const handleOpenModal = ( element: Planes ) => {
+    setSelectedView(element);
     setModalVisible(true);
   }
 
   const handleCloseModal = () => {
     setModalVisible(false);
   }
+
+  useEffect(() => {
+    console.log("entra effect");
+    getPlanes();
+  }, []);
+
+  const getPlanes = async() => {
+    try {
+
+        const resp = await MuySaludableApi.get("/planesAlimenticios");
+
+        //console.log( resp.data.elementos )
+        setPlanes(resp.data.elementos);
+
+    } catch (error) {
+        console.log(error)
+    }
+
+  }
+
 
   const generarId = () => {
     const random = Math.random().toString(36).substring(2);
@@ -69,15 +102,15 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
       {/* Menú selección de planes */}
       <View style={styles.planContainerMain}>
         {/* Contenedores con descripción del plan */}
-        {plans.map((view) => (
+        {planes.map((element) => (
           <TouchableOpacity
-            key={view.id}
-            onPress={() => handleOpenModal(view)}
+            key={element.id}
+            onPress={() => handleOpenModal(element)}
             style={styles.containerPlan}
           >
-            <Text style={styles.titlePlanText}>{view.title}</Text>
-            <Text style={styles.contentPlanText}>{view.resume}</Text>
-            <Text style={styles.pricePlan}>${view.price}</Text>
+            <Text style={styles.titlePlanText}>{element.nombre}</Text>
+            <Text style={styles.contentPlanText}>{element.resumen}</Text>
+            <Text style={styles.pricePlan}>${element.precio}</Text>
           </TouchableOpacity>
         ))}
 
@@ -104,17 +137,21 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
               {/* Sección de Subtítulo */}
               <View style={styles.modalSection}>
-                <Text style={styles.subtitle}>{selectedView?.title}</Text>
+                <Text style={styles.subtitle}>{selectedView?.nombre}</Text>
               </View>
 
               {/* Sección de características */}
               <View style={styles.modalSection}>
-                {selectedView?.characteristics.map((itemCharacteristic) => (
-                  // Se establece "generarId" ya que ReactNative solicita un id único para cada elemento de una lista
-                  <View key={generarId()} style={styles.characteristicItem}>
-                    <Text>{itemCharacteristic}</Text>
+                <View style={styles.characteristicItem}>
+                  <View style={styles.containerBullet}>
+                    {selectedView?.descripcion_detallada.split("\n").map((linea, index) => (
+                        <View key={index} style={styles.itemContainer}>
+                          <Text style={styles.bullet}>•</Text>
+                          <Text style={styles.texto}>{linea}</Text>
+                        </View>
+                      ))}
                   </View>
-                ))}
+                </View>
               </View>
               {/* Botón para seleccionar */}
               <View style={styles.modalSection}>
@@ -233,6 +270,21 @@ const styles = StyleSheet.create({
   },
   characteristicItem: {
     marginBottom: 5,
+  },
+  containerBullet: {
+    padding: 10,
+  },
+  itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  bullet: {
+    fontSize: 20,
+    marginRight: 5,
+  },
+  texto: {
+    fontSize: 16,
   },
 });
 
