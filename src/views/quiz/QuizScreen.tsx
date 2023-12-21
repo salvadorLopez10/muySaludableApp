@@ -44,8 +44,8 @@ const QuizScreen = () => {
         {renderPreguntas()}
       </Swiper>
       <Button title="Enviar Respuestas" onPress={handleSubmit} /> */}
-      <Swiper style={styles.wrapper} showsButtons={true}>
-        <View style={styles.slide0}>
+      <Swiper style={styles.wrapper} showsButtons={true} loop={false}>
+        <View style={styles.slide1}>
           <View style={styles.logoContainer}>
             <Image
               source={require("../../../assets/logoMuySaludable.png")}
@@ -66,7 +66,7 @@ const QuizScreen = () => {
             </View>
           </View>
         </View>
-        <View style={styles.slide1}>
+        <View style={styles.slide2}>
           <Text style={styles.text}>Ingresa tu nombre y apellido</Text>
           <TextInput
             style={styles.textInputStyle}
@@ -74,10 +74,10 @@ const QuizScreen = () => {
             placeholder="Ingresa tu nombre"
           />
         </View>
-        <View style={styles.slide2}>
+        <View style={styles.slide3}>
           <Text style={styles.text}>Beautiful</Text>
         </View>
-        <View style={styles.slide3}>
+        <View style={styles.slide4}>
           <Text style={styles.text}>And simple</Text>
         </View>
       </Swiper>
@@ -115,25 +115,25 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  slide0: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#2562d4",
-  },
   slide1: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#9DD6EB",
+    backgroundColor: "#c46ec9",
   },
   slide2: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#97CAE5",
+    backgroundColor: "#9DD6EB",
   },
   slide3: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#97CAE5",
+  },
+  slide4: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
