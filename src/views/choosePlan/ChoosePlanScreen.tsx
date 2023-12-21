@@ -48,6 +48,11 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     getPlanes();
   }, []);
 
+  const onNavigate = () =>{
+    setModalVisible(false)
+    navigation.navigate("ResumeChoosenPlanScreen", {selectedPlan: selectedView});
+  }
+
   const getPlanes = async() => {
     try {
 
@@ -157,7 +162,8 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
               <View style={styles.modalSection}>
                 <RoundedButton
                   text="Seleccionar"
-                  onPress={() => navigation.navigate("ResumeChoosenPlanScreen")}
+                  // onPress={() => navigation.navigate("ResumeChoosenPlanScreen",{ selectedPlan: selectedView })}
+                  onPress={ onNavigate }
                 />
               </View>
             </View>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TextInput } from "react-native";
+import { View, Text, Button, StyleSheet, TextInput, Image } from "react-native";
 import Swiper from "react-native-swiper";
 
 const QuizScreen = () => {
@@ -45,10 +45,34 @@ const QuizScreen = () => {
       </Swiper>
       <Button title="Enviar Respuestas" onPress={handleSubmit} /> */}
       <Swiper style={styles.wrapper} showsButtons={true}>
+        <View style={styles.slide0}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("../../../assets/logoMuySaludable.png")}
+              style={styles.logoImage}
+            />
+          </View>
+          <View style={styles.containerText}>
+            <Text style={styles.text}>¡Bienvenido a Muy Saludable!</Text>
+            <View style={styles.contentText}>
+              <Text style={styles.text2}>
+                Para ayudarte a conseguir los objetivos que deseas queremos
+                conocer más de ti
+              </Text>
+              <Text style={styles.text2}>
+                por lo tanto te pedimos que nos apoyes a contestar el
+                custionario que se presenta a continuación
+              </Text>
+            </View>
+          </View>
+        </View>
         <View style={styles.slide1}>
-          <Text style={styles.text}>¿Cuál es tu nombre?</Text>
-          <TextInput placeholderTextColor="#d1cccc"
-                        placeholder="Ingresa tu nombre"/>
+          <Text style={styles.text}>Ingresa tu nombre y apellido</Text>
+          <TextInput
+            style={styles.textInputStyle}
+            placeholderTextColor="#d1cccc"
+            placeholder="Ingresa tu nombre"
+          />
         </View>
         <View style={styles.slide2}>
           <Text style={styles.text}>Beautiful</Text>
@@ -75,8 +99,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   wrapper: {},
+  textInputStyle: {
+    backgroundColor: "white",
+    color: "blue",
+    padding: 10,
+    marginTop: 10,
+    width: "80%",
+  },
+  containerText: {
+    width: "80%",
+    alignItems: "stretch",
+  },
+  contentText: {
+    marginTop: 20,
+  },
+
+  slide0: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#9debe2",
+  },
   slide1: {
     flex: 1,
     justifyContent: "center",
@@ -97,8 +141,23 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#fff",
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: "bold",
+    alignSelf: "center",
+  },
+  text2: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  logoContainer: {
+    position: "absolute",
+    alignSelf: "center",
+    top: "15%",
+  },
+  logoImage: {
+    width: 100,
+    height: 100,
   },
 });
 
