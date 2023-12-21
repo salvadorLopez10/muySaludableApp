@@ -61,7 +61,7 @@ const QuizScreen = () => {
               </Text>
               <Text style={styles.text2}>
                 por lo tanto te pedimos que nos apoyes a contestar el
-                custionario que se presenta a continuación
+                cuestionario que se presenta a continuación
               </Text>
             </View>
           </View>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#9debe2",
+    backgroundColor: "#2562d4",
   },
   slide1: {
     flex: 1,
