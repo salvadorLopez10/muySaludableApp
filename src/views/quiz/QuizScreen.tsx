@@ -1,8 +1,99 @@
-import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TextInput, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StackScreenProps } from "@react-navigation/stack";
+import { View, Text, Button, StyleSheet, TextInput, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
 import Swiper from "react-native-swiper";
+import { heightOptions, weightOptions, hoursSleep, yesNoOptions, numberFoodsOptions, sourceContactOptions, heightOptionsSelect, weightOptionsSelect, sexOptionsSelect, activityLevelSelect, dietOptionsSelect, goalOptionsSelect, statesMexicoOptionsSelect } from './DataDropdown';
+import SelectField from "../../components/SelectField";
+import { MuySaludableApi } from "../../api/MuySaludableApi";
+import MultiSelectField from "../../components/MultiSelectField";
 
-const QuizScreen = () => {
+interface Props extends StackScreenProps<any,any>{};
+
+interface Alimentos {
+  id: number;
+  nombre: string;
+  tipo: string;
+  informacion_nutrimental: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+//Food representa la estructura de los elementos que se establecen en el campo select en donde se eleige los alimentos a los que se es alérgico
+interface Food {
+  label: string;
+  id: string;
+}
+
+const QuizScreen = ({navigation}: Props) => {
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [gender, setGender] = useState("");
+  const [physicalActivity, setPhysicalActivity] = useState("");
+  const [dietType, setDietType] = useState("");
+  const [foodAvoid, setFoodAvoid] = useState("");
+  const [foodAvoidList, setFoodAvoidList] = useState<Food[]>([]);//Lista completa
+  const [foodAvoidListFiltered, setFoodAvoidListFiltered] = useState<Food[]>([]);//Lista completa
+  const [goal, setGoal] = useState("");
+  const [stateMexico, setStateMexico] = useState("");
+
+  const handleHeightSelect = (value: string) => {
+    setHeight(value);
+  };
+
+  const handleGenderSelect = (value: string) => {
+    setGender(value);
+  };
+
+  const handlePhysicalActivitySelect = (value: string) => {
+    setPhysicalActivity(value);
+  };
+
+  const handleDietTypeSelect = (value: string) => {
+    setDietType(value);
+  };
+  
+  const handleFoodAvoidSelect = (value: string) => {
+    setFoodAvoid(value);
+  };
+
+  const handleGoalSelect = (value: string) => {
+    setGoal(value);
+  };
+
+  const handleStateMexicoSelect = (value: string) => {
+    setStateMexico(value);
+  };
+
+  const handleFoidAvoidListFiltered = ( array: Food[] ) => {
+    setFoodAvoidListFiltered(array);
+  }
+
+  useEffect(() => {
+    console.log("entra effect");
+    getAlimentos();
+  }, []);
+
+  const getAlimentos = async () => {
+    try {
+      const resp = await MuySaludableApi.get("/alimentos");
+
+      //console.log( resp.data.alimentos )
+      const foodList = transformarArreglo(resp.data.alimentos);
+      //console.log(foodList);
+      setFoodAvoidList(foodList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+function transformarArreglo( original: Alimentos[]): Food[] {
+  return original.map((alimento) => ({
+    label: alimento.nombre,
+    id: alimento.nombre,
+  }));
+}
   const [respuestas, setRespuestas] = useState(Array(10).fill(""));
 
   const handleRespuestaChange = (index:number, respuesta:string) => {
@@ -11,32 +102,35 @@ const QuizScreen = () => {
     setRespuestas(nuevasRespuestas);
   };
 
-  const renderPreguntas = () => {
-    return respuestas.map((respuesta, index) => (
-      <View key={index} style={styles.preguntaContainer}>
-        <Text>Pregunta {index + 1}</Text>
-        {/* Aquí puedes utilizar un componente de entrada (TextInput) u otros controles según tus necesidades */}
-        <Button
-          title="Respuesta 1"
-          onPress={() => handleRespuestaChange(index, "Respuesta 1")}
-        />
-        <Button
-          title="Respuesta 2"
-          onPress={() => handleRespuestaChange(index, "Respuesta 2")}
-        />
-        <Button
-          title="Respuesta 3"
-          onPress={() => handleRespuestaChange(index, "Respuesta 3")}
-        />
-        <Text>Respuesta seleccionada: {respuesta}</Text>
-      </View>
-    ));
-  };
+  
 
   const handleSubmit = () => {
-    // Aquí puedes hacer algo con las respuestas, por ejemplo, enviarlas a un servidor
     console.log("Respuestas:", respuestas);
   };
+
+  const swiperRef = React.useRef<Swiper>(null);
+  const goNext = () => {
+    if (swiperRef.current) {
+      swiperRef.current.scrollBy(1);
+    }
+  };
+
+  const renderButton = () => (
+    <TouchableOpacity onPress={() => swiperRef.current?.scrollBy(2)}>
+      <View style={{ backgroundColor: "blue", padding: 10, borderRadius: 5 }}>
+        <Text style={{ color: "white" }}>Siguiente</Text>
+      </View>
+    </TouchableOpacity>
+  );
+  
+  const[selectedHeight, setSelectedHeight] = useState("");
+  
+  const placeholder = {
+    label: "Select an option...",
+    value: null,
+  };
+
+  const [isFocus, setIsFocus] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -44,7 +138,13 @@ const QuizScreen = () => {
         {renderPreguntas()}
       </Swiper>
       <Button title="Enviar Respuestas" onPress={handleSubmit} /> */}
-      <Swiper style={styles.wrapper} showsButtons={true} loop={false}>
+      <Swiper
+        style={styles.wrapper}
+        // showsButtons={true}
+        loop={false}
+        ref={swiperRef}
+        scrollEnabled={true}
+      >
         <View style={styles.slide1}>
           <View style={styles.logoContainer}>
             <Image
@@ -53,18 +153,18 @@ const QuizScreen = () => {
             />
           </View>
           <View style={styles.containerText}>
-            <Text style={styles.text}>¡Bienvenido a Muy Saludable!</Text>
+            <Text style={styles.text}>¡BIENVENIDO A MUY SALUDABLE!</Text>
             <View style={styles.contentText}>
               <Text style={styles.text2}>
-                Para ayudarte a conseguir los objetivos que deseas queremos
-                conocer más de ti
+                Contesta el siguiente cuestionario
               </Text>
-              <Text style={styles.text2}>
-                por lo tanto te pedimos que nos apoyes a contestar el
-                cuestionario que se presenta a continuación
-              </Text>
+              <Text style={styles.text2}>para poder desarrollar tu plan</Text>
+              <Text style={styles.text2}>alimenticio</Text>
             </View>
           </View>
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Comenzar</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.slide2}>
           <Text style={styles.text}>Ingresa tu nombre y apellido</Text>
@@ -72,13 +172,142 @@ const QuizScreen = () => {
             style={styles.textInputStyle}
             placeholderTextColor="#d1cccc"
             placeholder="Ingresa tu nombre"
+            value={name}
+            onChangeText={(value) => setName(value)}
           />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.slide3}>
-          <Text style={styles.text}>Beautiful</Text>
+          <Text style={styles.text}>Ingresa tu edad</Text>
+          <View style={styles.containerTextLabel}>
+            <TextInput
+              style={styles.textInputStyleEdad}
+              keyboardType="numeric"
+              placeholderTextColor="#d1cccc"
+              placeholder="Edad"
+              value={age}
+              onChangeText={(value) => setAge(value)}
+            />
+            <Text style={{ color: "white" }}> años</Text>
+          </View>
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
         </View>
+
         <View style={styles.slide4}>
-          <Text style={styles.text}>And simple</Text>
+          <Text style={styles.text}>Ingresa tu altura</Text>
+          <SelectField
+            data={heightOptionsSelect}
+            keyboardType="numeric"
+            onItemSelected={handleHeightSelect}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.slide5}>
+          <Text style={styles.text}>Ingresa tu peso</Text>
+          {/* <SelectField data={weightOptionsSelect} keyboardType="numeric" /> */}
+          <View style={styles.containerTextLabel}>
+            <TextInput
+              style={styles.textInputStyleEdad}
+              keyboardType="numeric"
+              placeholderTextColor="#d1cccc"
+              placeholder="Peso"
+              value={weight}
+              onChangeText={(value) => setWeight(value)}
+            />
+            <Text style={{ color: "white" }}> kg</Text>
+          </View>
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.slide6}>
+          <Text style={styles.text}>Sexo</Text>
+          <SelectField
+            data={sexOptionsSelect}
+            onItemSelected={handleGenderSelect}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.slide7}>
+          <Text style={styles.text}>
+            ¿Cuál es el nivel de actividad física que realizas?
+          </Text>
+          <SelectField
+            data={activityLevelSelect}
+            onItemSelected={handlePhysicalActivitySelect}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.slide8}>
+          <Text style={styles.text}>¿Qué tipo de dieta prefieres seguir?</Text>
+          <SelectField
+            data={dietOptionsSelect}
+            onItemSelected={handleDietTypeSelect}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.slide9}>
+          <Text style={styles.text}>
+            Selecciona los alimentos a los que seas alérgico o no consumas
+          </Text>
+          {/* <SelectField
+            data={foodAvoidList}
+            onItemSelected={handleFoodAvoidSelect}
+          /> */}
+          <MultiSelectField
+            data={foodAvoidList}
+            onItemSelected={handleFoidAvoidListFiltered}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.slide10}>
+          <Text style={styles.text}>¿Cuál es tu objetivo?</Text>
+          <SelectField
+            data={goalOptionsSelect}
+            onItemSelected={handleGoalSelect}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "white" }}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.slide15}>
+          <Text style={styles.text}>
+            ¿De qué parte de México nos contactas?
+          </Text>
+          <SelectField
+            data={statesMexicoOptionsSelect}
+            onItemSelected={handleStateMexicoSelect}
+          />
+          <TouchableOpacity
+            // onPress={() => navigation.navigate("ResumeAnswersScreen")}
+            onPress={() => {
+              console.log(foodAvoidListFiltered);
+            }}
+            style={styles.styleNextButton}
+          >
+            <Text style={{ color: "white" }}>Finalizar</Text>
+          </TouchableOpacity>
         </View>
       </Swiper>
     </View>
@@ -102,30 +331,47 @@ const styles = StyleSheet.create({
   wrapper: {},
   textInputStyle: {
     backgroundColor: "white",
-    color: "blue",
+    color: "#1257A4",
     padding: 10,
     marginTop: 10,
     width: "80%",
+    textAlign: "center",
+  },
+  textInputStyleEdad: {
+    backgroundColor: "white",
+    color: "#1257A4",
+    padding: 10,
+    marginTop: 10,
+    width: "30%",
+    textAlign: "center",
   },
   containerText: {
     width: "80%",
-    alignItems: "stretch",
+    alignItems: "center",
   },
   contentText: {
     marginTop: 20,
+  },
+  styleNextButton: {
+    padding: 10,
+    width: "80%",
+    backgroundColor: "#F79E04",
+    alignItems: "center",
+    marginTop: 10,
+    borderRadius: 15,
   },
 
   slide1: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#c46ec9",
+    backgroundColor: "#FFFFF",
   },
   slide2: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#9DD6EB",
+    backgroundColor: "#89ca89",
   },
   slide3: {
     flex: 1,
@@ -136,19 +382,104 @@ const styles = StyleSheet.create({
   slide4: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#92BBD9",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide5: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide6: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide7: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide8: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide9: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide10: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide11: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide12: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide13: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide14: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide15: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
+  },
+  slide16: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#F78291",
+    alignItems: "center",
+    //padding: 30,
   },
   text: {
-    color: "#fff",
-    fontSize: 24,
+    color: "#55851F",
+    fontSize: 18,
     fontWeight: "bold",
     alignSelf: "center",
   },
   text2: {
-    color: "#fff",
+    color: "#55851F",
     fontSize: 18,
-    fontWeight: "bold",
+    alignSelf: "center",
   },
   logoContainer: {
     position: "absolute",
@@ -158,6 +489,53 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 100,
     height: 100,
+  },
+
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    backgroundColor: "white",
+    marginTop: 10,
+    width: "60%",
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: "absolute",
+    backgroundColor: "white",
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  selectedStyle: {
+    borderRadius: 12,
+  },
+  containerSlide: {
+    flex: 1,
+  },
+  containerTextLabel: {
+    flexDirection: "row",
+    alignItems: "baseline",
   },
 });
 

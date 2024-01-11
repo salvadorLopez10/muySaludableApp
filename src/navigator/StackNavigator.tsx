@@ -5,7 +5,7 @@ import { ChoosePlanScreen } from "../views/choosePlan/ChoosePlanScreen";
 import { ResumeChoosenPlanScreen } from "../views/resumeChoosenPlan/ResumeChoosenPlanScreen";
 import QuizScreen from "../views/quiz/QuizScreen";
 import { PaymentScreen } from "../views/payment/PaymentScreen";
-
+import ResumeAnswersScreen from "../views/resumeAnswers/ResumeAnswersScreen";
 const Stack = createStackNavigator();
 
 export const StackNavigator = () => {
@@ -33,6 +33,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="QuizScreen"
         component={QuizScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ResumeAnswersScreen"
+        component={ResumeAnswersScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
