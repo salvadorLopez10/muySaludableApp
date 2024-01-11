@@ -87,7 +87,7 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
             value={selectedItems.map((item) => item.label).join(", ")} // Mostrar elementos seleccionados
             editable={false}
           />
-          <Icon name="angle-down" size={20} color="#1257A4" />
+          <Icon name="angle-down" size={20} color="#2A261B" />
         </View>
       </TouchableHighlight>
 
@@ -112,7 +112,7 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
               />
               {searchQuery !== "" && (
                 <TouchableHighlight onPress={handleClearSearch}>
-                  <Icon name="times" size={20} color="#1257A4" />
+                  <Icon name="times" size={20} color="#2A261B" />
                 </TouchableHighlight>
               )}
             </View>
@@ -132,6 +132,7 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
                 >
                   <View style={styles.listItemContainer}>
                     <CheckBox
+                      checkedColor="#F79E04"
                       checked={selectedItems.some(
                         (selectedItem) => selectedItem.id === item.id
                       )}
@@ -144,8 +145,13 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
               ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
 
-            <TouchableOpacity onPress={confirmSelection} style={styles.styleButtonConfirm}>
-              <Text style={{ color: "white" }}>Confirmar</Text>
+            <TouchableOpacity
+              onPress={confirmSelection}
+              style={styles.styleButtonConfirm}
+            >
+              <Text style={{ color: "white", fontWeight: "bold" }}>
+                Confirmar
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -181,7 +187,8 @@ const styles = StyleSheet.create({
     right: 20,
   },
   inputTextStyle: {
-    color: "#1257A4",
+    color: "#2A261B",
+    fontWeight: "bold",
     padding: 10,
     marginTop: 10,
     textAlign: "center",
@@ -238,6 +245,8 @@ const styles = StyleSheet.create({
   },
   listItemText: {
     marginLeft: 5,
+    color: "#2A261B",
+    fontWeight: "bold",
   },
   styleButtonConfirm: {
     padding: 10,

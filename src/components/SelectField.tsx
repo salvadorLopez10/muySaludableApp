@@ -74,7 +74,7 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
             value={selectedValue}
             editable={false}
           />
-          <Icon name="angle-down" size={20} color="#1257A4" />
+          <Icon name="angle-down" size={20} color="#2A261B" />
         </View>
       </TouchableHighlight>
 
@@ -99,7 +99,7 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
               />
               {searchQuery !== "" && (
                 <TouchableHighlight onPress={handleClearSearch}>
-                  <Icon name="times" size={20} color="#1257A4" />
+                  <Icon name="times" size={20} color="#2A261B" />
                 </TouchableHighlight>
               )}
             </View>
@@ -118,7 +118,7 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
                   }
                 >
                   <View style={styles.listItem}>
-                    <Text>{item.label}</Text>
+                    <Text style={styles.textItem}>{item.label}</Text>
                   </View>
                 </TouchableHighlight>
               )}
@@ -158,7 +158,8 @@ const styles = StyleSheet.create({
     right: 20,
   },
   inputTextStyle: {
-    color: "#1257A4",
+    color: "#2A261B",
+    fontWeight: "bold",
     padding: 10,
     marginTop: 10,
     textAlign: "center",
@@ -171,6 +172,10 @@ const styles = StyleSheet.create({
   listItem: {
     paddingVertical: 10,
     width: "100%",
+  },
+  textItem: {
+    color: "#2A261B",
+    fontWeight: "bold"
   },
   separator: {
     height: 1,

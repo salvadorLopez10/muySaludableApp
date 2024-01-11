@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { View, Text, Button, StyleSheet, TextInput, Image, TouchableOpacity, TouchableWithoutFeedback, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, Image, TouchableOpacity, ImageBackground, Alert } from 'react-native';
 import Swiper from "react-native-swiper";
 import { heightOptions, weightOptions, hoursSleep, yesNoOptions, numberFoodsOptions, sourceContactOptions, heightOptionsSelect, weightOptionsSelect, sexOptionsSelect, activityLevelSelect, dietOptionsSelect, goalOptionsSelect, statesMexicoOptionsSelect } from './DataDropdown';
 import SelectField from "../../components/SelectField";
@@ -140,6 +140,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
       <Button title="Enviar Respuestas" onPress={handleSubmit} /> */}
       <Swiper
         style={styles.wrapper}
+        //activeDotColor="#FCFDBD"
         // showsButtons={true}
         loop={false}
         ref={swiperRef}
@@ -153,7 +154,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             />
           </View>
           <View style={styles.containerText}>
-            <Text style={styles.text}>¡BIENVENIDO A MUY SALUDABLE!</Text>
+            <Text style={styles.textTitle}>¡BIENVENIDO A MUY SALUDABLE!</Text>
             <View style={styles.contentText}>
               <Text style={styles.text2}>
                 Contesta el siguiente cuestionario
@@ -162,11 +163,14 @@ function transformarArreglo( original: Alimentos[]): Food[] {
               <Text style={styles.text2}>alimenticio</Text>
             </View>
           </View>
-          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+          <TouchableOpacity onPress={goNext} style={styles.styleBeginButton}>
             <Text style={{ color: "white" }}>Comenzar</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.slide2}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>Ingresa tu nombre y apellido</Text>
           <TextInput
             style={styles.textInputStyle}
@@ -176,10 +180,16 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             onChangeText={(value) => setName(value)}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
-        <View style={styles.slide3}>
+        </ImageBackground>
+
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>Ingresa tu edad</Text>
           <View style={styles.containerTextLabel}>
             <TextInput
@@ -190,14 +200,19 @@ function transformarArreglo( original: Alimentos[]): Food[] {
               value={age}
               onChangeText={(value) => setAge(value)}
             />
-            <Text style={{ color: "white" }}> años</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}> años</Text>
           </View>
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <View style={styles.slide4}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>Ingresa tu altura</Text>
           <SelectField
             data={heightOptionsSelect}
@@ -205,11 +220,16 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             onItemSelected={handleHeightSelect}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <View style={styles.slide5}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>Ingresa tu peso</Text>
           {/* <SelectField data={weightOptionsSelect} keyboardType="numeric" /> */}
           <View style={styles.containerTextLabel}>
@@ -221,25 +241,35 @@ function transformarArreglo( original: Alimentos[]): Food[] {
               value={weight}
               onChangeText={(value) => setWeight(value)}
             />
-            <Text style={{ color: "white" }}> kg</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}> kg</Text>
           </View>
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <View style={styles.slide6}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>Sexo</Text>
           <SelectField
             data={sexOptionsSelect}
             onItemSelected={handleGenderSelect}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <View style={styles.slide7}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>
             ¿Cuál es el nivel de actividad física que realizas?
           </Text>
@@ -248,50 +278,67 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             onItemSelected={handlePhysicalActivitySelect}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <View style={styles.slide8}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>¿Qué tipo de dieta prefieres seguir?</Text>
           <SelectField
             data={dietOptionsSelect}
             onItemSelected={handleDietTypeSelect}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <View style={styles.slide9}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>
             Selecciona los alimentos a los que seas alérgico o no consumas
           </Text>
-          {/* <SelectField
-            data={foodAvoidList}
-            onItemSelected={handleFoodAvoidSelect}
-          /> */}
+
           <MultiSelectField
             data={foodAvoidList}
             onItemSelected={handleFoidAvoidListFiltered}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <View style={styles.slide10}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>¿Cuál es tu objetivo?</Text>
           <SelectField
             data={goalOptionsSelect}
             onItemSelected={handleGoalSelect}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "white" }}>Siguiente</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
 
-        <View style={styles.slide15}>
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide15}
+        >
           <Text style={styles.text}>
             ¿De qué parte de México nos contactas?
           </Text>
@@ -306,9 +353,11 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             }}
             style={styles.styleNextButton}
           >
-            <Text style={{ color: "white" }}>Finalizar</Text>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Finalizar
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
       </Swiper>
     </View>
   );
@@ -331,7 +380,8 @@ const styles = StyleSheet.create({
   wrapper: {},
   textInputStyle: {
     backgroundColor: "white",
-    color: "#1257A4",
+    color: "#2A261B",
+    fontWeight: "bold",
     padding: 10,
     marginTop: 10,
     width: "80%",
@@ -339,7 +389,8 @@ const styles = StyleSheet.create({
   },
   textInputStyleEdad: {
     backgroundColor: "white",
-    color: "#1257A4",
+    color: "#2A261B",
+    fontWeight: "bold",
     padding: 10,
     marginTop: 10,
     width: "30%",
@@ -352,10 +403,18 @@ const styles = StyleSheet.create({
   contentText: {
     marginTop: 20,
   },
+  styleBeginButton: {
+    padding: 10,
+    width: "80%",
+    backgroundColor: "#FAA029",
+    alignItems: "center",
+    marginTop: 10,
+    borderRadius: 15,
+  },
   styleNextButton: {
     padding: 10,
     width: "80%",
-    backgroundColor: "#F79E04",
+    backgroundColor: "#FCFDBD",
     alignItems: "center",
     marginTop: 10,
     borderRadius: 15,
@@ -463,6 +522,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     //padding: 30,
   },
+  imageBackground: {
+    width: "100%",
+    height: "100%",
+  },
   slide16: {
     flex: 1,
     justifyContent: "center",
@@ -470,8 +533,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     //padding: 30,
   },
+  textTitle: {
+    color: "#55851f",
+    fontSize: 18,
+    fontWeight: "bold",
+    alignSelf: "center",
+  },
   text: {
-    color: "#55851F",
+    color: "white",
     fontSize: 18,
     fontWeight: "bold",
     alignSelf: "center",
