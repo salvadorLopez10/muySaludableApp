@@ -146,7 +146,10 @@ function transformarArreglo( original: Alimentos[]): Food[] {
         ref={swiperRef}
         scrollEnabled={true}
       >
-        <View style={styles.slide1}>
+        <ImageBackground
+          source={require("../../../assets/background_manzana.jpg")}
+          style={styles.slide15}
+        >
           <View style={styles.logoContainer}>
             <Image
               source={require("../../../assets/logoMuySaludable.png")}
@@ -166,7 +169,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           <TouchableOpacity onPress={goNext} style={styles.styleBeginButton}>
             <Text style={{ color: "white" }}>Comenzar</Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
           style={styles.slide15}
@@ -367,7 +370,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 16,
+    //padding: 16,
   },
   swiper: {
     flex: 1,

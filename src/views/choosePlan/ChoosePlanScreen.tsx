@@ -90,17 +90,17 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../../assets/BackgroundFrutas.png")}
+        source={require("../../../assets/background_carrete_frutas.jpg")}
         style={styles.imageBackground}
       />
       {/* Título */}
       <View style={styles.tituloContainer}>
-        <Text style={styles.tituloText}>ELIGE TU PLAN NUTRICIONAL</Text>
+        <Text style={styles.tituloText}>ELIGE TU PLAN ALIMENTICIO</Text>
         <Text style={styles.contentTitulo}>
-          Cambia tus hábitos alimenticios y
+          Vive una vida más
         </Text>
         <Text style={styles.contentTitulo}>
-          consigue el cuerpo de tus sueños
+          saludable
         </Text>
       </View>
 
@@ -189,12 +189,12 @@ const styles = StyleSheet.create({
     top: "10%",
   },
   tituloText: {
-    color: "white",
+    color: "#326807",
     fontSize: 24,
     fontWeight: "bold",
   },
   contentTitulo: {
-    color: "white",
+    color: "#326807",
     top: 10,
     fontSize: 20,
     textAlign: "center",
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   containerPlan: {
     width: "80%",
     height: "auto",
-    backgroundColor: "#fce948",
+    backgroundColor: "#faa029",
     borderRadius: 9,
     padding: 7,
     top: 5,
@@ -224,21 +224,26 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
+    alignItems: "center",
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
   },
 
   titlePlanText: {
+    color: "white",
+    fontWeight: "bold",
     textAlign: "center",
     fontSize: 16,
   },
   contentPlanText: {
+    color: "white",
     textAlign: "justify",
     fontSize: 12,
     top: 5,
   },
   pricePlan: {
+    color: "#326807",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -267,10 +272,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
+    color: "#55851F",
     fontSize: 20,
     fontWeight: "bold",
   },
   subtitle: {
+    color: "#55851F",
     fontSize: 16,
     fontStyle: "italic",
   },
@@ -290,6 +297,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   texto: {
+    color: "#55851F",
     fontSize: 16,
   },
 });
