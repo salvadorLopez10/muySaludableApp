@@ -209,15 +209,16 @@ const styles = StyleSheet.create({
   inputEmail: {
     height: 40,
     width: "100%",
+    color: "#55851F",
     backgroundColor: "white", // Color del fondo del TextInput
     borderRadius: 5,
     paddingHorizontal: 10,
   },
   containerBoton: {
-    position: "absolute",
+    //position: "absolute",
     alignSelf: "center",
     alignItems: "center",
-    top: "85%",
+    //top: "85%",
     marginTop: 20,
     width: "100%",
   },

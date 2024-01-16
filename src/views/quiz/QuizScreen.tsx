@@ -105,8 +105,62 @@ function transformarArreglo( original: Alimentos[]): Food[] {
   
 
   const handleSubmit = () => {
-    console.log("Respuestas:", respuestas);
+
+    let textFieldsEmpty = "";
+
+    if(name.trim()== ""){
+      textFieldsEmpty += "Nombre\n";
+    }
+
+    if (age.trim() == "") {
+      textFieldsEmpty += "Edad\n";
+    }
+
+    if(height.trim() == ""){
+       textFieldsEmpty += "Altura\n";
+    }
+
+    if (weight.trim() == "") {
+      textFieldsEmpty += "Peso\n";
+    }
+
+    if (gender.trim() == "") {
+      textFieldsEmpty += "Sexo\n";
+    }
+
+    if (physicalActivity.trim() == "") {
+      textFieldsEmpty += "Nivel de Actividad Física\n";
+    }
+    if (dietType.trim() == "") {
+      textFieldsEmpty += "Tipo de dieta\n";
+    }
+    if (foodAvoidListFiltered.length == 0) {
+      textFieldsEmpty += "Alimentos que no consumas\n";
+    }
+    if (goal.trim() == "") {
+      textFieldsEmpty += "Objetivo\n";
+    }
+    if (stateMexico.trim() == "") {
+      textFieldsEmpty += "Parte de México\n";
+    }
+    // Alert.alert("Error", "Favor de ingresar Sexo");
+
+    if( textFieldsEmpty != "" ){
+      //Eliminando la última coma del string
+      textFieldsEmpty = textFieldsEmpty.substring(0,textFieldsEmpty.length -1);
+      Alert.alert("Para continuar, favor de ingresar la siguiente información:", textFieldsEmpty);
+
+      return;
+    }
+    
+    navigation.navigate("ResumeAnswersScreen",{ name, age, height, weight, gender, physicalActivity, dietType, foodAvoidListFiltered, goal, stateMexico });
   };
+
+  const validateFieldEmpty = ( nameField: string, value: string ) => {
+
+
+    return "";
+  }
 
   const swiperRef = React.useRef<Swiper>(null);
   const goNext = () => {
@@ -114,23 +168,11 @@ function transformarArreglo( original: Alimentos[]): Food[] {
       swiperRef.current.scrollBy(1);
     }
   };
-
-  const renderButton = () => (
-    <TouchableOpacity onPress={() => swiperRef.current?.scrollBy(2)}>
-      <View style={{ backgroundColor: "blue", padding: 10, borderRadius: 5 }}>
-        <Text style={{ color: "white" }}>Siguiente</Text>
-      </View>
-    </TouchableOpacity>
-  );
   
   const[selectedHeight, setSelectedHeight] = useState("");
-  
-  const placeholder = {
-    label: "Select an option...",
-    value: null,
-  };
 
   const [isFocus, setIsFocus] = useState(false);
+
 
   return (
     <View style={styles.container}>
@@ -148,7 +190,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
       >
         <ImageBackground
           source={require("../../../assets/background_manzana.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <View style={styles.logoContainer}>
             <Image
@@ -172,7 +214,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
         </ImageBackground>
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>Ingresa tu nombre y apellido</Text>
           <TextInput
@@ -191,7 +233,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>Ingresa tu edad</Text>
           <View style={styles.containerTextLabel}>
@@ -214,7 +256,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>Ingresa tu altura</Text>
           <SelectField
@@ -231,7 +273,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>Ingresa tu peso</Text>
           {/* <SelectField data={weightOptionsSelect} keyboardType="numeric" /> */}
@@ -255,7 +297,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>Sexo</Text>
           <SelectField
@@ -271,7 +313,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>
             ¿Cuál es el nivel de actividad física que realizas?
@@ -289,7 +331,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>¿Qué tipo de dieta prefieres seguir?</Text>
           <SelectField
@@ -305,7 +347,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>
             Selecciona los alimentos a los que seas alérgico o no consumas
@@ -324,7 +366,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>¿Cuál es tu objetivo?</Text>
           <SelectField
@@ -340,7 +382,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide15}
+          style={styles.slide}
         >
           <Text style={styles.text}>
             ¿De qué parte de México nos contactas?
@@ -350,10 +392,10 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             onItemSelected={handleStateMexicoSelect}
           />
           <TouchableOpacity
-            // onPress={() => navigation.navigate("ResumeAnswersScreen")}
-            onPress={() => {
-              console.log(foodAvoidListFiltered);
-            }}
+            onPress={ handleSubmit }
+            // onPress={() => {
+            //   console.log(foodAvoidListFiltered);
+            // }}
             style={styles.styleNextButton}
           >
             <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
@@ -422,103 +464,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 15,
   },
-
-  slide1: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FFFFF",
-  },
-  slide2: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#89ca89",
-  },
-  slide3: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#97CAE5",
-  },
-  slide4: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#92BBD9",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide5: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide6: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide7: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide8: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide9: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide10: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide11: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide12: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide13: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide14: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#F78291",
-    alignItems: "center",
-    //padding: 30,
-  },
-  slide15: {
+  slide: {
     flex: 1,
     justifyContent: "center",
     backgroundColor: "#F78291",
