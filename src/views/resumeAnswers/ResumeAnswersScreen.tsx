@@ -29,6 +29,10 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
     const handleConfirm = () => {
 
         console.log("confirmar")
+        //ToDo: Aquí se calcula TASA METABÓLICA BASAL y Se genera el PLAN ALIMENTICIO
+        //Se notifica que el plan está listo a través de un push notification
+        navigation.navigate("MainMenuScreen");
+
     };
     
   return (

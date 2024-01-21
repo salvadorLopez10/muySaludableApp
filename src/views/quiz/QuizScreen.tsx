@@ -222,7 +222,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             placeholderTextColor="#d1cccc"
             placeholder="Ingresa tu nombre"
             value={name}
-            onChangeText={(value) => setName(value)}
+            onChangeText={(value) => setName(value.toUpperCase())}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
             <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
