@@ -21,7 +21,7 @@ interface Planes {
   nombre: string;
   resumen: string;
   descripcion_detallada: string;
-  duracion: string;
+  duracion_meses: string;
   precio: string;
   createdAt: string;
   updatedAt: string;

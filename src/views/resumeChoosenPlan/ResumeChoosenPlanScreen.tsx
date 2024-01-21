@@ -12,7 +12,7 @@ interface Plan {
   nombre: string;
   resumen: string;
   descripcion_detallada: string;
-  duracion: string;
+  duracion_meses: string;
   precio: string;
   createdAt: string;
   updatedAt: string;
@@ -23,15 +23,34 @@ type ResumeChoosenPlanRouteProp = RouteProp<{ ResumeChoosenPlanScreen: { selecte
 export const ResumeChoosenPlanScreen = ({navigation}: Props) => {
 
   const { email, onChange } = useViewModel();
+  const [validity, setValidity] = useState("")
 
   const route = useRoute<ResumeChoosenPlanRouteProp>();
   const { selectedPlan } = route.params;
 
 
   useEffect(() => {
-    console.log("cambio plan")
-    console.log(selectedPlan)
-  }, [selectedPlan])
+    //console.log("cambio plan")
+    const vigencia = setValidityDate(selectedPlan);
+    setValidity(vigencia);
+
+    console.log(vigencia);
+
+  }, [selectedPlan]);
+
+  const setValidityDate = (selectedPlan:Plan) => {
+    const currentDate = new Date();
+    const sumaMeses = parseInt(selectedPlan.duracion_meses);
+
+    // Suma 1 mes
+    const validityDate = new Date();
+    validityDate.setMonth(currentDate.getMonth() + sumaMeses);
+    //console.log(validityDate)
+
+    const formatDate: { year?: 'numeric'; month?: 'long'; day?: 'numeric' } = { year: 'numeric', month: 'long', day: 'numeric' };
+
+    return `${validityDate.toLocaleDateString(undefined, formatDate)}`;
+  }
 
   const onConfirmPlan = () => {
     Keyboard.dismiss();
@@ -81,7 +100,7 @@ export const ResumeChoosenPlanScreen = ({navigation}: Props) => {
       {/* Sección de vigencia */}
       <View style={styles.bottomContainer}>
         <Text style={styles.contentTitulo}>VIGENCIA DEL PLAN</Text>
-        <Text style={styles.fechaVigencia}>14/01/2023</Text>
+        <Text style={styles.fechaVigencia}>{ validity }</Text>
       </View>
 
       {/* Sección email*/}
