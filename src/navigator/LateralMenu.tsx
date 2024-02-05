@@ -5,23 +5,28 @@ import { Image, Text } from "react-native";
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native";
+import { ManageAccountScreen } from "../views/manageAccount/ManageAccountScreen";
+import { PrivacyLegalScreen } from '../views/privacyLegal/PrivacyLegalScreen';
 
 const Drawer = createDrawerNavigator();
 
 export const LateralMenu = () => {
   return (
-    <Drawer.Navigator
-        drawerContent={ (props) => <InternalMenu { ...props }/> }
-    >
+    <Drawer.Navigator drawerContent={(props) => <InternalMenu {...props} />}>
       <Drawer.Screen
         name="UserProfileScreen"
         options={{ title: "Perfil del Usuario" }}
         component={UserProfileScreen}
       />
       <Drawer.Screen
-        name="MainMenuScreen"
-        options={{ title: "Plan Alimenticio" }}
-        component={MainMenuScreen}
+        name="ManageAccountScreen"
+        options={{ title: "Administrar Cuenta" }}
+        component={ManageAccountScreen}
+      />
+      <Drawer.Screen
+        name="PrivacyLegalScreen"
+        options={{ title: "Privacidad y aviso legal" }}
+        component={PrivacyLegalScreen}
       />
     </Drawer.Navigator>
   );
@@ -30,30 +35,36 @@ export const LateralMenu = () => {
 const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
   return (
     <DrawerContentScrollView>
-        {/* Estilos del avatar */}
-        <View style={styles.containerAvatar}>
-            <Image
-            source={ require("../../assets/logoMuySaludable.png") }
-            style={styles.avatar}
-            />
-        </View>
+      {/* Estilos del avatar */}
+      <View style={styles.containerAvatar}>
+        <Image
+          source={require("../../assets/logoMuySaludable.png")}
+          style={styles.avatar}
+        />
+      </View>
 
       {/* Opciones del menú */}
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuOpcionContainer}
-            onPress={() => navigation.navigate("UserProfileScreen")}
+        <TouchableOpacity
+          style={styles.menuOpcionContainer}
+          onPress={() => navigation.navigate("UserProfileScreen")}
         >
-            <Text style={styles.menuTexto}>Perfil de Usuario</Text>
+          <Text style={styles.menuTexto}>Perfil de Usuario</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuOpcionContainer}
-            onPress={() => navigation.navigate("MainMenuScreen")}
+        <TouchableOpacity
+          style={styles.menuOpcionContainer}
+          onPress={() => navigation.navigate("ManageAccountScreen")}
         >
-            <Text style={styles.menuTexto}>Plan Alimenticio</Text>
+          <Text style={styles.menuTexto}>Administrar Cuenta</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.menuOpcionContainer}
+          onPress={() => navigation.navigate("PrivacyLegalScreen")}
+        >
+          <Text style={styles.menuTexto}>Privacidad y aviso legal</Text>
         </TouchableOpacity>
       </View>
-    
-
     </DrawerContentScrollView>
   );
 };
