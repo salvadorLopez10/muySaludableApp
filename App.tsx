@@ -14,8 +14,8 @@ export default function App() {
       {
         userPlanActive == "0" ? 
           <StackNavigator /> : 
-          // <LateralMenu />
-          <BottomTabs />
+          <LateralMenu />
+          // <BottomTabs />
       }
       {/* <BottomTabs /> */}
       {/* <StackNavigator /> */}

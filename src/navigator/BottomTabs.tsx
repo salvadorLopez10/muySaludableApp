@@ -32,16 +32,16 @@ export const BottomTabs = () => {
               iconName = "person";
               break;
             case "MealPlanScreen":
-              iconName = "logo-apple";
+              iconName = "fast-food-outline";
               break;
             case "WorkoutPlanScreen":
-              iconName = "fitness";
+              iconName = "barbell-outline";
               break;
             case "MentalHealthScreen":
-              iconName = "heart";
+              iconName = "heart-outline";
               break;
             case "FinancialHealthScreen":
-              iconName = "cash";
+              iconName = "cash-outline";
               break;
           }
 
@@ -50,15 +50,15 @@ export const BottomTabs = () => {
         },
       })}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name="LateralMenu"
         component={LateralMenu}
         options={{ headerShown: false, title: "Perfil" }}
-      />
+      /> */}
       <Tab.Screen
         name="MealPlanScreen"
         component={MainMenuScreen}
-        options={{ headerShown: true, title: "Plan Alimenticio" }}
+        options={{ headerShown: false, title: "Plan Alimenticio" }}
       />
       <Tab.Screen
         name="WorkoutPlanScreen"
