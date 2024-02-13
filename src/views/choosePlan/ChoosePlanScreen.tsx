@@ -95,7 +95,8 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
       />
       {/* Título */}
       <View style={styles.tituloContainer}>
-        <Text style={styles.tituloText}>ELIGE TU PLAN ALIMENTICIO</Text>
+        <Text style={styles.tituloText}>ELIGE TU</Text>
+        <Text style={styles.tituloText}>PLAN ALIMENTICIO</Text>
         <Text style={styles.contentTitulo}>
           Vive una vida más
         </Text>
@@ -137,7 +138,7 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
               {/* Sección de Título */}
               <View style={styles.modalSection}>
-                <Text style={styles.title}>Detalle del plan</Text>
+                <Text style={styles.title}>Resumen del plan</Text>
               </View>
 
               {/* Sección de Subtítulo */}
@@ -190,15 +191,18 @@ const styles = StyleSheet.create({
   },
   tituloText: {
     color: "#326807",
+    alignSelf: "center",
     fontSize: 24,
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
   },
   contentTitulo: {
     color: "#326807",
     top: 10,
-    fontSize: 20,
+    fontSize: 18,
     textAlign: "center",
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Book",
   },
   planContainerMain: {
     flex: 1,
@@ -208,12 +212,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-    marginTop: 20,
+    marginTop: 25,
   },
 
   containerPlan: {
     width: "80%",
-    height: "auto",
+    height: "15%",
     backgroundColor: "#faa029",
     borderRadius: 9,
     padding: 7,
@@ -232,20 +236,23 @@ const styles = StyleSheet.create({
 
   titlePlanText: {
     color: "white",
-    fontWeight: "bold",
+    //fontWeight: "bold",
     textAlign: "center",
     fontSize: 16,
+    fontFamily: "Gotham-Ultra",
   },
   contentPlanText: {
     color: "white",
-    textAlign: "justify",
-    fontSize: 12,
+    textAlign: "center",
+    fontSize: 15,
+    fontFamily: "Gotham-Medium",
     top: 5,
   },
   pricePlan: {
     color: "#326807",
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 20,
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
     textAlign: "center",
     top: 10,
     marginBottom: 7,
@@ -273,13 +280,15 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#55851F",
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 24,
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
   },
   subtitle: {
     color: "#55851F",
-    fontSize: 16,
-    fontStyle: "italic",
+    fontSize: 18,
+    //fontStyle: "italic",
+    fontFamily: "Gotham-BlackItalic",
   },
   characteristicItem: {
     marginBottom: 5,
@@ -298,7 +307,8 @@ const styles = StyleSheet.create({
   },
   texto: {
     color: "#55851F",
-    fontSize: 16,
+    fontSize: 15,
+    fontFamily: "Gotham-Medium",
   },
 });
 

@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
         borderRadius: 15
     },
     textButton : {
-        color: 'white'
+        color: 'white',
+        fontFamily: "Gotham-Medium"
     }
 
 });

@@ -73,53 +73,54 @@ export const ResumeChoosenPlanScreen = ({navigation}: Props) => {
 
   return (
     <View style={styles.container}>
-      {/* <Image
-        source={require("../../../assets/BackGroundFresas.png")}
-        style={styles.imageBackground}
-      /> */}
-
-      {/* Título */}
-      <View style={styles.tituloContainer}>
-        <Text style={styles.tituloText}>RESUMEN DEL PLAN </Text>
-      </View>
-
-      {/* Sección de características */}
-      <View style={styles.caracteristicasContainer}>
-        <Text style={styles.contentTitulo}>{selectedPlan.nombre}</Text>
-        <View style={styles.containerPrice}>
-          <Text style={styles.pricePlan}>${selectedPlan.precio}</Text>
+        {/* Título */}
+        <View style={styles.tituloContainer}>
+          <Text style={styles.tituloText}>RESUMEN DEL PLAN</Text>
         </View>
-        {selectedPlan?.descripcion_detallada.split("\n").map((linea, index) => (
-          <View key={index} style={styles.itemContainer}>
-            <Text style={styles.bullet}>•</Text>
-            <Text style={styles.texto}>{linea}</Text>
+
+        {/* Sección de características */}
+        <View style={styles.caracteristicasContainer}>
+          <Text style={styles.contentTitulo}>{selectedPlan.nombre}</Text>
+          <View style={styles.containerPrice}>
+            <Text style={styles.pricePlan}>${selectedPlan.precio}</Text>
           </View>
-        ))}
-      </View>
 
-      {/* Sección de vigencia */}
-      <View style={styles.bottomContainer}>
-        <Text style={styles.contentTitulo}>VIGENCIA DEL PLAN</Text>
-        <Text style={styles.fechaVigencia}>{ validity }</Text>
-      </View>
+          <View style={styles.containerBullets}>
+            {selectedPlan?.descripcion_detallada
+              .split("\n")
+              .map((linea, index) => (
+                <View key={index} style={styles.itemContainer}>
+                  <Text style={styles.bullet}>•</Text>
+                  <Text style={styles.texto}>{linea}</Text>
+                </View>
+              ))}
+          </View>
+        </View>
 
-      {/* Sección email*/}
-      <View style={styles.containerEmail}>
-        <Text style={styles.labelEmail}>Ingresa tu correo electrónico</Text>
-        <TextInput
-          style={styles.inputEmail}
-          placeholder="Correo electrónico"
-          value={email}
-          onChangeText={(text) => onChange("email", text)}
-        />
-      </View>
+        {/* Sección de vigencia */}
+        <View style={styles.bottomContainer}>
+          <Text style={styles.textVigencia}>VIGENCIA DEL PLAN</Text>
+          <Text style={styles.fechaVigencia}>{validity}</Text>
+        </View>
 
-      {/* Sección botón*/}
-      <View style={styles.containerBoton}>
-        <TouchableOpacity style={styles.boton} onPress={onConfirmPlan}>
-          <Text style={styles.textoBoton}>Confirmar y proceder al pago</Text>
-        </TouchableOpacity>
-      </View>
+        {/* Sección email*/}
+        <View style={styles.containerEmail}>
+          <Text style={styles.labelEmail}>Ingresa tu correo electrónico</Text>
+          <TextInput
+            style={styles.inputEmail}
+            placeholder=""
+            value={email}
+            onChangeText={(text) => onChange("email", text)}
+          />
+        </View>
+
+        {/* Sección botón*/}
+        <View style={styles.containerBoton}>
+          <TouchableOpacity style={styles.boton} onPress={onConfirmPlan}>
+            <Text style={styles.textoBoton}>Confirmar y proceder al pago</Text>
+          </TouchableOpacity>
+        </View>
+      
     </View>
   );
 }
@@ -129,33 +130,34 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  imageBackground: {
-    width: "100%",
-    height: "100%",
-  },
   tituloContainer: {
     //position: "absolute",
+    flex: 1,
     alignSelf: "center",
     //top:50,
-    marginTop: "15%",
+    marginTop: "10%",
+    justifyContent: "center",
   },
   tituloText: {
     color: "#326807",
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 24,
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
   },
   contentTitulo: {
     color: "#55851F",
-    //top: 20,
-    fontSize: 18,
+    //top: 10,
+    fontSize: 24,
     textAlign: "center",
-    fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
+    //fontWeight: "bold",
   },
   containerPrice: {
     backgroundColor: "rgba(85, 133, 31, 0.7)",
+    padding:15,
     borderRadius: 10,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 15,
     marginLeft: 40,
     marginRight: 50,
     marginBottom: 20,
@@ -166,11 +168,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     //top: 40,
     fontSize: 24,
-    fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
+    //fontWeight: "bold",
   },
 
   caracteristicasContainer: {
     backgroundColor: "#FCFDBD",
+    flex: 6,
     marginLeft: 30,
     marginRight: 30,
     borderRadius: 20,
@@ -178,13 +182,19 @@ const styles = StyleSheet.create({
     borderColor: "#55851F",
     //position: "absolute",
     alignSelf: "center",
-    marginTop: "3%",
+    //marginTop: "3%",
+    //top:1,
     padding: 10,
+  },
+  containerBullets: {
+    flex: 1,
+    justifyContent: "center",
   },
   itemContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    //justifyContent: 'center',
+    marginBottom: 8,
   },
   bullet: {
     color: "#55851F",
@@ -193,63 +203,82 @@ const styles = StyleSheet.create({
   },
   texto: {
     fontSize: 15,
-    fontWeight: "bold",
+    //fontWeight: "bold",
     color: "#55851F",
+    fontFamily: "Gotham-Medium",
   },
   bottomContainer: {
-    position: "relative",
+    flex: 1,
+    //position: "relative",
     alignSelf: "center",
     //top:70
-    marginTop: "2%",
+    //marginTop: "3%",
+    //bottom:10,
+  },
+  textVigencia: {
+    color: "#55851F",
+    //top: 10,
+    fontSize: 18,
+    textAlign: "center",
+    fontFamily: "Gotham-Ultra",
   },
   fechaVigencia: {
     color: "#55851F",
-    top: 10,
-    fontSize: 20,
+    top: 5,
+    fontSize: 18,
     textAlign: "center",
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
   },
   containerEmail: {
     //position: "absolute",
     //top: "65%",
-    marginTop: 15,
+    flex: 1,
+    //marginTop: "3%",
     alignSelf: "center",
     width: "70%",
     backgroundColor: "rgba(85, 133, 31, 0.7)",
-    padding: 10,
+    padding: 8,
     borderRadius: 10,
     alignItems: "center",
+    justifyContent: "center",
+    bottom: 10,
   },
   labelEmail: {
     color: "white", // Color del texto de la etiqueta
     fontSize: 15,
-    marginBottom: 10,
+    marginBottom: 8,
+    fontFamily: "Gotham-Medium",
   },
   inputEmail: {
-    height: 40,
+    height: "40%",
     width: "100%",
     color: "#55851F",
     backgroundColor: "white", // Color del fondo del TextInput
     borderRadius: 5,
-    paddingHorizontal: 10,
+    //paddingHorizontal: 10,
+    textAlign: "center",
+    fontFamily: "Gotham-Medium",
   },
   containerBoton: {
+    flex: 1,
     //position: "absolute",
     alignSelf: "center",
     alignItems: "center",
-    //top: "85%",
-    marginTop: 20,
+    top: 5,
+    //marginTop: 10,
     width: "100%",
   },
   boton: {
     backgroundColor: "#FAA029",
-    padding: 20,
+    padding: 14,
     borderRadius: 10,
-    width: "70%",
+    width: "80%",
     alignItems: "center",
   },
   textoBoton: {
     color: "white",
     fontSize: 16,
+    fontFamily: "Gotham-Medium",
   },
 });
