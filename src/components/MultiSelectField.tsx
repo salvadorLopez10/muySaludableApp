@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white", // Fondo blanco
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 15,
     paddingHorizontal: 10,
     justifyContent: "space-between",
   },

@@ -31,7 +31,7 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
   //const data = heightOptionsSelect;
 
   const filteredData = data.filter((item) =>
-    item.label.toLowerCase().includes(searchQuery.toLowerCase())
+    item.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleInputChange = (text: string) => {
@@ -74,7 +74,10 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
             value={selectedValue}
             editable={false}
           />
-          <Icon name="angle-down" size={20} color="#2A261B" />
+          <View style={{ alignItems: "flex-end", backgroundColor:"white" }}>
+               <Icon name="angle-down" size={20} color="#2A261B" />
+          </View>
+          {/* <Icon name="angle-down" size={20} color="#2A261B" /> */}
         </View>
       </TouchableHighlight>
 
@@ -196,9 +199,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white", // Fondo blanco
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 15,
     paddingHorizontal: 10,
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   inputContainerSearch: {
     flexDirection: "row",

@@ -44,12 +44,12 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         <View style={styles.containerTitle}>
           <Text style={styles.textTitle}>RESUMEN DE RESPUESTAS</Text>
         </View>
-        <View style={styles.logoContainer}>
+        {/* <View style={styles.logoContainer}>
           <Image
             source={require("../../../assets/logoMuySaludable.png")}
             style={styles.logoImage}
           />
-        </View>
+        </View> */}
 
         <View style={styles.containerAnswer}>
           <ScrollView>
@@ -115,26 +115,31 @@ const styles = StyleSheet.create({
   },
   containerTitle: {
     position: "absolute",
-    width: "80%",
+    //width: "80%",
     alignItems: "center",
-    top: "5%",
+    top: "7%",
   },
   textTitle: {
     color: "#55851f",
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 24,
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
     alignSelf: "center",
   },
   containerAnswer: {
     //backgroundColor: "blue",
-    width: "70%",
-    height: "50%",
+    width: "90%",
+    height: "70%",
     alignItems: "center",
+    //top:"5%"
   },
   textAnswer: {
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Medium",
+    fontSize:18,
     margin: 10,
-    flexWrap:"wrap"
+    flexWrap: "wrap",
+    color: "#2E2A21",
   },
   containerButtons: {
     flexDirection: "row",

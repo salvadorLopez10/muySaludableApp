@@ -29,6 +29,7 @@ const QuizScreen = ({navigation}: Props) => {
   const [age, setAge] = useState("");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
+  const [weightValue, setWeightValue] = useState("");
   const [gender, setGender] = useState("");
   const [physicalActivity, setPhysicalActivity] = useState("");
   const [dietType, setDietType] = useState("");
@@ -217,17 +218,17 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           style={styles.slide}
         >
           <Text style={styles.text}>Ingresa tu nombre y apellido</Text>
-          <TextInput
-            style={styles.textInputStyle}
-            placeholderTextColor="#d1cccc"
-            placeholder="Ingresa tu nombre"
-            value={name}
-            onChangeText={(value) => setName(value.toUpperCase())}
-          />
+          <View style={styles.containerTextInput}>
+            <TextInput
+              style={styles.textInputStyle}
+              placeholderTextColor="#d1cccc"
+              placeholder="Ingresa tu nombre"
+              value={name}
+              onChangeText={(value) => setName(value.toUpperCase())}
+            />
+          </View>
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
-              Siguiente
-            </Text>
+            <Text style={styles.nextButtonText}>Siguiente</Text>
           </TouchableOpacity>
         </ImageBackground>
 
@@ -236,7 +237,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           style={styles.slide}
         >
           <Text style={styles.text}>Ingresa tu edad</Text>
-          <View style={styles.containerTextLabel}>
+          <View style={styles.containerTextInput}>
             <TextInput
               style={styles.textInputStyleEdad}
               keyboardType="numeric"
@@ -245,7 +246,6 @@ function transformarArreglo( original: Alimentos[]): Food[] {
               value={age}
               onChangeText={(value) => setAge(value)}
             />
-            <Text style={{ color: "white", fontWeight: "bold" }}> años</Text>
           </View>
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
             <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
@@ -275,9 +275,9 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           source={require("../../../assets/fondoSlides.jpg")}
           style={styles.slide}
         >
-          <Text style={styles.text}>Ingresa tu peso</Text>
+          <Text style={styles.text}>Ingresa tu peso (kg)</Text>
           {/* <SelectField data={weightOptionsSelect} keyboardType="numeric" /> */}
-          <View style={styles.containerTextLabel}>
+          <View style={styles.containerTextInput}>
             <TextInput
               style={styles.textInputStyleEdad}
               keyboardType="numeric"
@@ -286,7 +286,6 @@ function transformarArreglo( original: Alimentos[]): Food[] {
               value={weight}
               onChangeText={(value) => setWeight(value)}
             />
-            <Text style={{ color: "white", fontWeight: "bold" }}> kg</Text>
           </View>
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
             <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
@@ -392,7 +391,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             onItemSelected={handleStateMexicoSelect}
           />
           <TouchableOpacity
-            onPress={ handleSubmit }
+            onPress={handleSubmit}
             // onPress={() => {
             //   console.log(foodAvoidListFiltered);
             // }}
@@ -423,26 +422,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   wrapper: {},
-  textInputStyle: {
+  containerTextInput: {
+    margin: 10,
+    borderRadius: 15,
+    width: "80%",
     backgroundColor: "white",
+  },
+  textInputStyle: {
     color: "#2A261B",
-    fontWeight: "bold",
+    // fontWeight: "bold",
     padding: 10,
     marginTop: 10,
-    width: "80%",
+    //width: "80%",
     textAlign: "center",
+    fontFamily: "Gotham-Medium",
   },
   textInputStyleEdad: {
-    backgroundColor: "white",
+    //backgroundColor: "white",
     color: "#2A261B",
     fontWeight: "bold",
     padding: 10,
     marginTop: 10,
-    width: "30%",
+    //28width: "30%",
     textAlign: "center",
   },
   containerText: {
-    width: "80%",
+    width: "90%",
     alignItems: "center",
   },
   contentText: {
@@ -455,6 +460,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
     borderRadius: 15,
+    fontFamily: "Gotham-Medium",
   },
   styleNextButton: {
     padding: 10,
@@ -463,6 +469,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
     borderRadius: 15,
+  },
+  nextButtonText: {
+    color: "#2A261B",
+    fontFamily: "Gotham-Medium",
   },
   slide: {
     flex: 1,
@@ -485,28 +495,32 @@ const styles = StyleSheet.create({
   textTitle: {
     color: "#55851f",
     fontSize: 18,
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
     alignSelf: "center",
   },
   text: {
     color: "white",
     fontSize: 18,
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
     alignSelf: "center",
   },
   text2: {
     color: "#55851F",
     fontSize: 18,
     alignSelf: "center",
+    fontFamily: "Gotham-Medium",
   },
   logoContainer: {
     position: "absolute",
     alignSelf: "center",
     top: "15%",
+    padding: 10,
   },
   logoImage: {
-    width: 100,
-    height: 100,
+    //width: 100,
+    //height: 100,
   },
 
   dropdown: {
