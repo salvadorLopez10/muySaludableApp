@@ -10,13 +10,6 @@ interface Props extends StackScreenProps<any,any>{};
 
 export const PaymentScreen = ( {navigation}: Props ) => {
 
-  const [name, setName] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiration, setExpiration] = useState("");
-  
-  const [cvv, setCvv] = useState("");
-   const [value, setValue] = useState('')
-  const [error, setError] = useState<string | null>(null)
   function onSubmit() {
     console.log("form submitted");
   }
