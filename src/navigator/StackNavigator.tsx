@@ -29,7 +29,7 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="PaymentScreen"
         component={PaymentScreen}
-        // options={{ headerShown: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="QuizScreen"
