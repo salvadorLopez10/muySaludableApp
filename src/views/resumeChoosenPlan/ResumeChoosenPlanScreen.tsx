@@ -1,7 +1,19 @@
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Keyboard, Alert } from 'react-native'
+import Icon from "react-native-vector-icons/FontAwesome";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+  Alert,
+  Modal,
+  KeyboardAvoidingView
+} from "react-native";
 import useViewModel from './ViewModel'
 
 
@@ -23,11 +35,34 @@ type ResumeChoosenPlanRouteProp = RouteProp<{ ResumeChoosenPlanScreen: { selecte
 export const ResumeChoosenPlanScreen = ({navigation}: Props) => {
 
   const { email, onChange } = useViewModel();
-  const [validity, setValidity] = useState("")
+  const [isModalVisibleEmail, setIsModalVisibleEmail] = useState(false);
+  const [validity, setValidity] = useState("");
 
   const route = useRoute<ResumeChoosenPlanRouteProp>();
   const { selectedPlan } = route.params;
 
+  const openModal = () => {
+    setIsModalVisibleEmail(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisibleEmail(false);
+  };
+
+  const handleConfirmEmail = () => {
+    if (email === "") {
+      Alert.alert("Error", "Favor de ingresar el email");
+      return;
+    } else {
+      const validRegex =
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if (!email.match(validRegex)) {
+        Alert.alert("Error", "Favor de ingresar un correo electrónico válido");
+        return;
+      }
+    }
+    closeModal();
+  };
 
   useEffect(() => {
     //console.log("cambio plan")
@@ -72,56 +107,78 @@ export const ResumeChoosenPlanScreen = ({navigation}: Props) => {
   
 
   return (
-    <View style={styles.container}>
-        {/* Título */}
-        <View style={styles.tituloContainer}>
-          <Text style={styles.tituloText}>RESUMEN DEL PLAN</Text>
+    <KeyboardAvoidingView style={styles.container} behavior="height">
+      {/* Título */}
+      <View style={styles.tituloContainer}>
+        <Text style={styles.tituloText}>RESUMEN DEL PLAN</Text>
+      </View>
+
+      {/* Sección de características */}
+      <View style={styles.caracteristicasContainer}>
+        <Text style={styles.contentTitulo}>{selectedPlan.nombre}</Text>
+        <View style={styles.containerPrice}>
+          <Text style={styles.pricePlan}>${selectedPlan.precio}</Text>
         </View>
 
-        {/* Sección de características */}
-        <View style={styles.caracteristicasContainer}>
-          <Text style={styles.contentTitulo}>{selectedPlan.nombre}</Text>
-          <View style={styles.containerPrice}>
-            <Text style={styles.pricePlan}>${selectedPlan.precio}</Text>
+        <View style={styles.containerBullets}>
+          {selectedPlan?.descripcion_detallada
+            .split("\n")
+            .map((linea, index) => (
+              <View key={index} style={styles.itemContainer}>
+                <Text style={styles.bullet}>•</Text>
+                <Text style={styles.texto}>{linea}</Text>
+              </View>
+            ))}
+        </View>
+      </View>
+
+      {/* Sección de vigencia */}
+      <View style={styles.bottomContainer}>
+        <Text style={styles.textVigencia}>VIGENCIA DEL PLAN</Text>
+        <Text style={styles.fechaVigencia}>{validity}</Text>
+      </View>
+
+      {/* Sección email*/}
+      <TouchableOpacity style={styles.containerEmail} onPress={openModal}>
+        <Text style={styles.labelEmail}>Ingresa tu correo electrónico</Text>
+        <TextInput
+          style={styles.inputEmail}
+          placeholder=""
+          value={email}
+          editable={false}
+        />
+      </TouchableOpacity>
+
+      {/* Ventana modal */}
+      <Modal visible={isModalVisibleEmail} animationType="slide" transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.closeIcon} onPress={closeModal}>
+              <Icon name="times" size={20} color="black" />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Correo electrónico"
+              value={email}
+              onChangeText={(text) => onChange("email", text)}
+            />
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={handleConfirmEmail}
+            >
+              <Text style={styles.modalButtonText}>Confirmar</Text>
+            </TouchableOpacity>
           </View>
-
-          <View style={styles.containerBullets}>
-            {selectedPlan?.descripcion_detallada
-              .split("\n")
-              .map((linea, index) => (
-                <View key={index} style={styles.itemContainer}>
-                  <Text style={styles.bullet}>•</Text>
-                  <Text style={styles.texto}>{linea}</Text>
-                </View>
-              ))}
-          </View>
         </View>
+      </Modal>
 
-        {/* Sección de vigencia */}
-        <View style={styles.bottomContainer}>
-          <Text style={styles.textVigencia}>VIGENCIA DEL PLAN</Text>
-          <Text style={styles.fechaVigencia}>{validity}</Text>
-        </View>
-
-        {/* Sección email*/}
-        <View style={styles.containerEmail}>
-          <Text style={styles.labelEmail}>Ingresa tu correo electrónico</Text>
-          <TextInput
-            style={styles.inputEmail}
-            placeholder=""
-            value={email}
-            onChangeText={(text) => onChange("email", text)}
-          />
-        </View>
-
-        {/* Sección botón*/}
-        <View style={styles.containerBoton}>
-          <TouchableOpacity style={styles.boton} onPress={onConfirmPlan}>
-            <Text style={styles.textoBoton}>Confirmar y proceder al pago</Text>
-          </TouchableOpacity>
-        </View>
-      
-    </View>
+      {/* Sección botón*/}
+      <View style={styles.containerBoton}>
+        <TouchableOpacity style={styles.boton} onPress={onConfirmPlan}>
+          <Text style={styles.textoBoton}>Confirmar y proceder al pago</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -129,6 +186,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  mainContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   tituloContainer: {
     //position: "absolute",
@@ -154,7 +216,7 @@ const styles = StyleSheet.create({
   },
   containerPrice: {
     backgroundColor: "rgba(85, 133, 31, 0.7)",
-    padding:15,
+    padding: 15,
     borderRadius: 10,
     alignItems: "center",
     marginTop: 15,
@@ -280,5 +342,47 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontFamily: "Gotham-Medium",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalInput: {
+    height: 40,
+    width: "100%",
+    color: "#55851F",
+    backgroundColor: "white",
+    borderRadius: 5,
+    borderColor: "#55851F",
+    borderWidth: 1,
+    textAlign: "center",
+    fontFamily: "Gotham-Medium",
+    marginTop: 15,
+  },
+  modalButton: {
+    backgroundColor: "#FAA029",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  modalButtonText: {
+    color: "white",
+    fontFamily: "Gotham-Medium",
+    fontSize: 16,
+  },
+  closeIcon: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
 });
