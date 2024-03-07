@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Button, TouchableOpacity,Text } from "react-native";
 import TextField from "../../components/TextField";
 import useViewModel from './ViewModel';
-const CreditCardForm = () => {
 
-    const { 
+interface ComponentsCreditCard {
+  emailProp: string;
+  precioProp: string;
+  setLoading: ( val: boolean ) => void;
+}
+const CreditCardForm = ({ emailProp, precioProp, setLoading }: ComponentsCreditCard ) => {
+
+    const {
       cardHolder,
       errorCardHolder,
       cardNumber,
@@ -16,9 +22,9 @@ const CreditCardForm = () => {
       onChange,
       handleCardNumberChange,
       handleExpiryDateChange,
-      handleCvvChange, 
-      onSubmitPayment 
-    } = useViewModel();
+      handleCvvChange,
+      onSubmitPayment,
+    } = useViewModel({ emailProp, precioProp, setLoading });
 
     return (
       <View>
@@ -54,10 +60,11 @@ const CreditCardForm = () => {
           />
           <TextField
             style={styles.textField}
-            label="CVV"
+            label="CVC"
             keyboardType="numeric"
             errorText={errorCvv}
             value={cvv}
+            maxLength={4}
             onChangeText={handleCvvChange}
           />
         </View>

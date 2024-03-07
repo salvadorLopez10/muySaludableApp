@@ -1,4 +1,4 @@
-import { useRoute, RouteProp } from "@react-navigation/native";
+import { useRoute, RouteProp, useNavigation, NavigationProp } from "@react-navigation/native";
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react'
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -15,6 +15,7 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 import useViewModel from './ViewModel'
+import { RootStackParams } from "../../navigator/StackNavigator";
 
 
 interface Props extends StackScreenProps<any,any>{};
@@ -30,16 +31,17 @@ interface Plan {
   updatedAt: string;
 }
 
-type ResumeChoosenPlanRouteProp = RouteProp<{ ResumeChoosenPlanScreen: { selectedPlan: Plan } }, 'ResumeChoosenPlanScreen'>;
+//type ResumeChoosenPlanRouteProp = RouteProp<{ ResumeChoosenPlanScreen: { selectedPlan: Plan } }, 'ResumeChoosenPlanScreen'>;
 
-export const ResumeChoosenPlanScreen = ({navigation}: Props) => {
+export const ResumeChoosenPlanScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const { email, onChange } = useViewModel();
   const [isModalVisibleEmail, setIsModalVisibleEmail] = useState(false);
   const [validity, setValidity] = useState("");
 
-  const route = useRoute<ResumeChoosenPlanRouteProp>();
-  const { selectedPlan } = route.params;
+  const params = useRoute<RouteProp<RootStackParams,"ResumeChoosenPlanScreen">>().params;
+  const { selectedPlan } = params;
 
   const openModal = () => {
     setIsModalVisibleEmail(true);
@@ -101,8 +103,9 @@ export const ResumeChoosenPlanScreen = ({navigation}: Props) => {
           return;
         }
     }
+    //navigation.navigate("ResumeChoosenPlanScreen", {selectedPlan: selectedView});
 
-    navigation.navigate("PaymentScreen");
+    navigation.navigate("PaymentScreen",{email: email, precio: selectedPlan.precio});
   }
   
 

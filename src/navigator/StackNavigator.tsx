@@ -7,7 +7,29 @@ import QuizScreen from "../views/quiz/QuizScreen";
 import { PaymentScreen } from "../views/payment/PaymentScreen";
 import ResumeAnswersScreen from "../views/resumeAnswers/ResumeAnswersScreen";
 import MainMenuScreen from "../views/mainMenu/MainMenuScreen";
-const Stack = createStackNavigator();
+
+interface Plan {
+  id: number;
+  nombre: string;
+  resumen: string;
+  descripcion_detallada: string;
+  duracion_meses: string;
+  precio: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type RootStackParams = {
+  ChoosePlanScreen: undefined,
+  ResumeChoosenPlanScreen: {selectedPlan: Plan},
+  PaymentScreen: { email: string, precio: string },
+  QuizScreen: undefined,
+  ResumeAnswersScreen: undefined,
+  MainMenuScreen: undefined
+};
+
+const Stack = createStackNavigator<RootStackParams>();
+
 
 export const StackNavigator = () => {
   return (
