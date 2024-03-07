@@ -7,10 +7,11 @@ import { MuySaludableApi } from '../../api/MuySaludableApi';
 interface ComponentsCreditCard {
   emailProp: string;
   precioProp: string;
+  planProp: string;
   setLoading: ( val: boolean ) => void
 }
 
-const PaymentScreenViewModel = ({ emailProp, precioProp, setLoading }: ComponentsCreditCard) => {
+const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }: ComponentsCreditCard) => {
   const [values, setValues] = useState({
     cardHolder: "",
     errorCardHolder: "",
@@ -22,6 +23,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, setLoading }: Component
     errorCvv: "",
     precio: precioProp,
     email: emailProp,
+    plan: planProp
   });
 
   useEffect(() => {
@@ -66,6 +68,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, setLoading }: Component
         const body = {
           id: response.id,
           amount: parseInt(values.precio) * 100,
+          plan: values.plan
         };
 
         const responsePayment = await MuySaludableApi.post(
@@ -140,14 +143,6 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, setLoading }: Component
   
 
   function onSubmitPayment() {
-    console.log("DESDE VIEWMODEL MODIFICANDO ERRORES");
-    // console.log("Card Number:", values.cardNumber);
-    // console.log("Card Number Length:", values.cardNumber.replace(/\D/g, "").length);
-    // console.log("Expiry Date:", values.expiration);
-    // console.log("CVV:", values.cvv);
-    // console.log("Card Holder Name:", values.cardHolder);
-    console.log("ANTES");
-    console.log("ERRORES", JSON.stringify(values));
 
     // Validar cardHolder
     if (values.cardHolder.trim().length === 0) {

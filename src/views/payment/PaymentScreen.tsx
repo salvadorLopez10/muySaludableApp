@@ -29,7 +29,7 @@ export const PaymentScreen = (  ) => {
   const params = useRoute<RouteProp<RootStackParams,"PaymentScreen">>().params;
   console.log("LOS PARAMETROS");
   console.log(params);
-  const { email, precio} = params;
+  const { email, precio, plan} = params;
 
   function onSubmit() {
     console.log("form submitted");
@@ -81,6 +81,7 @@ export const PaymentScreen = (  ) => {
         <CreditCardForm
           emailProp={email}
           precioProp={precio}
+          planProp={plan}
           setLoading={setLoadingState}
         />
       </ScrollView>

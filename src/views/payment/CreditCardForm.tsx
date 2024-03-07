@@ -6,9 +6,10 @@ import useViewModel from './ViewModel';
 interface ComponentsCreditCard {
   emailProp: string;
   precioProp: string;
+  planProp: string;
   setLoading: ( val: boolean ) => void;
 }
-const CreditCardForm = ({ emailProp, precioProp, setLoading }: ComponentsCreditCard ) => {
+const CreditCardForm = ({ emailProp, precioProp, planProp, setLoading }: ComponentsCreditCard ) => {
 
     const {
       cardHolder,
@@ -24,7 +25,7 @@ const CreditCardForm = ({ emailProp, precioProp, setLoading }: ComponentsCreditC
       handleExpiryDateChange,
       handleCvvChange,
       onSubmitPayment,
-    } = useViewModel({ emailProp, precioProp, setLoading });
+    } = useViewModel({ emailProp, precioProp, planProp, setLoading });
 
     return (
       <View>
