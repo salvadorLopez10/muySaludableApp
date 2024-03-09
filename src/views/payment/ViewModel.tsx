@@ -3,6 +3,7 @@ import React,{useEffect, useState} from 'react'
 import stripe from "react-native-stripe-client";
 import { MuySaludableApi } from '../../api/MuySaludableApi';
 import { AxiosError } from 'axios';
+import { Alert } from 'react-native';
 
 
 interface ComponentsCreditCard {
@@ -25,7 +26,10 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
     precio: precioProp,
     email: emailProp,
     plan: planProp,
-    modalErrorVisible: false
+    modalErrorVisible: false,
+    modalSuccessVisible: true,
+    password: "",
+    confirmPassword: ""
   });
 
   useEffect(() => {
@@ -118,8 +122,40 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
 
   const closeErrorModal = () => {
      onChange("modalErrorVisible", false);
+  }
+  
+  const handlePassword = (text: string) => {
+    onChange("password", text);
   };
 
+  const handleConfirmPassword = (text: string) => {
+    onChange("confirmPassword", text);
+  };
+
+  const closeSuccessModal = () => {
+    onChange("modalSuccessVisible", false);
+  };
+
+  const handleConfirmContinue = () => {
+
+    console.log("PASSWORD");
+    console.log(values.password, values.confirmPassword);
+
+    if( values.password.trim().length < 8 ){
+      Alert.alert("Error","La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
+
+    if ( values.password.trim() !== values.confirmPassword.trim() ) {
+      Alert.alert("Error", "Las contraseñas no coinciden, favor de verificar");
+      return;
+    }
+
+    //ToDo: NAVEGA A LA PANTALLA DE QUIZ Y ACTUALIZA USUARIO CON SU CONTRASEÑA
+
+
+
+  }
 
   const handleCardNumberChange = (text: string): void => {
     // Eliminar cualquier caracter no numérico
@@ -251,6 +287,10 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
     onSubmitPayment,
     showErrorModal,
     closeErrorModal,
+    handlePassword,
+    handleConfirmPassword,
+    closeSuccessModal,
+    handleConfirmContinue
   };
 };
 
