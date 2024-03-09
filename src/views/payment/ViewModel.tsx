@@ -2,13 +2,14 @@ import React,{useEffect, useState} from 'react'
 // @ts-ignore
 import stripe from "react-native-stripe-client";
 import { MuySaludableApi } from '../../api/MuySaludableApi';
+import { AxiosError } from 'axios';
 
 
 interface ComponentsCreditCard {
   emailProp: string;
   precioProp: string;
   planProp: string;
-  setLoading: ( val: boolean ) => void
+  setLoading: (val: boolean) => void;
 }
 
 const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }: ComponentsCreditCard) => {
@@ -23,12 +24,13 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
     errorCvv: "",
     precio: precioProp,
     email: emailProp,
-    plan: planProp
+    plan: planProp,
+    modalErrorVisible: false
   });
 
   useEffect(() => {
-    console.log("EFFECT VALUES CREDITCARDFORM");
-    console.log("VALUES: " + JSON.stringify(values, null, 3));
+    //console.log("EFFECT VALUES CREDITCARDFORM");
+    //console.log("VALUES: " + JSON.stringify(values, null, 3));
   }, [values]);
 
   //Se utiliza este useEffect para establecer los valores de email y precio  que vienen a través del padre CreditCardForm
@@ -63,26 +65,37 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
         "SE MANDA EL PAGO STRIPE CON EL TOKEN OBTENIDO : " + response.id
       );
 
-      try {
-        setLoading(true);
-        const body = {
-          id: response.id,
-          amount: parseInt(values.precio) * 100,
-          plan: values.plan
-        };
+      
+      setLoading(true);
+      const body = {
+        id: response.id,
+        amount: parseInt(values.precio) * 100,
+        plan: values.plan
+      };
 
-        const responsePayment = await MuySaludableApi.post(
-          "/stripe/create",
-          body
-        );
-        setLoading(false);
-        console.log("RESPUESTA PAGO");
-        console.log(JSON.stringify(responsePayment, null, 2));
-      } catch (error) {
-        setLoading(false);
-        console.log("ERROR POST PAGO");
-        console.log(error);
-      }
+      const responsePayment = await MuySaludableApi.post(
+        "/stripe/create",
+        body
+      ).then((respuesta) => {
+          setLoading(false);
+          console.log("RESPUESTA PAGO");
+          console.log(JSON.stringify(respuesta, null, 2));
+      }).catch(error => {
+        // Manejar el error
+          setLoading(false);
+          console.log("ERROR POST PAGO CATCH BLOQUE");
+          //console.log(`Error: ${(error as AxiosError)?.response?.data}`);
+
+        if (error.response && error.response.data) {
+          if( !error.response.data.success ){
+              showErrorModal();
+              console.log("Mensaje de error: ", error.response.data.message);
+          }
+        } else {
+          console.log("Error en la transacción SIN DATA:", error.message);
+        }
+      });
+       
     } else {
       console.log("NO SE MANDA EL PAGO");
     }
@@ -98,6 +111,15 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
       setValues({ ...values, [property]: value });
     }
   };
+
+  const showErrorModal = () => {
+    onChange("modalErrorVisible", true);
+  };
+
+  const closeErrorModal = () => {
+     onChange("modalErrorVisible", false);
+  };
+
 
   const handleCardNumberChange = (text: string): void => {
     // Eliminar cualquier caracter no numérico
@@ -227,6 +249,8 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
     handleExpiryDateChange,
     handleCvvChange,
     onSubmitPayment,
+    showErrorModal,
+    closeErrorModal,
   };
 };
 

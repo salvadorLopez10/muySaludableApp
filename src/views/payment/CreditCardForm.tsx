@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Button, TouchableOpacity,Text } from "react-native";
 import TextField from "../../components/TextField";
 import useViewModel from './ViewModel';
+import ModalError from "./ModalError";
 
 interface ComponentsCreditCard {
   emailProp: string;
@@ -20,11 +21,13 @@ const CreditCardForm = ({ emailProp, precioProp, planProp, setLoading }: Compone
       errorExpiration,
       cvv,
       errorCvv,
+      modalErrorVisible,
       onChange,
       handleCardNumberChange,
       handleExpiryDateChange,
       handleCvvChange,
       onSubmitPayment,
+      closeErrorModal
     } = useViewModel({ emailProp, precioProp, planProp, setLoading });
 
     return (
@@ -72,6 +75,8 @@ const CreditCardForm = ({ emailProp, precioProp, planProp, setLoading }: Compone
         <TouchableOpacity onPress={onSubmitPayment} style={styles.styleButton}>
           <Text style={{ color: "white" }}>Pagar</Text>
         </TouchableOpacity>
+
+        <ModalError visible={modalErrorVisible} onClose={closeErrorModal} />
       </View>
     );
 };
