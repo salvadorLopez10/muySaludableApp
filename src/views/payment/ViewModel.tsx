@@ -10,10 +10,11 @@ interface ComponentsCreditCard {
   emailProp: string;
   precioProp: string;
   planProp: string;
+  idPlanProp: number;
   setLoading: (val: boolean) => void;
 }
 
-const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }: ComponentsCreditCard) => {
+const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, setLoading }: ComponentsCreditCard) => {
   const [values, setValues] = useState({
     cardHolder: "",
     errorCardHolder: "",
@@ -26,15 +27,17 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
     precio: precioProp,
     email: emailProp,
     plan: planProp,
+    idPlan: idPlanProp,
     modalErrorVisible: false,
-    modalSuccessVisible: true,
+    modalSuccessVisible: false,
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    idPago: "",
   });
 
   useEffect(() => {
-    //console.log("EFFECT VALUES CREDITCARDFORM");
-    //console.log("VALUES: " + JSON.stringify(values, null, 3));
+    // console.log("EFFECT VALUES CREDITCARDFORM");
+    // console.log("VALUES: " + JSON.stringify(values, null, 3));
   }, [values]);
 
   //Se utiliza este useEffect para establecer los valores de email y precio  que vienen a través del padre CreditCardForm
@@ -81,9 +84,59 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
         "/stripe/create",
         body
       ).then((respuesta) => {
-          setLoading(false);
+          
           console.log("RESPUESTA PAGO");
           console.log(JSON.stringify(respuesta, null, 2));
+
+          //Se obtiene ID de pago
+          setIdPago(respuesta.data.data.id);
+
+          //Inserta usuario con su suscripción
+          const bodyUser = {
+            "email": values.email
+          };
+          console.log("BODY USER");
+          console.log(JSON.stringify(bodyUser, null, 2));
+
+          const usuario = MuySaludableApi.post("/usuarios", bodyUser)
+            .then((responseUsuario) => {
+              console.log("RESPUESTA CREACIÓN DE USUARIO");
+              console.log(JSON.stringify(responseUsuario, null, 2));
+              //Una vez creado el usuario, se procede a generar el registro de suscripción
+              const bodySuscripcion = {
+                id_usuario: responseUsuario.data.data.id,
+                id_plan_alimenticio: values.idPlan,
+                id_pago: respuesta.data.data.id,
+                fecha_expiracion: "2024-04-03 23:55:00",
+                estado: "Activo",
+              };
+              console.log(JSON.stringify(bodySuscripcion, null, 2));
+              //Una vez creado el usuario, se procede a generar el registro de suscripción
+              const suscripción = MuySaludableApi.post("/suscripciones", bodySuscripcion)
+                .then((responseSuscripcion) => {
+                  console.log("RESPUESTA SUSCRIPCIÓN");
+                  console.log(JSON.stringify(responseSuscripcion, null, 2));
+                  
+                  setLoading(false);
+
+                  //Muestra ventana modal para establecer contraseña
+                  showSuccessModal();
+                }).catch((errorSuscripcion) => {
+                   setLoading(false);
+                   console.log("Mensaje de error en suscripción: ",errorSuscripcion.response.data.message);
+
+                });
+
+
+            }).catch((errorUsuario) => {
+               setLoading(false);
+               console.log("Mensaje de error en creación de usuario: ",errorUsuario.response.data.message);
+
+            });
+
+
+          
+
       }).catch(error => {
         // Manejar el error
           setLoading(false);
@@ -122,7 +175,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
 
   const closeErrorModal = () => {
      onChange("modalErrorVisible", false);
-  }
+  };
   
   const handlePassword = (text: string) => {
     onChange("password", text);
@@ -132,8 +185,17 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
     onChange("confirmPassword", text);
   };
 
+  const showSuccessModal = () => {
+    onChange("modalSuccessVisible", true);
+  };
+
   const closeSuccessModal = () => {
     onChange("modalSuccessVisible", false);
+  };
+
+  const setIdPago = (id: string) => {
+    onChange("idPago", id);
+    
   };
 
   const handleConfirmContinue = () => {
@@ -143,6 +205,11 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
 
     if( values.password.trim().length < 8 ){
       Alert.alert("Error","La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
+
+    if (values.confirmPassword.trim().length == 0) {
+      Alert.alert("Error", "Por favor confirma la contraseña");
       return;
     }
 
@@ -289,6 +356,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp, setLoading }:
     closeErrorModal,
     handlePassword,
     handleConfirmPassword,
+    showSuccessModal,
     closeSuccessModal,
     handleConfirmContinue
   };

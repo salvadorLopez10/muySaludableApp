@@ -104,8 +104,7 @@ export const ResumeChoosenPlanScreen = () => {
         }
     }
     //navigation.navigate("ResumeChoosenPlanScreen", {selectedPlan: selectedView});
-
-    navigation.navigate("PaymentScreen",{email: email, precio: selectedPlan.precio, plan: selectedPlan.nombre});
+    navigation.navigate("PaymentScreen",{email: email, precio: selectedPlan.precio, plan: selectedPlan.nombre, idPlan: selectedPlan.id});
   }
   
 
