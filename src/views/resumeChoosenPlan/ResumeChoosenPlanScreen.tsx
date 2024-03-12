@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import useViewModel from './ViewModel'
 import { RootStackParams } from "../../navigator/StackNavigator";
+import { MuySaludableApi } from "../../api/MuySaludableApi";
 
 
 interface Props extends StackScreenProps<any,any>{};
@@ -51,7 +52,7 @@ export const ResumeChoosenPlanScreen = () => {
     setIsModalVisibleEmail(false);
   };
 
-  const handleConfirmEmail = () => {
+  const handleConfirmEmail = async () => {
     if (email === "") {
       Alert.alert("Error", "Favor de ingresar el email");
       return;
@@ -63,7 +64,46 @@ export const ResumeChoosenPlanScreen = () => {
         return;
       }
     }
-    closeModal();
+
+    const requestEmail = {
+      "email": email
+    }
+
+     const responseEmailExists = await MuySaludableApi.post(
+       "/usuarios/checkEmail",
+       requestEmail
+     ).then((response) => {
+
+      //console.log(JSON.stringify(response,null,2));
+      if (response.data.status == "Duplicate") {
+
+        Alert.alert(
+          "Error",
+          "El email que ingresaste ya existe, favor de intentar con uno diferente"
+        );
+        return;
+      }
+
+      closeModal();
+
+     }).catch((error) => {
+        // console.log("Error al verificar el email");
+        // console.log(JSON.stringify(error, null, 2));
+        Alert.alert(
+          "Error",
+          "NO se ha podido verificar el email, favor de intentar nuevamente"
+        );
+        if (error.response && error.response.data) {
+          if (!error.response.data.success) {
+            
+            console.log("Mensaje de error: ", error.response.data.message);
+          }
+        } else {
+          console.log("Error en la transacción SIN DATA:", error.message);
+        }
+    });
+
+    
   };
 
   useEffect(() => {

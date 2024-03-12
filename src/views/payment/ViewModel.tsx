@@ -4,7 +4,7 @@ import stripe from "react-native-stripe-client";
 import { MuySaludableApi } from '../../api/MuySaludableApi';
 import { AxiosError } from 'axios';
 import { Alert } from 'react-native';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigator/StackNavigator';
 
 
@@ -252,12 +252,27 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
     .then((responsePassword) => {
       closeIndicator();
       enableButton();
-      console.log("RESPUESTA PASSWORD CREADO");
-      console.log(JSON.stringify(responsePassword, null, 2));
-      
-      //showSuccessModal();
-      navigation.navigate("QuizScreen");
+      //console.log("RESPUESTA PASSWORD CREADO");
+      //console.log(JSON.stringify(responsePassword, null, 2));
 
+      Alert.alert(
+        "La contraseña se estableció correctamente",
+        "Por favor guarda tu contraseña, la necesitarás para acceder a tu información.\n\nA continuación serás dirigido para contestar un cuestionario, el cual nos ayudará a generar el plan adecuado para ti",
+        [
+          {
+            text: "Continuar",
+            onPress: () =>
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: "QuizScreen" }],
+                })
+              ),
+          },
+        ],
+        { cancelable: false }
+      );
+      
     }).catch((errorSuscripcion) => {
         closeIndicator();
         enableButton();
