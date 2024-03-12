@@ -4,6 +4,8 @@ import stripe from "react-native-stripe-client";
 import { MuySaludableApi } from '../../api/MuySaludableApi';
 import { AxiosError } from 'axios';
 import { Alert } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParams } from '../../navigator/StackNavigator';
 
 
 interface ComponentsCreditCard {
@@ -15,6 +17,8 @@ interface ComponentsCreditCard {
 }
 
 const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, setLoading }: ComponentsCreditCard) => {
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
+  const [idUsuario, setIdUsuario] = useState(null);
   const [values, setValues] = useState({
     cardHolder: "",
     errorCardHolder: "",
@@ -33,11 +37,14 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
     password: "",
     confirmPassword: "",
     idPago: "",
+    indicatorVisible: false,
+    disableButton: false
   });
 
   useEffect(() => {
     // console.log("EFFECT VALUES CREDITCARDFORM");
     // console.log("VALUES: " + JSON.stringify(values, null, 3));
+    // console.log("ID USUARIO: "+idUsuario)
   }, [values]);
 
   //Se utiliza este useEffect para establecer los valores de email y precio  que vienen a través del padre CreditCardForm
@@ -110,6 +117,9 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
                 fecha_expiracion: "2024-04-03 23:55:00",
                 estado: "Activo",
               };
+
+              //Establece idUsuario en el state
+              setIdUsuario(responseUsuario.data.data.id);
               console.log(JSON.stringify(bodySuscripcion, null, 2));
               //Una vez creado el usuario, se procede a generar el registro de suscripción
               const suscripción = MuySaludableApi.post("/suscripciones", bodySuscripcion)
@@ -127,15 +137,11 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
 
                 });
 
-
             }).catch((errorUsuario) => {
                setLoading(false);
                console.log("Mensaje de error en creación de usuario: ",errorUsuario.response.data.message);
 
             });
-
-
-          
 
       }).catch(error => {
         // Manejar el error
@@ -198,7 +204,23 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
     
   };
 
-  const handleConfirmContinue = () => {
+  const showIndicator = () => {
+    onChange("indicatorVisible", true);
+  };
+
+  const disableButton = () => {
+    onChange("disableButton", true);
+  }
+
+  const enableButton = () => {
+    onChange("disableButton", false);
+  }
+
+  const closeIndicator = () => {
+    onChange("indicatorVisible", false);
+  };
+
+  const handleConfirmContinue = async () => {
 
     console.log("PASSWORD");
     console.log(values.password, values.confirmPassword);
@@ -219,6 +241,29 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
     }
 
     //ToDo: NAVEGA A LA PANTALLA DE QUIZ Y ACTUALIZA USUARIO CON SU CONTRASEÑA
+    const bodyUpdatePass = {
+      password: values.password
+    };
+    console.log("URL ACTUALIZAR PASSWORD");
+    console.log(`/usuarios/${idUsuario}`);
+    showIndicator();
+    disableButton();
+    const actualizaPassword = await MuySaludableApi.put(`/usuarios/${idUsuario}`, bodyUpdatePass)
+    .then((responsePassword) => {
+      closeIndicator();
+      enableButton();
+      console.log("RESPUESTA PASSWORD CREADO");
+      console.log(JSON.stringify(responsePassword, null, 2));
+      
+      //showSuccessModal();
+      navigation.navigate("QuizScreen");
+
+    }).catch((errorSuscripcion) => {
+        closeIndicator();
+        enableButton();
+        console.log("Mensaje de error en suscripción: ",errorSuscripcion.response.data.message);
+
+    });
 
 
 
@@ -358,7 +403,8 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
     handleConfirmPassword,
     showSuccessModal,
     closeSuccessModal,
-    handleConfirmContinue
+    handleConfirmContinue,
+    showIndicator
   };
 };
 

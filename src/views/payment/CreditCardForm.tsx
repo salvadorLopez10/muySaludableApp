@@ -32,6 +32,8 @@ const CreditCardForm = ({
     modalSuccessVisible,
     password,
     confirmPassword,
+    indicatorVisible,
+    disableButton,
     onChange,
     handleCardNumberChange,
     handleExpiryDateChange,
@@ -95,6 +97,8 @@ const CreditCardForm = ({
         visible={modalSuccessVisible}
         password={password}
         confirmPassword={confirmPassword}
+        visibleIndicator={indicatorVisible}
+        disableButton={disableButton}
         handlePassword={(text: string) => handlePassword(text)}
         handleConfirmPassword={(text: string) => handleConfirmPassword(text)}
         onConfirmContinue={handleConfirmContinue}

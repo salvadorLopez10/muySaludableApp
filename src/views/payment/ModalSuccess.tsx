@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Modal, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import { View, Text, Modal, TouchableOpacity, StyleSheet, TextInput, ActivityIndicator } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import useViewModel from "./ViewModel";
 import TextField from "../../components/TextField";
@@ -8,12 +8,14 @@ interface PropsModalSuccess {
   visible: boolean;
   password: string;
   confirmPassword: string;
+  visibleIndicator: boolean;
+  disableButton: boolean;
   handlePassword: (value:string) => void,
   handleConfirmPassword: (value:string) => void,
   onConfirmContinue: () => void;
 }
 
-const ModalSuccess = ({ visible, password, confirmPassword, handlePassword,handleConfirmPassword, onConfirmContinue }: PropsModalSuccess) => {
+const ModalSuccess = ({ visible, password, confirmPassword, visibleIndicator, disableButton, handlePassword, handleConfirmPassword, onConfirmContinue }: PropsModalSuccess) => {
 
 
   return (
@@ -62,8 +64,9 @@ const ModalSuccess = ({ visible, password, confirmPassword, handlePassword,handl
               onChangeText={handleConfirmPassword}
             />
           </View>
-          <TouchableOpacity onPress={onConfirmContinue} style={styles.confirmButton}>
+          <TouchableOpacity onPress={onConfirmContinue} style={styles.confirmButton} disabled={disableButton}>
             <Text style={styles.closeButtonText}>Confirmar</Text>
+            {visibleIndicator && <ActivityIndicator size="large" color="#ffffff" />}
           </TouchableOpacity>
         </View>
       </View>
