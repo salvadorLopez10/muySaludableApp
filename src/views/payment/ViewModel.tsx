@@ -61,6 +61,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
   );
 
   const createTokenPayment = async () => {
+    setLoading(true);
     const response = await stripeClient.createToken({
       card: {
         number: values.cardNumber.replace(/\s/g, ""),
@@ -79,8 +80,6 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
         "SE MANDA EL PAGO STRIPE CON EL TOKEN OBTENIDO : " + response.id
       );
 
-      
-      setLoading(true);
       const body = {
         id: response.id,
         amount: parseInt(values.precio) * 100,
@@ -160,7 +159,9 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
       });
        
     } else {
-      console.log("NO SE MANDA EL PAGO");
+       setLoading(false);
+      console.log("NO SE MANDA EL PAGO NO SE OBTUVO TOKEN PARA PAGO");
+      showErrorModal();
     }
   };
 
