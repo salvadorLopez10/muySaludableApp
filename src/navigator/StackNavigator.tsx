@@ -22,7 +22,7 @@ interface Plan {
 export type RootStackParams = {
   ChoosePlanScreen: undefined,
   ResumeChoosenPlanScreen: {selectedPlan: Plan},
-  PaymentScreen: { email: string, precio: string, plan: string, idPlan: number },
+  PaymentScreen: { email: string, precio: string, plan: string, idPlan: number, fechaExpiracion: string },
   QuizScreen: undefined,
   ResumeAnswersScreen: undefined,
   MainMenuScreen: undefined

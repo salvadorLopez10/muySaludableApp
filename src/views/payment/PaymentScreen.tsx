@@ -24,27 +24,23 @@ interface Plan {
 
 export const PaymentScreen = (  ) => {
   const [loading, setLoading] = useState(false);
+  const [expirationDate, setExpirationDate] = useState("");
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const params = useRoute<RouteProp<RootStackParams,"PaymentScreen">>().params;
   console.log("LOS PARAMETROS");
   console.log(params);
-  const { email, precio, plan, idPlan} = params;
-
-  function onSubmit() {
-    console.log("form submitted");
-  }
-
-  const onNavigateQuiz = () => {
-
-    navigation.navigate("QuizScreen");
-  };
+  const { email, precio, plan, idPlan, fechaExpiracion} = params;
 
   function setLoadingState(isLoading: boolean) {
     setLoading(isLoading);
   }
 
-
+  useEffect(() => {
+    //console.log("ENTRA EFFECT EN SCREEN");
+    setExpirationDate(fechaExpiracion);
+  }, []);
+  
   function LoadingAnimation() {
     return (
       <View style={styles.indicatorWrapper}>
@@ -57,19 +53,6 @@ export const PaymentScreen = (  ) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        {/* <Text style={styles.title}>Payment details</Text>
-        <TextField
-          style={styles.textField}
-          value={value}
-          label="Cardholder name"
-          errorText={error}
-          onChangeText={(text) => setValue(text)}
-        />
-        <Button
-          title="ERROR"
-          onPress={() => setError('Este campo es requerido')}
-        /> */}
-        {/* <Button title="Siguiente" onPress={onNavigateQuiz}></Button> */}
         <View style={styles.tituloContainer}>
           <Text style={styles.title}>Detalles de Pago</Text>
 
@@ -79,10 +62,11 @@ export const PaymentScreen = (  ) => {
           </View>
         </View>
         <CreditCardForm
-          emailProp = {email}
-          precioProp = {precio}
-          planProp = {plan}
-          idPlanProp = {idPlan}
+          emailProp={email}
+          precioProp={precio}
+          planProp={plan}
+          idPlanProp={idPlan}
+          fechaExpiracionProp = {expirationDate}
           setLoading={setLoadingState}
         />
       </ScrollView>

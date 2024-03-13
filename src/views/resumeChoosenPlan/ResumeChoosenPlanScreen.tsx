@@ -40,6 +40,7 @@ export const ResumeChoosenPlanScreen = () => {
   const { email, onChange } = useViewModel();
   const [isModalVisibleEmail, setIsModalVisibleEmail] = useState(false);
   const [validity, setValidity] = useState("");
+  const [expirationDate, setExpirationDate] = useState("");
 
   const params = useRoute<RouteProp<RootStackParams,"ResumeChoosenPlanScreen">>().params;
   const { selectedPlan } = params;
@@ -107,11 +108,10 @@ export const ResumeChoosenPlanScreen = () => {
   };
 
   useEffect(() => {
-    //console.log("cambio plan")
     const vigencia = setValidityDate(selectedPlan);
-    setValidity(vigencia);
-
-    console.log(vigencia);
+    setValidity(vigencia[0]);
+    setExpirationDate(vigencia[1]);
+    //console.log(JSON.stringify(vigencia,null,2));
 
   }, [selectedPlan]);
 
@@ -119,14 +119,32 @@ export const ResumeChoosenPlanScreen = () => {
     const currentDate = new Date();
     const sumaMeses = parseInt(selectedPlan.duracion_meses);
 
-    // Suma 1 mes
     const validityDate = new Date();
     validityDate.setMonth(currentDate.getMonth() + sumaMeses);
     //console.log(validityDate)
 
+    //Se establece formato de fecha en un string como: 12 de mayo de 2024
     const formatDate: { year?: 'numeric'; month?: 'long'; day?: 'numeric' } = { year: 'numeric', month: 'long', day: 'numeric' };
 
-    return `${validityDate.toLocaleDateString(undefined, formatDate)}`;
+    //Se establece fecha con el siguiente formato:  2024-05-12 23:55:00
+    const formattedDate = formatExpirationDate(validityDate);
+
+    return [`${validityDate.toLocaleDateString(undefined, formatDate)}`, formattedDate];
+  }
+
+  const formatExpirationDate = ( validityDate: Date ) => {
+    
+    const year = validityDate.getFullYear().toString();
+    let month = (validityDate.getMonth() + 1).toString().padStart(2, '0');
+    let day = validityDate.getDate().toString().padStart(2, '0');
+    let hours = '23';
+    let minutes = '59';
+    let seconds = '00';
+
+    // Formatear la fecha
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    return formattedDate;
   }
 
   const onConfirmPlan = () => {
@@ -136,15 +154,15 @@ export const ResumeChoosenPlanScreen = () => {
       Alert.alert("Error", "Favor de ingresar el email");
       return;
     } else {
-        const validRegex =
-          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        if (!email.match(validRegex)) {
-          Alert.alert("Error", "Favor de ingresar un correo electrónico válido");
-          return;
-        }
+      const validRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      //const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if (!email.match(validRegex)) {
+        Alert.alert("Error", "Favor de ingresar un correo electrónico válido");
+        return;
+      }
     }
     //navigation.navigate("ResumeChoosenPlanScreen", {selectedPlan: selectedView});
-    navigation.navigate("PaymentScreen",{email: email, precio: selectedPlan.precio, plan: selectedPlan.nombre, idPlan: selectedPlan.id});
+    navigation.navigate("PaymentScreen",{email: email, precio: selectedPlan.precio, plan: selectedPlan.nombre, idPlan: selectedPlan.id, fechaExpiracion: expirationDate});
   }
   
 

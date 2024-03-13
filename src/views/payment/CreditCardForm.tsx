@@ -10,13 +10,15 @@ interface ComponentsCreditCard {
   precioProp: string;
   planProp: string;
   idPlanProp: number;
-  setLoading: ( val: boolean ) => void;
+  fechaExpiracionProp: string;
+  setLoading: (val: boolean) => void;
 }
 const CreditCardForm = ({
   emailProp,
   precioProp,
   planProp,
   idPlanProp,
+  fechaExpiracionProp,
   setLoading,
 }: ComponentsCreditCard) => {
   const {
@@ -44,7 +46,7 @@ const CreditCardForm = ({
     handleConfirmPassword,
     closeSuccessModal,
     handleConfirmContinue,
-  } = useViewModel({ emailProp, precioProp, planProp, idPlanProp, setLoading });
+  } = useViewModel({ emailProp, precioProp, planProp, idPlanProp, fechaExpiracionProp, setLoading });
 
   return (
     <View>

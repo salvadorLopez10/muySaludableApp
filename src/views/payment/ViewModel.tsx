@@ -13,10 +13,11 @@ interface ComponentsCreditCard {
   precioProp: string;
   planProp: string;
   idPlanProp: number;
+  fechaExpiracionProp: string;
   setLoading: (val: boolean) => void;
 }
 
-const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, setLoading }: ComponentsCreditCard) => {
+const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fechaExpiracionProp, setLoading }: ComponentsCreditCard) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [idUsuario, setIdUsuario] = useState(null);
   const [values, setValues] = useState({
@@ -32,6 +33,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
     email: emailProp,
     plan: planProp,
     idPlan: idPlanProp,
+    fechaExpiracion: fechaExpiracionProp,
     modalErrorVisible: false,
     modalSuccessVisible: false,
     password: "",
@@ -44,17 +46,17 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
   useEffect(() => {
     // console.log("EFFECT VALUES CREDITCARDFORM");
     // console.log("VALUES: " + JSON.stringify(values, null, 3));
-    // console.log("ID USUARIO: "+idUsuario)
   }, [values]);
-
+  
   //Se utiliza este useEffect para establecer los valores de email y precio  que vienen a través del padre CreditCardForm
   useEffect(() => {
     setValues((prevState) => ({
       ...prevState,
       precio: precioProp,
       email: emailProp,
+      fechaExpiracion: fechaExpiracionProp
     }));
-  }, [emailProp, precioProp]);
+  }, [emailProp, precioProp,fechaExpiracionProp]);
 
   const stripeClient = stripe(
     "pk_test_51Oq6azDzbFBwqYhA6mgKDESqSCCkb35K5f50LwY2MWh5QWYjm756QnFTrWt14E8lJNMttoxiYs7CXOYlmgjRdsOy00xHRmKGWg"
@@ -113,13 +115,13 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
                 id_usuario: responseUsuario.data.data.id,
                 id_plan_alimenticio: values.idPlan,
                 id_pago: respuesta.data.data.id,
-                fecha_expiracion: "2024-04-03 23:55:00",
+                fecha_expiracion: values.fechaExpiracion,
                 estado: "Activo",
               };
 
               //Establece idUsuario en el state
               setIdUsuario(responseUsuario.data.data.id);
-              console.log(JSON.stringify(bodySuscripcion, null, 2));
+              //console.log(JSON.stringify(bodySuscripcion, null, 2));
               //Una vez creado el usuario, se procede a generar el registro de suscripción
               const suscripción = MuySaludableApi.post("/suscripciones", bodySuscripcion)
                 .then((responseSuscripcion) => {
@@ -154,6 +156,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, se
               console.log("Mensaje de error: ", error.response.data.message);
           }
         } else {
+          showErrorModal();
           console.log("Error en la transacción SIN DATA:", error.message);
         }
       });
