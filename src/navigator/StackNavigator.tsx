@@ -7,6 +7,8 @@ import QuizScreen from "../views/quiz/QuizScreen";
 import { PaymentScreen } from "../views/payment/PaymentScreen";
 import ResumeAnswersScreen from "../views/resumeAnswers/ResumeAnswersScreen";
 import MainMenuScreen from "../views/mainMenu/MainMenuScreen";
+import { LoginScreen } from "../views/login/LoginScreen";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Plan {
   id: number;
@@ -20,6 +22,7 @@ interface Plan {
 }
 
 export type RootStackParams = {
+  LoginScreen: undefined,
   ChoosePlanScreen: undefined,
   ResumeChoosenPlanScreen: {selectedPlan: Plan},
   PaymentScreen: { email: string, precio: string, plan: string, idPlan: number, fechaExpiracion: string },
@@ -32,12 +35,19 @@ const Stack = createStackNavigator<RootStackParams>();
 
 
 export const StackNavigator = () => {
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: true,
       }}
     >
+      <Stack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+
       <Stack.Screen
         name="ChoosePlanScreen"
         component={ChoosePlanScreen}
@@ -46,7 +56,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="ResumeChoosenPlanScreen"
         component={ResumeChoosenPlanScreen}
-        options={{ headerTransparent: true, headerBackTitle: "", title: "" }}
+        options={{
+          headerTransparent: true,
+          headerBackTitle: "",
+          title: "",
+        }}
       />
       <Stack.Screen
         name="PaymentScreen"
@@ -63,7 +77,6 @@ export const StackNavigator = () => {
         component={ResumeAnswersScreen}
         options={{ headerShown: false }}
       />
-
       <Stack.Screen
         name="MainMenuScreen"
         component={MainMenuScreen}

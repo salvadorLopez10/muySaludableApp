@@ -6,9 +6,11 @@ import { LateralMenu } from './src/navigator/LateralMenu';
 import { BottomTabs } from './src/navigator/BottomTabs';
 import { useFonts } from "expo-font";
 import { Text, View } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [userPlanActive, setUserPlanActive] = useState("1");
+  const [authenticated, setAuthenticated] = useState(false);
   const [fontsLoaded, fontError] = useFonts({
     "Gotham-Ultra": require("./assets/fonts/Gotham-Ultra.otf"),
     "Gotham-Book": require("./assets/fonts/Gotham-Book.otf"),
@@ -24,12 +26,20 @@ export default function App() {
     </View>
   }
   
-  
+  const getInfoUser = async () => {
+    const user = await AsyncStorage.getItem("user");
 
+    if (user != null) {
+      setAuthenticated(true);
+    }
+    console.log(JSON.stringify(user, null, 3));
+  };
+
+  getInfoUser();
   return (
     <NavigationContainer>
       {
-        userPlanActive == "1" ? 
+       !authenticated ? 
           <StackNavigator /> : 
           <LateralMenu />
           // <BottomTabs />

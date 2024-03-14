@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, ScrollView } from "react-native";
+import useViewModel from "./ViewModel";
 import { View } from "react-native";
 
 const MainMenuScreen = () => {
 
   const [activeCircle, setActiveCircle] = useState("null");
+
+  const {handleLogout} =useViewModel();
 
   const handleCirclePress = (circleText:string) => {
     setActiveCircle(circleText);
@@ -21,7 +24,7 @@ const MainMenuScreen = () => {
         <View style={styles.buttonExportContainer}>
           <TouchableOpacity
             style={styles.exportButton}
-            // onPress={handleDeleteAccount}
+            onPress={handleLogout}
           >
             <Text style={{ color: "white", fontWeight: "bold" }}>
               EXPORTAR PLAN COMO PDF

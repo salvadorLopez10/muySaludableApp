@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: MyColors.backgroundButton,
         padding: 13,
-        borderRadius: 15
+        borderRadius: 15,
+        alignItems:"center"
     },
     textButton : {
         color: 'white',
