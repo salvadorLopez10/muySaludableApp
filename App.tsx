@@ -7,10 +7,13 @@ import { BottomTabs } from './src/navigator/BottomTabs';
 import { useFonts } from "expo-font";
 import { Text, View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthStore } from './src/store/auth/useAuthStore';
 
 export default function App() {
   const [userPlanActive, setUserPlanActive] = useState("1");
   const [authenticated, setAuthenticated] = useState(false);
+
+  const status = useAuthStore( state => state.status );
   const [fontsLoaded, fontError] = useFonts({
     "Gotham-Ultra": require("./assets/fonts/Gotham-Ultra.otf"),
     "Gotham-Book": require("./assets/fonts/Gotham-Book.otf"),
@@ -30,7 +33,10 @@ export default function App() {
     const user = await AsyncStorage.getItem("user");
 
     if (user != null) {
-      setAuthenticated(true);
+      //setAuthenticated(true);
+      console.log(JSON.parse(user));
+      useAuthStore.setState({ status: "authenticated" });
+      useAuthStore.setState({ user: JSON.parse(user) });
     }
     console.log(JSON.stringify(user, null, 3));
   };
@@ -39,10 +45,8 @@ export default function App() {
   return (
     <NavigationContainer>
       {
-       !authenticated ? 
-          <StackNavigator /> : 
-          <LateralMenu />
-          // <BottomTabs />
+        status !== "authenticated" ? <StackNavigator /> : <LateralMenu />
+        // <BottomTabs />
       }
       {/* <BottomTabs /> */}
       {/* <StackNavigator /> */}

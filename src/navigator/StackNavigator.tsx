@@ -9,6 +9,7 @@ import ResumeAnswersScreen from "../views/resumeAnswers/ResumeAnswersScreen";
 import MainMenuScreen from "../views/mainMenu/MainMenuScreen";
 import { LoginScreen } from "../views/login/LoginScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LateralMenu } from "./LateralMenu";
 
 interface Plan {
   id: number;
@@ -79,7 +80,7 @@ export const StackNavigator = () => {
       />
       <Stack.Screen
         name="MainMenuScreen"
-        component={MainMenuScreen}
+        component={LateralMenu}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

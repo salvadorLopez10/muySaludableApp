@@ -4,11 +4,13 @@ import { Alert } from "react-native";
 import { useNavigation, NavigationProp, CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RootStackParams } from "../../navigator/StackNavigator";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useAuthStore } from "../../store/auth/useAuthStore";
 
 
 const LoginViewModel = () => {
 
-    const navigation = useNavigation<NavigationProp<RootStackParams>>();
+    const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
     const [values, setValues] = useState({
         email: "",
         password: "",
@@ -31,6 +33,7 @@ const LoginViewModel = () => {
         }
 
         setLoading(true);
+        
         const requestLogin = {
             email, password
         };
@@ -44,12 +47,13 @@ const LoginViewModel = () => {
             if (responseLogin.data.status == "Ok") {
                 AsyncStorage.setItem( "user", JSON.stringify(responseLogin.data.data) );
 
-                navigation.dispatch(
-                    CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: "MainMenuScreen" }],
-                    })
-                );
+                useAuthStore.setState({ status: "authenticated" });
+                useAuthStore.setState({ user: responseLogin.data.data });
+                
+                // navigation.reset({
+                //   index: 0,
+                //   routes: [{ name: "MainMenuScreen" }],
+                // });
                 
             } else if (responseLogin.data.status == "Error") {
 

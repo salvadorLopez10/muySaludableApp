@@ -9,6 +9,9 @@ import { ManageAccountScreen } from "../views/manageAccount/ManageAccountScreen"
 import { PrivacyLegalScreen } from '../views/privacyLegal/PrivacyLegalScreen';
 import { BottomTabs } from "./BottomTabs";
 import Icon from "react-native-vector-icons/Ionicons";
+import { StackNavigator } from "./StackNavigator";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthStore } from "../store/auth/useAuthStore";
 
 const Drawer = createDrawerNavigator();
 
@@ -35,6 +38,11 @@ export const LateralMenu = () => {
         options={{ title: "Inicio" }}
         component={BottomTabs}
       />
+      {/* <Drawer.Screen
+        name="StackNavigator"
+        options={{ headerShown: false }}
+        component={StackNavigator}
+      />  */}
     </Drawer.Navigator>
   );
 }
@@ -100,7 +108,14 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
       {/* Opción para cerrar sesión */}
       <TouchableOpacity
         style={styles.logoutContainer}
-        onPress={() => console.log("Cerrar sesión")}
+        onPress={async() => {
+
+          await AsyncStorage.removeItem("user");
+
+          useAuthStore.setState({ status: "unauthenticated" });
+          useAuthStore.setState({ user: undefined });
+        
+        }}
       >
         <Icon name="exit-outline" size={25} color="black" />
         <Text style={styles.logoutText}>Cerrar sesión</Text>

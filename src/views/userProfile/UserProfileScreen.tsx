@@ -70,7 +70,7 @@ export const UserProfileScreen = () => {
             <View style={styles.footer}>
                 <View style={styles.buttonDeleteContainer}>
                     <TouchableOpacity style={styles.buttonDelete} onPress={ handleDeleteAccount }>
-                        <Text style={{ color: "white", fontWeight: "bold" }}>Eliminar cuenta</Text>
+                        <Text style={{ color: "red" }}>Eliminar cuenta</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -199,7 +199,9 @@ const styles = StyleSheet.create({
   buttonDelete: {
     padding: 10,
     width: "100%",
-    backgroundColor: "rgba(224, 26, 0, 0.8)",
+    borderWidth: 1,
+    borderColor: "rgba(224, 26, 0, 0.8)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     alignItems: "center",
     //marginTop: 10,
     borderRadius: 15,
