@@ -220,7 +220,7 @@ export const ResumeChoosenPlanScreen = () => {
               style={styles.modalInput}
               placeholder="Correo electrónico"
               value={email}
-              onChangeText={(text) => onChange("email", text)}
+              onChangeText={(text) => onChange("email", text.toLowerCase())}
             />
             <TouchableOpacity
               style={styles.modalButton}

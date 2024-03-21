@@ -210,7 +210,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             </View>
           </View>
           <TouchableOpacity onPress={goNext} style={styles.styleBeginButton}>
-            <Text style={{ color: "white" }}>Comenzar</Text>
+            <Text style={{ color: "white", fontFamily:"Gotham-Medium" }}>Comenzar</Text>
           </TouchableOpacity>
         </ImageBackground>
         <ImageBackground
@@ -314,9 +314,8 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           source={require("../../../assets/fondoSlides.jpg")}
           style={styles.slide}
         >
-          <Text style={styles.text}>
-            ¿Cuál es el nivel de actividad física que realizas?
-          </Text>
+          <Text style={styles.text}>¿Cuál es el nivel de</Text>
+          <Text style={styles.text}>actividad física que realizas?</Text>
           <SelectField
             data={activityLevelSelect}
             onItemSelected={handlePhysicalActivitySelect}
@@ -348,9 +347,8 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           source={require("../../../assets/fondoSlides.jpg")}
           style={styles.slide}
         >
-          <Text style={styles.text}>
-            Selecciona los alimentos a los que seas alérgico o no consumas
-          </Text>
+          <Text style={styles.text}>Selecciona los alimentos a los que</Text>
+          <Text style={styles.text}>seas alérgico o no consumas</Text>
 
           <MultiSelectField
             data={foodAvoidList}
@@ -384,7 +382,10 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           style={styles.slide}
         >
           <Text style={styles.text}>
-            ¿De qué parte de México nos contactas?
+            ¿De qué parte de México
+          </Text>
+          <Text style={styles.text}>
+            nos contactas?
           </Text>
           <SelectField
             data={statesMexicoOptionsSelect}
@@ -427,22 +428,27 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: "80%",
     backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    //padding: 5
   },
   textInputStyle: {
     color: "#2A261B",
     // fontWeight: "bold",
     padding: 10,
-    marginTop: 10,
-    //width: "80%",
+    //marginTop: 10,
+    width: "80%",
     textAlign: "center",
     fontFamily: "Gotham-Medium",
   },
   textInputStyleEdad: {
     //backgroundColor: "white",
     color: "#2A261B",
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Medium",
     padding: 10,
-    marginTop: 10,
+    //marginTop: 10,
     //28width: "30%",
     textAlign: "center",
   },

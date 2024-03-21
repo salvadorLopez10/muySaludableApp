@@ -64,7 +64,7 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
   return (
     <View style={styles.container}>
       <TouchableHighlight
-        // style={styles.inputContainer}
+        style={styles.inputContainer}
         onPress={handleModalShow}
       >
         <View style={styles.selectContainer}>
@@ -109,6 +109,7 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
 
             <FlatList
               data={filteredData}
+              style={styles.flatListStyle}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableHighlight
@@ -138,7 +139,8 @@ const styles = StyleSheet.create({
   container: {
     //flex: 1,
     justifyContent: "center",
-    padding: 16,
+    //padding: 16,
+    width: "80%",
   },
   modalContainer: {
     flex: 1,
@@ -152,7 +154,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 10,
     alignItems: "center",
-    height: "25%",
+    //height: "40%",
+    flexBasis: "auto", //Ajusta la altura con base a la altura de su contenido
+    maxHeight: "40%",
   },
   closeIcon: {
     //position: "absolute",
@@ -162,15 +166,20 @@ const styles = StyleSheet.create({
   },
   inputTextStyle: {
     color: "#2A261B",
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Medium",
     padding: 10,
-    marginTop: 10,
+    //marginTop: 10,
     textAlign: "center",
     backgroundColor: "white",
+    //justifyContent: "center",
+    width: "80%",
+  },
+  flatListStyle: {
     width: "80%",
   },
   contenedorItem: {
-    width: 200,
+    //width: '90%',
   },
   listItem: {
     paddingVertical: 10,
@@ -178,7 +187,8 @@ const styles = StyleSheet.create({
   },
   textItem: {
     color: "#2A261B",
-    fontWeight: "bold"
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Medium",
   },
   separator: {
     height: 1,
@@ -188,26 +198,30 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "90%",
-    backgroundColor: "white",
+    // flexDirection: "row",
+    // alignItems: "center",
+    // width: "90%",
+    // backgroundColor: "white",
+    marginTop: 10,
+    marginBottom: 10,
   },
   selectContainer: {
     flexDirection: "row",
+    //padding: 10,
+    //width: "90%",
     alignItems: "center",
     backgroundColor: "white", // Fondo blanco
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 15,
-    paddingHorizontal: 10,
+    //paddingHorizontal: 10,
     justifyContent: "center",
   },
   inputContainerSearch: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "white", // Fondo blanco
+    //backgroundColor: "blue", // Fondo blanco
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,

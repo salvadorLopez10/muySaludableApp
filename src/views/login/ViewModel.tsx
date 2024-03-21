@@ -57,7 +57,7 @@ const LoginViewModel = () => {
                 
             } else if (responseLogin.data.status == "Error") {
 
-                //La credecnciales son incorrectas
+                //La credenciales son incorrectas
                 Alert.alert("Error", responseLogin.data.msg);
             }
         }).catch((error) => {

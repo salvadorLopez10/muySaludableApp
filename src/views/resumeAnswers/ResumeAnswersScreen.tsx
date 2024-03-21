@@ -3,6 +3,7 @@ import { useRoute, RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from '@react-navigation/stack';
 import { StyleSheet, View, Image, ImageBackground, ScrollView, Text, TouchableOpacity } from 'react-native'
 import { activityLevelSelect } from '../quiz/DataDropdown';
+import { Alert } from 'react-native';
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -27,12 +28,14 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         navigation.goBack()
     }
     const handleConfirm = () => {
-
-        console.log("confirmar")
-        //ToDo: Aquí se calcula TASA METABÓLICA BASAL y Se genera el PLAN ALIMENTICIO
-        //Se notifica que el plan está listo a través de un push notification
-        navigation.navigate("MainMenuScreen");
-
+      Alert.alert(
+        "Información",
+        "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+      );
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "LoginScreen" }],
+      });
     };
     
   return (
@@ -57,7 +60,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
               1. {route.params!.name as any}
             </Text>
             <Text style={styles.textAnswer}>2. {route.params!.age} años</Text>
-            <Text style={styles.textAnswer}>3. {route.params!.height} cm</Text>
+            <Text style={styles.textAnswer}>3. {(route.params!.height)/100} m</Text>
             <Text style={styles.textAnswer}>4. {route.params!.weight} kg</Text>
             <Text style={styles.textAnswer}>5. {route.params!.gender}</Text>
             <Text style={styles.textAnswer}>6. {labelLevelActivity}</Text>
@@ -129,7 +132,7 @@ const styles = StyleSheet.create({
   containerAnswer: {
     //backgroundColor: "blue",
     width: "90%",
-    height: "70%",
+    height: "75%",
     alignItems: "center",
     //top:"5%"
   },

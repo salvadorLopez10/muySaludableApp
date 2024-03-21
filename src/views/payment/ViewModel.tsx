@@ -21,6 +21,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [idUsuario, setIdUsuario] = useState(null);
   const [values, setValues] = useState({
+    discountCode: "",
     cardHolder: "",
     errorCardHolder: "",
     cardNumber: "",

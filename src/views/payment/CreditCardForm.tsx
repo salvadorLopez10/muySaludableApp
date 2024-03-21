@@ -22,6 +22,7 @@ const CreditCardForm = ({
   setLoading,
 }: ComponentsCreditCard) => {
   const {
+    discountCode,
     cardHolder,
     errorCardHolder,
     cardNumber,
@@ -52,11 +53,19 @@ const CreditCardForm = ({
     <View>
       <TextField
         style={styles.textField}
+        label="Código de descuento"
+        // errorText={errorCardHolder}
+        value={discountCode}
+        // onChangeText={(text) => setCardHolder(text)}
+        onChangeText={(text) => onChange("discountCode", text)}
+      />
+      <TextField
+        style={styles.textField}
         label="Nombre del Titular"
         errorText={errorCardHolder}
         value={cardHolder}
         // onChangeText={(text) => setCardHolder(text)}
-        onChangeText={(text) => onChange("cardHolder", text)}
+        onChangeText={(text) => onChange("cardHolder", text.toUpperCase())}
       />
       <TextField
         style={styles.textField}
