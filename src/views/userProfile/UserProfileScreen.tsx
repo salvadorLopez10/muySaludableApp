@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
     //top: "10%",
   },
   logoImage: {
-    width: 100,
-    height: 100,
+    // width: 100,
+    //height: 100,
   },
   generalInfoContainer: {
     width: "100%",
@@ -102,13 +102,15 @@ const styles = StyleSheet.create({
   generalInfoTitleText: {
     fontSize: 20,
     color: "#326807",
-    fontWeight: "bold",
+    //fontWeight: "bold",
     marginVertical: 5,
+    fontFamily: "Gotham-Ultra",
   },
   generalInfoSubtitleText: {
     fontSize: 16,
     color: "#326807",
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
   },
   infoUserContainer: {
     flexDirection: "row",
@@ -138,9 +140,10 @@ const styles = StyleSheet.create({
   },
   dataUser: {
     fontSize: 16,
-    fontWeight: "bold",
+    //fontWeight: "bold",
     marginVertical: 5,
     color: "#ffff",
+    fontFamily: "Gotham-Medium",
   },
   statusSuscriptionContainer: {
     width: "100%",
@@ -150,15 +153,17 @@ const styles = StyleSheet.create({
   suscriptionText: {
     fontSize: 18,
     color: "#326807",
-    fontWeight: "bold",
+    //fontWeight: "bold",
     marginVertical: 3,
+    fontFamily: "Gotham-Ultra",
   },
   suscriptionPlan: {
     fontSize: 18,
     color: "#326807",
-    fontWeight: "bold",
+    //fontWeight: "bold",
     marginVertical: 3,
     textDecorationLine: "underline",
+    fontFamily: "Gotham-Ultra",
   },
   dataUserContainer: {
     width: "100%",
@@ -184,9 +189,10 @@ const styles = StyleSheet.create({
   },
   datosInfoText: {
     fontSize: 16,
-    fontWeight: "bold",
+    //fontWeight: "bold",
     marginVertical: 5,
     color: "#ffff",
+    fontFamily: "Gotham-Medium",
   },
   footer: {
     width: "100%",

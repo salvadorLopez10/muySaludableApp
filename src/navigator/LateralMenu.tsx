@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   avatar: {
-    width: 100,
-    height: 100,
+    //width: 50,
+    //height: 100,
   },
   divider: {
     borderBottomWidth: 1,
@@ -162,7 +162,8 @@ const styles = StyleSheet.create({
   menuTexto: {
     marginLeft: 20,
     fontSize: 16,
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Medium"
   },
   logoutContainer: {
     paddingHorizontal: 20,
@@ -175,6 +176,7 @@ const styles = StyleSheet.create({
   logoutText: {
     marginLeft: 20,
     fontSize: 16,
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Medium"
   },
 });
