@@ -90,10 +90,19 @@ const QuizScreen = ({navigation}: Props) => {
   };
 
 function transformarArreglo( original: Alimentos[]): Food[] {
-  return original.map((alimento) => ({
+  // return original.map((alimento) => ({
+  //   label: alimento.nombre,
+  //   id: alimento.nombre,
+  // }));
+  const foodList: Food[] = original.map((alimento) => ({
     label: alimento.nombre,
     id: alimento.nombre,
   }));
+
+  // Agregar el elemento adicional
+  //foodList.unshift({ label: "Sin alergia", id: "Sin alergia" });
+
+  return foodList;
 }
   const [respuestas, setRespuestas] = useState(Array(10).fill(""));
 
@@ -135,9 +144,9 @@ function transformarArreglo( original: Alimentos[]): Food[] {
     if (dietType.trim() == "") {
       textFieldsEmpty += "Tipo de dieta\n";
     }
-    if (foodAvoidListFiltered.length == 0) {
-      textFieldsEmpty += "Alimentos que no consumas\n";
-    }
+    // if (foodAvoidListFiltered.length == 0) {
+    //   textFieldsEmpty += "Alimentos que no consumas\n";
+    // }
     if (goal.trim() == "") {
       textFieldsEmpty += "Objetivo\n";
     }
@@ -349,6 +358,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
         >
           <Text style={styles.text}>Selecciona los alimentos a los que</Text>
           <Text style={styles.text}>seas alérgico o no consumas</Text>
+          <Text style={styles.text}>(puedes omitir este paso)</Text>
 
           <MultiSelectField
             data={foodAvoidList}

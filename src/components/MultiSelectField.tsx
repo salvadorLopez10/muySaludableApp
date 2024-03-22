@@ -119,6 +119,7 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
 
             <FlatList
               data={filteredData}
+              style={styles.flatListStyle}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableHighlight
@@ -187,16 +188,29 @@ const styles = StyleSheet.create({
     right: 20,
   },
   inputTextStyle: {
+    // color: "#2A261B",
+    // fontWeight: "bold",
+    // padding: 10,
+    // marginTop: 10,
+    // textAlign: "center",
+    // backgroundColor: "white",
+    // width: "80%",
     color: "#2A261B",
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Medium",
     padding: 10,
-    marginTop: 10,
+    //marginTop: 10,
     textAlign: "center",
     backgroundColor: "white",
+    //justifyContent: "center",
+    width: "80%",
+  },
+  flatListStyle: {
     width: "80%",
   },
   contenedorItem: {
-    width: 200,
+    //width: 200,
+    width:'90%',
     flexDirection: "row",
   },
   listItem: {
@@ -217,14 +231,24 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   selectContainer: {
+    // flexDirection: "row",
+    // alignItems: "center",
+    // backgroundColor: "white", // Fondo blanco
+    // borderWidth: 1,
+    // borderColor: "#ccc",
+    // borderRadius: 15,
+    // paddingHorizontal: 10,
+    // justifyContent: "space-between",
     flexDirection: "row",
+    //padding: 10,
+    //width: "90%",
     alignItems: "center",
     backgroundColor: "white", // Fondo blanco
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 15,
-    paddingHorizontal: 10,
-    justifyContent: "space-between",
+    //paddingHorizontal: 10,
+    justifyContent: "center",
   },
   inputContainerSearch: {
     flexDirection: "row",
@@ -241,12 +265,13 @@ const styles = StyleSheet.create({
   listItemContainer: {
     flexDirection: "row", // Muestra los elementos en la misma fila
     alignItems: "center",
-    paddingVertical: 5,
+    //paddingVertical: 5,
   },
   listItemText: {
-    marginLeft: 5,
+    //marginLeft: 5,
     color: "#2A261B",
     fontWeight: "bold",
+    fontFamily: "Gotham-Medium",
   },
   styleButtonConfirm: {
     padding: 10,

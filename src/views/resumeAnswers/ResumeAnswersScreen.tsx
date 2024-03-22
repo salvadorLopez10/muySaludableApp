@@ -60,18 +60,22 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
               1. {route.params!.name as any}
             </Text>
             <Text style={styles.textAnswer}>2. {route.params!.age} años</Text>
-            <Text style={styles.textAnswer}>3. {(route.params!.height)/100} m</Text>
+            <Text style={styles.textAnswer}>
+              3. {route.params!.height / 100} m
+            </Text>
             <Text style={styles.textAnswer}>4. {route.params!.weight} kg</Text>
             <Text style={styles.textAnswer}>5. {route.params!.gender}</Text>
             <Text style={styles.textAnswer}>6. {labelLevelActivity}</Text>
             <Text style={styles.textAnswer}>7. {route.params!.dietType}</Text>
             <Text style={styles.textAnswer}>
               8.{" "}
-              {route
-                .params!.foodAvoidListFiltered.map(
-                  (alimento: foodListItem) => alimento.label
-                )
-                .join(", ")}
+              {route.params!.foodAvoidListFiltered.length > 0
+                ? "Sin alergia y/o consumo cualquier alimento"
+                : route
+                    .params!.foodAvoidListFiltered.map(
+                      (alimento: foodListItem) => alimento.label
+                    )
+                    .join(", ")}
             </Text>
             <Text style={styles.textAnswer}>9. {route.params!.goal}</Text>
             <Text style={styles.textAnswer}>
@@ -81,11 +85,17 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         </View>
 
         <View style={styles.containerButtons}>
-          <TouchableOpacity style={styles.correctButton} onPress={ handleCorrect }>
+          <TouchableOpacity
+            style={styles.correctButton}
+            onPress={handleCorrect}
+          >
             <Text style={{ color: "white", fontWeight: "bold" }}>Corregir</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.confirmButton} onPress={ handleConfirm }>
+          <TouchableOpacity
+            style={styles.confirmButton}
+            onPress={handleConfirm}
+          >
             <Text style={{ color: "white", fontWeight: "bold" }}>
               Confirmar
             </Text>
@@ -120,7 +130,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     //width: "80%",
     alignItems: "center",
-    top: "7%",
+    top: "10%",
   },
   textTitle: {
     color: "#55851f",
@@ -134,7 +144,7 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "75%",
     alignItems: "center",
-    //top:"5%"
+    top:"3%"
   },
   textAnswer: {
     //fontWeight: "bold",
