@@ -24,6 +24,7 @@ interface Plan {
 
 export const PaymentScreen = (  ) => {
   const [loading, setLoading] = useState(false);
+  
   const [expirationDate, setExpirationDate] = useState("");
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
@@ -31,9 +32,14 @@ export const PaymentScreen = (  ) => {
   console.log("LOS PARAMETROS");
   console.log(params);
   const { email, precio, plan, idPlan, fechaExpiracion} = params;
+  const [currentPrice, setCurrentPrice] = useState(precio);
 
   function setLoadingState(isLoading: boolean) {
     setLoading(isLoading);
+  }
+
+  function changePriceDiscount( valPrice: string ) {
+    setCurrentPrice(valPrice);
   }
 
   useEffect(() => {
@@ -45,7 +51,7 @@ export const PaymentScreen = (  ) => {
     return (
       <View style={styles.indicatorWrapper}>
         <ActivityIndicator size="large" color="#ffffff" />
-        <Text style={styles.indicatorText}>Realizando pago...</Text>
+        <Text style={styles.indicatorText}>Cargando...</Text>
       </View>
     );
   }
@@ -58,7 +64,9 @@ export const PaymentScreen = (  ) => {
 
           <View style={styles.containerDataUser}>
             <Text style={styles.userDetail}>Email: {email}</Text>
-            <Text style={styles.userDetail}>Total a pagar: ${precio}</Text>
+            <Text style={styles.userDetail}>
+              Total a pagar: ${currentPrice}
+            </Text>
           </View>
         </View>
         <CreditCardForm
@@ -66,8 +74,9 @@ export const PaymentScreen = (  ) => {
           precioProp={precio}
           planProp={plan}
           idPlanProp={idPlan}
-          fechaExpiracionProp = {expirationDate}
+          fechaExpiracionProp={expirationDate}
           setLoading={setLoadingState}
+          setCurrentPrice={changePriceDiscount}
         />
       </ScrollView>
       {loading && <LoadingAnimation />}

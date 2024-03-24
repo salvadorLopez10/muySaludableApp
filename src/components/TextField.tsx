@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     color: "#55851F",
     borderRadius: 4,
     fontFamily: "Gotham-Medium",
-    fontSize: 16,
+    fontSize: 14,
   },
   labelContainer: {
     position: "absolute",

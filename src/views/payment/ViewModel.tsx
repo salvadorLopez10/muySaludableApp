@@ -15,9 +15,10 @@ interface ComponentsCreditCard {
   idPlanProp: number;
   fechaExpiracionProp: string;
   setLoading: (val: boolean) => void;
+  setCurrentPrice: (val: string) => void;
 }
 
-const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fechaExpiracionProp, setLoading }: ComponentsCreditCard) => {
+const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fechaExpiracionProp, setLoading, setCurrentPrice }: ComponentsCreditCard) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [idUsuario, setIdUsuario] = useState(null);
   const [values, setValues] = useState({
@@ -85,7 +86,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
 
       const body = {
         id: response.id,
-        amount: parseInt(values.precio) * 100,
+        amount: parseInt(values.precio) * 100, //Se multiplica * 100 ya que el monto se envía en centavos
         plan: values.plan
       };
 
@@ -289,6 +290,46 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
 
   }
 
+  const handleValidateDiscount = async ( discount: string ) => {
+    
+    if( discount.trim().length == 0 ){
+      Alert.alert("Error", "Ingresa un código de descuento");
+      return;
+    }
+
+    //Se envía petición para consultar código de descuento
+    setLoading(true);
+    const resp = await MuySaludableApi.get(
+      `/codigosDescuento/getCodigoName/${discount}`
+    ).then((response) => {
+      setLoading(false);
+      Alert.alert("Éxito", "El código de descuento se ha aplicado correctamente");
+      const percent = response.data.data.valor / 100;
+      const discount = 1.0 - percent;
+
+      const finalPrice = (Number(values.precio) * discount).toFixed(2);
+      
+      setCurrentPrice(finalPrice.toString());
+      onChange("precio",finalPrice);
+      //console.log(JSON.stringify(response,null,3))
+
+    }).catch((errorDiscount) => {
+        setLoading(false);
+        console.log("Mensaje de error para consulta de código Postal");
+       // console.log(JSON.stringify(errorDiscount.response, null, 3));
+
+        if( errorDiscount.response.data ){
+          //Mensaje de respuesta de endpoint
+          if( errorDiscount.response.status == 404 ){
+
+            console.log(errorDiscount.response.data.msg)
+          }
+        }
+    });
+
+
+  }
+
   const handleCardNumberChange = (text: string): void => {
     // Eliminar cualquier caracter no numérico
     let formattedText: string = text.replace(/\D/g, "");
@@ -413,6 +454,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
   return {
     ...values,
     onChange,
+    handleValidateDiscount,
     handleCardNumberChange,
     handleExpiryDateChange,
     handleCvvChange,

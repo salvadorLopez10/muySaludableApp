@@ -12,6 +12,7 @@ interface ComponentsCreditCard {
   idPlanProp: number;
   fechaExpiracionProp: string;
   setLoading: (val: boolean) => void;
+  setCurrentPrice: (val: string) => void;
 }
 const CreditCardForm = ({
   emailProp,
@@ -20,6 +21,7 @@ const CreditCardForm = ({
   idPlanProp,
   fechaExpiracionProp,
   setLoading,
+  setCurrentPrice,
 }: ComponentsCreditCard) => {
   const {
     discountCode,
@@ -38,6 +40,7 @@ const CreditCardForm = ({
     indicatorVisible,
     disableButton,
     onChange,
+    handleValidateDiscount,
     handleCardNumberChange,
     handleExpiryDateChange,
     handleCvvChange,
@@ -47,18 +50,37 @@ const CreditCardForm = ({
     handleConfirmPassword,
     closeSuccessModal,
     handleConfirmContinue,
-  } = useViewModel({ emailProp, precioProp, planProp, idPlanProp, fechaExpiracionProp, setLoading });
+  } = useViewModel({
+    emailProp,
+    precioProp,
+    planProp,
+    idPlanProp,
+    fechaExpiracionProp,
+    setLoading,
+    setCurrentPrice
+  });
 
   return (
     <View>
-      <TextField
-        style={styles.textField}
-        label="Código de descuento"
-        // errorText={errorCardHolder}
-        value={discountCode}
-        // onChangeText={(text) => setCardHolder(text)}
-        onChangeText={(text) => onChange("discountCode", text)}
-      />
+      <View style={styles.rowDiscount}>
+        <TextField
+          style={styles.textFieldDiscount}
+          label="Código de descuento"
+          // errorText={errorCardHolder}
+          value={discountCode}
+          // onChangeText={(text) => setCardHolder(text)}
+          onChangeText={(text) => onChange("discountCode", text)}
+        />
+
+        <TouchableOpacity
+          onPress={() => handleValidateDiscount(discountCode)}
+          style={styles.buttonDiscount}
+        >
+          <Text style={{ color: "#ffffff", fontFamily: "Gotham-Medium" }}>
+            Validar descuento
+          </Text>
+        </TouchableOpacity>
+      </View>
       <TextField
         style={styles.textField}
         label="Nombre del Titular"
@@ -118,10 +140,30 @@ const CreditCardForm = ({
   );
 };
 const styles = StyleSheet.create({
+  rowDiscount: {
+    flexDirection: "row",
+  },
+  textFieldDiscount: {
+    flex: 1,
+    marginTop: "10%",
+    marginRight: 24,
+    fontFamily: "Gotham-Medium",
+  },
+  buttonDiscount: {
+    flex: 1,
+    backgroundColor: "#FAA029",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#FAA029",
+    borderRadius: 15,
+    marginTop: "10%",
+    justifyContent: "center",
+    fontFamily: "Gotham-Medium",
+  },
   row: {
     flex: 1,
     flexDirection: "row",
-    marginBottom: 36,
+    marginBottom: "10%",
   },
   textField: {
     flex: 1,
