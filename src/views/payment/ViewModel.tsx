@@ -42,7 +42,8 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
     confirmPassword: "",
     idPago: "",
     indicatorVisible: false,
-    disableButton: false
+    disableButton: false,
+    inputEditable: true,
   });
 
   useEffect(() => {
@@ -170,6 +171,61 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
     }
   };
 
+  const createUserSuscription = async () =>{
+    //Inserta usuario con su suscripción
+    const bodyUser = {
+      email: values.email,
+    };
+    console.log("BODY USER");
+    console.log(JSON.stringify(bodyUser, null, 2));
+
+    const usuario = MuySaludableApi.post("/usuarios", bodyUser)
+      .then((responseUsuario) => {
+        console.log("RESPUESTA CREACIÓN DE USUARIO");
+        console.log(JSON.stringify(responseUsuario, null, 2));
+        //Una vez creado el usuario, se procede a generar el registro de suscripción
+        const bodySuscripcion = {
+          id_usuario: responseUsuario.data.data.id,
+          id_plan_alimenticio: values.idPlan,
+          id_pago: "FREE-DISCOUNT-CODE-"+values.discountCode,
+          fecha_expiracion: values.fechaExpiracion,
+          estado: "Activo",
+        };
+
+        //Establece idUsuario en el state
+        setIdUsuario(responseUsuario.data.data.id);
+        //console.log(JSON.stringify(bodySuscripcion, null, 2));
+        //Una vez creado el usuario, se procede a generar el registro de suscripción
+        const suscripción = MuySaludableApi.post(
+          "/suscripciones",
+          bodySuscripcion
+        )
+          .then((responseSuscripcion) => {
+            console.log("RESPUESTA SUSCRIPCIÓN");
+            console.log(JSON.stringify(responseSuscripcion, null, 2));
+
+            setLoading(false);
+
+            //Muestra ventana modal para establecer contraseña
+            showSuccessModal();
+          })
+          .catch((errorSuscripcion) => {
+            setLoading(false);
+            console.log(
+              "Mensaje de error en suscripción: ",
+              errorSuscripcion.response.data.message
+            );
+          });
+      })
+      .catch((errorUsuario) => {
+        setLoading(false);
+        console.log(
+          "Mensaje de error en creación de usuario: ",
+          errorUsuario.response.data.message
+        );
+      });
+  }
+
   const onChange = (property: string, value: any) => {
     //Cada que se detecte que se tiene valor en la variable, se limpia el error
     let errorPropertyName =
@@ -180,6 +236,15 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
       setValues({ ...values, [property]: value });
     }
   };
+
+  const setInputEditable = (value: String) => {
+    //En caso de que el precio final con descuento sea = 0, se deshabilitan campos para ingresar datos de tarjeta
+    if( Number(value) == 0 ){
+      onChange("inputEditable",false);
+    }else{
+      onChange("inputEditable", true);
+    }
+  }
 
   const showErrorModal = () => {
     onChange("modalErrorVisible", true);
@@ -304,13 +369,17 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
     ).then((response) => {
       setLoading(false);
       Alert.alert("Éxito", "El código de descuento se ha aplicado correctamente");
+      //Se calcula el porcentaje de descuento del cupón
       const percent = response.data.data.valor / 100;
       const discount = 1.0 - percent;
 
       const finalPrice = (Number(values.precio) * discount).toFixed(2);
       
       setCurrentPrice(finalPrice.toString());
+      //Se cambia el estado de precio para poder enviar el valor correcto en la petición de pago a stripe
       onChange("precio",finalPrice);
+
+      setInputEditable(finalPrice);
       //console.log(JSON.stringify(response,null,3))
 
     }).catch((errorDiscount) => {
@@ -322,6 +391,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
           //Mensaje de respuesta de endpoint
           if( errorDiscount.response.status == 404 ){
 
+            Alert.alert("Error", errorDiscount.response.data.msg);
             console.log(errorDiscount.response.data.msg)
           }
         }
@@ -371,89 +441,98 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
     onChange("cvv", text);
   };
 
-  
-
   function onSubmitPayment() {
+    console.log("onsubmit payment", values.inputEditable)
+    //Si el precio se establece como 0 pesos, no es necesario agregar datos de tarjeta
+    if ( !values.inputEditable ) {
+      console.log("PROCEDEMOS A CREAR AL USUARIO Y LA SUSCRIPCIÓN")
+      //En caso de que el descuento sea de 100% se procede directamente a crear el usuario y la suscripcion sin necesidad de crear el pago
+      createUserSuscription();
 
-    // Validar cardHolder
-    if (values.cardHolder.trim().length === 0) {
-      onChange("errorCardHolder", "Este campo es requerido");
-      return;
     } else {
-      onChange("errorCardHolder", "");
-    }
-
-    // Validar cardNumber
-    if (values.cardNumber.trim().length === 0) {
-      onChange("errorCardHolder", "");
-      onChange("errorCardNumber", "Este campo es requerido");
-      return;
-    } else if (values.cardNumber.replace(/\D/g, "").length !== 16 && values.cardNumber.replace(/\D/g, "").length !== 15) {
-      onChange("errorCardNumber", "Favor de establecer al menos 15 dígitos");
-      return;
-    } else {
-      onChange("errorCardNumber", "");
-    }
-
-    if (values.expiration.trim().length === 0) {
-      onChange("errorExpiration", "Este campo es requerido");
-      return;
-    } else {
-      const formattedExpiryDate = values.expiration.replace(/\s/g, ""); // Eliminar espacios en blanco
-      const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
-
-      if (!regex.test(formattedExpiryDate)) {
-        onChange(
-          "errorExpiration",
-          "El formato de la fecha de vencimiento debe ser MM/YY"
-        );
+      // Validar cardHolder
+      if (values.cardHolder.trim().length === 0) {
+        onChange("errorCardHolder", "Este campo es requerido");
         return;
       } else {
-        const [month, year] = formattedExpiryDate.split("/");
-        const currentYear = new Date().getFullYear() % 100;
-        const currentMonth = new Date().getMonth() + 1;
-
-        if (
-          parseInt(year, 10) < currentYear ||
-          (parseInt(year, 10) === currentYear &&
-            parseInt(month, 10) < currentMonth)
-        ) {
-          onChange("errorExpiration", "La tarjeta está vencida");
+        onChange("errorCardHolder", "");
+      }
+  
+      // Validar cardNumber
+      if (values.cardNumber.trim().length === 0) {
+        onChange("errorCardHolder", "");
+        onChange("errorCardNumber", "Este campo es requerido");
+        return;
+      } else if (
+        values.cardNumber.replace(/\D/g, "").length !== 16 &&
+        values.cardNumber.replace(/\D/g, "").length !== 15
+      ) {
+        onChange("errorCardNumber", "Favor de establecer al menos 15 dígitos");
+        return;
+      } else {
+        onChange("errorCardNumber", "");
+      }
+  
+      if (values.expiration.trim().length === 0) {
+        onChange("errorExpiration", "Este campo es requerido");
+        return;
+      } else {
+        const formattedExpiryDate = values.expiration.replace(/\s/g, ""); // Eliminar espacios en blanco
+        const regex = /^(0[1-9]|1[0-2])\/?([0-9]{2})$/;
+  
+        if (!regex.test(formattedExpiryDate)) {
+          onChange(
+            "errorExpiration",
+            "El formato de la fecha de vencimiento debe ser MM/YY"
+          );
           return;
         } else {
-          onChange("errorExpiration", "");
+          const [month, year] = formattedExpiryDate.split("/");
+          const currentYear = new Date().getFullYear() % 100;
+          const currentMonth = new Date().getMonth() + 1;
+  
+          if (
+            parseInt(year, 10) < currentYear ||
+            (parseInt(year, 10) === currentYear &&
+              parseInt(month, 10) < currentMonth)
+          ) {
+            onChange("errorExpiration", "La tarjeta está vencida");
+            return;
+          } else {
+            onChange("errorExpiration", "");
+          }
         }
       }
-    }
-
-
-    if (values.cvv.trim().length === 0) {
-      //setErrorCvv("Este campo es requerido");
-      onChange("errorCvv", "Este campo es requerido");
-      return;
-    } else if (values.cvv.trim().length < 3 && values.cvv.trim().length > 4) {
-      onChange("errorCvv", "CVC no válido");
-    } else {
-      //setErrorCvv("");
-      onChange("errorCvv", "");
-    }
-
-    console.log("PROCEDEMOS A GENERAR EL PAGO");
-    console.log("ERRORES", JSON.stringify(values));
-    if (
-      values.cardNumber !== "" &&
-      values.expiration !== "" &&
-      values.cvv !== ""
-    ) {
-      createTokenPayment();
-    } else {
-      console.log("DATOS INCOMPLETOS, AÚN NO SE MANDA EL PAGO");
+  
+      if (values.cvv.trim().length === 0) {
+        //setErrorCvv("Este campo es requerido");
+        onChange("errorCvv", "Este campo es requerido");
+        return;
+      } else if (values.cvv.trim().length < 3 && values.cvv.trim().length > 4) {
+        onChange("errorCvv", "CVC no válido");
+      } else {
+        //setErrorCvv("");
+        onChange("errorCvv", "");
+      }
+  
+      console.log("PROCEDEMOS A GENERAR EL PAGO");
+      console.log("ERRORES", JSON.stringify(values));
+      if (
+        values.cardNumber !== "" &&
+        values.expiration !== "" &&
+        values.cvv !== ""
+      ) {
+        createTokenPayment();
+      } else {
+        console.log("DATOS INCOMPLETOS, AÚN NO SE MANDA EL PAGO");
+      }
     }
   }
 
   return {
     ...values,
     onChange,
+    setInputEditable,
     handleValidateDiscount,
     handleCardNumberChange,
     handleExpiryDateChange,

@@ -23,7 +23,7 @@ const ModalSuccess = ({ visible, password, confirmPassword, visibleIndicator, di
       animationType="slide"
       transparent={true}
       visible={visible}
-    //   onRequestClose={onClose}
+    //   onRequestClose={onClose} 
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
@@ -32,7 +32,7 @@ const ModalSuccess = ({ visible, password, confirmPassword, visibleIndicator, di
           </View>
           <Text style={styles.modalTextTitle}>Éxito</Text>
           <Text style={styles.modalText}>
-            El pago se ha registrado correctamente
+            Registro generado correctamente
           </Text>
           <View>
             <Text style={styles.modalTextDescription}>

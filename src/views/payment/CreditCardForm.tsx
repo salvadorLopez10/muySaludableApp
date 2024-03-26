@@ -39,7 +39,9 @@ const CreditCardForm = ({
     confirmPassword,
     indicatorVisible,
     disableButton,
+    inputEditable,
     onChange,
+    setInputEditable,
     handleValidateDiscount,
     handleCardNumberChange,
     handleExpiryDateChange,
@@ -82,47 +84,71 @@ const CreditCardForm = ({
         </TouchableOpacity>
       </View>
       <TextField
-        style={styles.textField}
+        //style={styles.textField}
+        style={[
+          styles.textField,
+          !inputEditable && { backgroundColor: "#EEEEEE" },
+        ]} //Background gris para mostrar deshabilitado el campo
         label="Nombre del Titular"
         errorText={errorCardHolder}
         value={cardHolder}
         // onChangeText={(text) => setCardHolder(text)}
-        onChangeText={(text) => onChange("cardHolder", text.toUpperCase())}
+        autoCapitalize={"characters"}
+        editable={inputEditable}
+        onChangeText={(text) => onChange("cardHolder", text)}
       />
       <TextField
-        style={styles.textField}
+        //style={styles.textField}
+        style={[
+          styles.textField,
+          !inputEditable && { backgroundColor: "#EEEEEE" },
+        ]}
         label="Número de Tarjeta"
         keyboardType="numeric"
         errorText={errorCardNumber}
         value={cardNumber}
+        editable={inputEditable}
         onChangeText={handleCardNumberChange}
       />
       <View style={styles.row}>
         <TextField
+          // style={[
+          //   styles.textField,
+          //   {
+          //     marginRight: 24,
+          //   },
+          // ]}
           style={[
             styles.textField,
-            {
-              marginRight: 24,
-            },
+            { marginRight: 24 },
+            !inputEditable && { backgroundColor: "#EEEEEE" },
           ]}
           label="Vencimiento MM/YY"
           keyboardType="numeric"
           errorText={errorExpiration}
           value={expiration}
+          editable={inputEditable}
           onChangeText={handleExpiryDateChange}
         />
         <TextField
-          style={styles.textField}
+          //style={styles.textField}
+          style={[
+            styles.textField,
+            !inputEditable && { backgroundColor: "#EEEEEE" },
+          ]}
           label="CVC"
           keyboardType="numeric"
           errorText={errorCvv}
           value={cvv}
           maxLength={4}
+          editable={inputEditable}
           onChangeText={handleCvvChange}
         />
       </View>
       <TouchableOpacity onPress={onSubmitPayment} style={styles.styleButton}>
-        <Text style={{ color: "white" }}>Pagar</Text>
+        <Text style={{ color: "white" }}>
+          {inputEditable ? "Pagar" : "Registrar"}
+        </Text>
       </TouchableOpacity>
 
       <ModalError visible={modalErrorVisible} onClose={closeErrorModal} />
