@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from '@react-navigation/stack';
 import { StyleSheet, View, Image, ImageBackground, ScrollView, Text, TouchableOpacity } from 'react-native'
 import { activityLevelSelect } from '../quiz/DataDropdown';
 import { Alert } from 'react-native';
+import { MuySaludableApi } from '../../api/MuySaludableApi';
+import { ActivityIndicator } from 'react-native';
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -16,6 +18,7 @@ interface foodListItem{
 const ResumeAnswersScreen = ({route,navigation}:Props) => {
     
     console.log(route.params);
+    const [loading, setLoading] = useState(false);
 
     const getLabelById = (id: string): string | undefined => {
         const selectedOption = activityLevelSelect.find(option => option.id === id);
@@ -28,15 +31,73 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         navigation.goBack()
     }
     const handleConfirm = () => {
-      Alert.alert(
-        "Información",
-        "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
-      );
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "LoginScreen" }],
-      });
+      updateInfoUser();
     };
+
+    const updateInfoUser = async() =>{
+      
+      const bodyUpdateUser = {
+        nombre: route.params!.name,
+        edad: route.params!.age,
+        altura: route.params!.height,
+        peso: route.params!.weight,
+        sexo: route.params!.gender,
+        actividad_fisica: route.params!.physicalActivity,
+        tipo_dieta: route.params!.dietType,
+        alimentos_evitar: route.params!.foodAvoidListFiltered.join(),
+        objetivo: route.params!.goal,
+        estado_mexico: route.params!.stateMexico,
+      };
+      console.log("URL ACTUALIZAR PASSWORD");
+      console.log(JSON.stringify(bodyUpdateUser,null,2));
+      console.log(`/usuarios/${route.params!.idUser}`);
+      showIndicator();
+      //disableButton();
+      const actualizaPassword = await MuySaludableApi.put(
+        `/usuarios/${route.params!.idUser}`,
+        bodyUpdateUser
+      )
+        .then((responseUser) => {
+          closeIndicator();
+          //enableButton();
+          console.log("RESPUESTA USER CUESTIONARIO");
+          console.log(JSON.stringify(responseUser, null, 2));
+
+          Alert.alert(
+            "Información",
+            "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+          );
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "LoginScreen" }],
+          });
+        })
+        .catch((errorUser) => {
+          //closeIndicator();
+          //enableButton();
+          console.log(
+            "Mensaje de error en suscripción: ",
+            errorUser.response.data.message
+          );
+        });
+    }
+
+    const showIndicator = () =>{
+      setLoading(true);
+    }
+
+    const closeIndicator = () => {
+      setLoading(false);
+    };
+
+    function LoadingAnimation() {
+      return (
+        <View style={styles.indicatorWrapper}>
+          <ActivityIndicator size="large" color="#ffffff" />
+          <Text style={styles.indicatorText}>Cargando...</Text>
+        </View>
+      );
+    }
     
   return (
     <View style={styles.container}>
@@ -101,6 +162,8 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {loading && <LoadingAnimation />}
       </ImageBackground>
     </View>
   );
@@ -144,12 +207,12 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "75%",
     alignItems: "center",
-    top:"3%"
+    top: "3%",
   },
   textAnswer: {
     //fontWeight: "bold",
     fontFamily: "Gotham-Medium",
-    fontSize:18,
+    fontSize: 18,
     margin: 10,
     flexWrap: "wrap",
     color: "#2E2A21",
@@ -173,6 +236,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     //marginTop: 10,
     borderRadius: 15,
+  },
+  indicatorWrapper: {
+    flex: 1,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(100, 100, 100, 0.6)",
+  },
+  indicatorText: {
+    fontSize: 18,
+    marginTop: 12,
+    color: "#ffffff",
+    fontFamily: "Gotham-Medium",
   },
 });
 export default ResumeAnswersScreen;

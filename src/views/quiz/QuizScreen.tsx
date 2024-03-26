@@ -24,7 +24,10 @@ interface Food {
   id: string;
 }
 
-const QuizScreen = ({navigation}: Props) => {
+const QuizScreen = ({route,navigation}: Props) => {
+  console.log("QUIZ");
+  console.log(route.params);
+  const [idUser, setIdUser] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [height, setHeight] = useState("");
@@ -73,6 +76,7 @@ const QuizScreen = ({navigation}: Props) => {
 
   useEffect(() => {
     console.log("entra effect");
+    setIdUser(route.params!.idUsuario);
     getAlimentos();
   }, []);
 
@@ -163,7 +167,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
       return;
     }
     
-    navigation.navigate("ResumeAnswersScreen",{ name, age, height, weight, gender, physicalActivity, dietType, foodAvoidListFiltered, goal, stateMexico });
+    navigation.navigate("ResumeAnswersScreen",{ idUser, name, age, height, weight, gender, physicalActivity, dietType, foodAvoidListFiltered, goal, stateMexico });
   };
 
   const validateFieldEmpty = ( nameField: string, value: string ) => {

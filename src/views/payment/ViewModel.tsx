@@ -336,7 +336,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
               navigation.dispatch(
                 CommonActions.reset({
                   index: 0,
-                  routes: [{ name: "QuizScreen" }],
+                  routes: [{ name: "QuizScreen", params:{ idUsuario } }],
                 })
               ),
           },
