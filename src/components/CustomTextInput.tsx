@@ -29,6 +29,7 @@ export const CustomTextInput = ({
         placeholder={placeholder}
         keyboardType={keyboardType}
         value={value}
+        autoCapitalize={"none"}
         onChangeText={(text) => onChangeText(property, text)}
         secureTextEntry={secureTextEntry}
       />
