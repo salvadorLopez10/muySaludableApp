@@ -134,16 +134,6 @@ export const UserProfileScreen = () => {
               </View>
             </View>
 
-            <View style={styles.footer}>
-              <View style={styles.buttonDeleteContainer}>
-                <TouchableOpacity
-                  style={styles.buttonDelete}
-                  onPress={handleDeleteAccount}
-                >
-                  <Text style={{ color: "red" }}>Eliminar cuenta</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
           </>
         )}
       </ScrollView>
