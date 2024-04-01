@@ -20,6 +20,8 @@ interface User{
     activo:           boolean;
     createdAt:        Date;
     updatedAt:        Date;
+    id_plan_alimenticio: number;
+    nombre_plan: null | string;
 }
 
 interface AuthResponse{

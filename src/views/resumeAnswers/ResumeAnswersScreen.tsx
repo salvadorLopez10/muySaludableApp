@@ -36,6 +36,11 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
 
     const updateInfoUser = async() =>{
       
+      var alimentos_evitar = "";
+      if (route.params!.foodAvoidListFiltered.length > 0) {
+        alimentos_evitar = route.params!.foodAvoidListFiltered.map((item:foodListItem) => item.id).join(", ");
+      }
+      
       const bodyUpdateUser = {
         nombre: route.params!.name,
         edad: route.params!.age,
@@ -44,7 +49,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         sexo: route.params!.gender,
         actividad_fisica: route.params!.physicalActivity,
         tipo_dieta: route.params!.dietType,
-        alimentos_evitar: route.params!.foodAvoidListFiltered.join(),
+        alimentos_evitar: alimentos_evitar,
         objetivo: route.params!.goal,
         estado_mexico: route.params!.stateMexico,
       };

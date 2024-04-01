@@ -1,12 +1,70 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native';
 import { Text, View, ScrollView,Image, TouchableOpacity } from "react-native";
+import { useAuthStore } from "../../store/auth/useAuthStore";
+import { activityLevelSelect } from '../quiz/DataDropdown';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+interface UserProps {
+  id: number;
+  nombre: null | string;
+  email: null | string;
+  password: null | string;
+  edad: null | string;
+  altura: null | string;
+  peso: null | string;
+  sexo: null | string;
+  actividad_fisica: null | string;
+  tipo_dieta: null | string;
+  alimentos_evitar: null | string;
+  objetivo: null | string;
+  estado_mexico: null | string;
+  activo: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  id_plan_alimenticio: number;
+  nombre_plan: null | string;
+}
+
+interface ListType {
+  id: string;
+  label: string;
+}
+
 
 export const UserProfileScreen = () => {
 
-    const handleDeleteAccount = () => {
-      console.log("SEGURO QUE DESEAS BORRAR TU CUENTA?");
+  const [userState, setUserState] = useState<UserProps | undefined>();
+  //const [userState, setUserState] = useState(null);
+
+  const handleDeleteAccount = () => {
+    console.log("SEGURO QUE DESEAS BORRAR TU CUENTA?");
+  };
+
+
+  const getLabelById = (id: string | undefined , list: ListType[]): string | undefined => {
+    const selectedOption = list.find(
+      (option) => option.id === id
+    );
+    return selectedOption?.label;
+  };
+
+  const labelLevelActivity = getLabelById(
+    userState?.actividad_fisica ?? undefined,
+    activityLevelSelect
+  );
+
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      const user = await useAuthStore.getState().user;
+      if (user ) {
+        //console.log(user);
+        setUserState(user);
+      }
     };
+    fetchDataUser();
+  }, [])
+  
 
   return (
     <View style={styles.container}>
@@ -16,66 +74,79 @@ export const UserProfileScreen = () => {
           style={styles.logoImage}
         />
       </View>
-
-       <ScrollView>
+      <ScrollView>
+        {userState && (
+          <>
             <View style={styles.generalInfoContainer}>
-                <Text style={styles.generalInfoTitleText}>SALVADOR LOPEZ BALLEZA</Text>
-                <Text style={styles.generalInfoSubtitleText}>jslb_cafcb10@hotmail.com</Text>
+
+              <Text style={styles.generalInfoSubtitleText}>{userState.email}</Text>
             </View>
 
             <View style={styles.infoUserContainer}>
-                <View style={styles.dataUserBox}>
-                    <Text style={styles.dataUser}>31 años</Text>
-                </View>
-                <View style={styles.dataUserBox}>
-                    <Text style={styles.dataUser}>183 cm</Text>
-                </View>
-                <View style={styles.dataUserBox}>
-                    <Text style={styles.dataUser}>110 kg</Text>
-                </View>
+              <View style={styles.dataUserBox}>
+                <Text style={styles.dataUser}>{userState.edad} años</Text>
+              </View>
+              <View style={styles.dataUserBox}>
+                <Text style={styles.dataUser}>
+                  {Number(userState?.altura) / 100} m
+                </Text>
+              </View>
+              <View style={styles.dataUserBox}>
+                <Text style={styles.dataUser}>{userState?.peso} kg</Text>
+              </View>
             </View>
 
             <View style={styles.statusSuscriptionContainer}>
-                <Text style={styles.suscriptionText}>SUSCRIPCIÓN ACTIVA</Text>
-                <Text style={styles.suscriptionPlan}>PLAN PREMIUM</Text>
+              <Text style={styles.suscriptionText}>SUSCRIPCIÓN ACTIVA</Text>
+              <Text style={styles.suscriptionPlan}>{userState.nombre_plan?.toUpperCase()}</Text>
             </View>
 
             <View style={styles.dataUserContainer}>
-                <View style={styles.datosInfoBox}>
-                    <Text style={styles.datosInfoText}>OBJETIVO:</Text>
-                    <Text style={styles.datosInfoText}>Eliminar grasa</Text>
-                </View>
+              <View style={styles.datosInfoBox}>
+                <Text style={styles.datosInfoText}>OBJETIVO:</Text>
+                <Text style={styles.datosInfoText}>{userState?.objetivo}</Text>
+              </View>
             </View>
 
             <View style={styles.dataUserContainer}>
-                <View style={styles.datosInfoBox}>
-                    <Text style={styles.datosInfoText}>TIPO DE DIETA:</Text>
-                    <Text style={styles.datosInfoText}>Todo tipo de alimentos</Text>
-                </View>
+              <View style={styles.datosInfoBox}>
+                <Text style={styles.datosInfoText}>TIPO DE DIETA:</Text>
+                <Text style={styles.datosInfoText}>
+                  {userState?.tipo_dieta}
+                </Text>
+              </View>
             </View>
 
             <View style={styles.dataUserContainer}>
-                <View style={styles.datosInfoBox}>
-                    <Text style={styles.datosInfoText}>NIVEL DE ACTIVIDAD FíSICA:</Text>
-                    <Text style={styles.datosInfoText}>Ejercicio moderado</Text>
-                </View>
+              <View style={styles.datosInfoBox}>
+                <Text style={styles.datosInfoText}>
+                  NIVEL DE ACTIVIDAD FíSICA:
+                </Text>
+                <Text style={styles.datosInfoText}>{labelLevelActivity}</Text>
+              </View>
             </View>
             <View style={styles.dataUserContainer}>
-                <View style={styles.datosInfoBox}>
-                    <Text style={styles.datosInfoText}>ALIMENTOS A EVITAR:</Text>
-                    <Text style={styles.datosInfoText}>JAMÓN</Text>
-                </View>
+              <View style={styles.datosInfoBox}>
+                <Text style={styles.datosInfoText}>ALIMENTOS A EVITAR:</Text>
+                <Text style={styles.datosInfoText}>
+                  {userState?.alimentos_evitar}
+                </Text>
+              </View>
             </View>
 
             <View style={styles.footer}>
-                <View style={styles.buttonDeleteContainer}>
-                    <TouchableOpacity style={styles.buttonDelete} onPress={ handleDeleteAccount }>
-                        <Text style={{ color: "red" }}>Eliminar cuenta</Text>
-                    </TouchableOpacity>
-                </View>
+              <View style={styles.buttonDeleteContainer}>
+                <TouchableOpacity
+                  style={styles.buttonDelete}
+                  onPress={handleDeleteAccount}
+                >
+                  <Text style={{ color: "red" }}>Eliminar cuenta</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-       </ScrollView>
-
+          </>
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -170,7 +241,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   datosInfoBox: {
-    width: "80%",
+    width: "90%",
     alignItems: "center",
     backgroundColor: "#faa029",
     borderRadius: 10,
