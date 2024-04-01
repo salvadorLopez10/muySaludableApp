@@ -223,7 +223,9 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             </View>
           </View>
           <TouchableOpacity onPress={goNext} style={styles.styleBeginButton}>
-            <Text style={{ color: "white", fontFamily:"Gotham-Medium" }}>Comenzar</Text>
+            <Text style={{ color: "white", fontFamily: "Gotham-Medium" }}>
+              Comenzar
+            </Text>
           </TouchableOpacity>
         </ImageBackground>
         <ImageBackground
@@ -235,9 +237,10 @@ function transformarArreglo( original: Alimentos[]): Food[] {
             <TextInput
               style={styles.textInputStyle}
               placeholderTextColor="#d1cccc"
+              autoCapitalize={"characters"}
               placeholder="Ingresa tu nombre"
               value={name}
-              onChangeText={(value) => setName(value.toUpperCase())}
+              onChangeText={(value) => setName(value)}
             />
           </View>
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
@@ -395,12 +398,8 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           source={require("../../../assets/fondoSlides.jpg")}
           style={styles.slide}
         >
-          <Text style={styles.text}>
-            ¿De qué parte de México
-          </Text>
-          <Text style={styles.text}>
-            nos contactas?
-          </Text>
+          <Text style={styles.text}>¿De qué parte de México</Text>
+          <Text style={styles.text}>nos contactas?</Text>
           <SelectField
             data={statesMexicoOptionsSelect}
             onItemSelected={handleStateMexicoSelect}
