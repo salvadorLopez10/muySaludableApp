@@ -68,7 +68,8 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
             onPress={() => navigation.navigate("Main")}
           >
             <View style={styles.menuOptionContent}>
-              <Icon name="home-outline" size={25} color="black" />
+              {/* <Icon name="home-outline" size={25} color="black" /> */}
+              <Image style={{ width: 30, height: 30 }} source={require("../../assets/inicio.png")} />
               <Text style={styles.menuTexto}>Inicio</Text>
             </View>
           </TouchableOpacity>
@@ -78,7 +79,8 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
             onPress={() => navigation.navigate("UserProfileScreen")}
           >
             <View style={styles.menuOptionContent}>
-              <Icon name="person-circle-outline" size={25} color="black" />
+              {/* <Icon name="person-circle-outline" size={25} color="black" /> */}
+              <Image style={{ width: 30, height: 30 }} source={require("../../assets/Usuario.png")} />
               <Text style={styles.menuTexto}>Perfil de Usuario</Text>
             </View>
           </TouchableOpacity>
@@ -88,7 +90,8 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
             onPress={() => navigation.navigate("ManageAccountScreen")}
           >
             <View style={styles.menuOptionContent}>
-              <Icon name="cog-outline" size={25} color="black" />
+              {/* <Icon name="cog-outline" size={25} color="black" /> */}
+              <Image style={{ width: 30, height: 30 }} source={require("../../assets/Configuracion.png")} />
               <Text style={styles.menuTexto}>Administrar Cuenta</Text>
             </View>
           </TouchableOpacity>
@@ -98,7 +101,8 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
             onPress={() => navigation.navigate("PrivacyLegalScreen")}
           >
             <View style={styles.menuOptionContent}>
-              <Icon name="newspaper-outline" size={25} color="black" />
+              {/* <Icon name="newspaper-outline" size={25} color="black" /> */}
+              <Image style={{ width: 30, height: 30 }} source={require("../../assets/Aviso_Privacidad.png")} />
               <Text style={styles.menuTexto}>Privacidad y aviso legal</Text>
             </View>
           </TouchableOpacity>
@@ -108,13 +112,11 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
       {/* Opción para cerrar sesión */}
       <TouchableOpacity
         style={styles.logoutContainer}
-        onPress={async() => {
-
+        onPress={async () => {
           await AsyncStorage.removeItem("user");
 
           useAuthStore.setState({ status: "unauthenticated" });
           useAuthStore.setState({ user: undefined });
-        
         }}
       >
         <Icon name="exit-outline" size={25} color="black" />

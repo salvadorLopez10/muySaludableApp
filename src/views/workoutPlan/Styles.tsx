@@ -4,13 +4,31 @@ const WorkoutStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    //width: "100%"
   },
   imageBackground: {
-    width: "100%",
-    height: "100%",
-    //opacity: 0.7,
-    //bottom: "30%",
+    // width: "100%",
+    // height: "100%",
+    flex: 1,
+    //justifyContent: "center",
+    alignItems: "center",
   },
+  containerText: {
+    margin: "10%",
+    alignContent: "stretch",
+  },
+  textContent: {
+    fontFamily: "Gotham-Book",
+    textAlign: "justify",
+  },
+  subtitleText: {
+    marginTop: "5%",
+    fontFamily: "Gotham-Ultra",
+  },
+  image:{
+    width: 300,
+    height:300
+  }
 });
 
 export default WorkoutStyles;
