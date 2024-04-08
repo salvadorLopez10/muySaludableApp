@@ -70,6 +70,7 @@ const CreditCardForm = ({
           label="Código de descuento"
           // errorText={errorCardHolder}
           value={discountCode}
+          styleEditable={inputEditable}
           // onChangeText={(text) => setCardHolder(text)}
           onChangeText={(text) => onChange("discountCode", text)}
         />
@@ -91,6 +92,7 @@ const CreditCardForm = ({
         ]} //Background gris para mostrar deshabilitado el campo
         label="Nombre del Titular"
         errorText={errorCardHolder}
+        styleEditable={inputEditable}
         value={cardHolder}
         // onChangeText={(text) => setCardHolder(text)}
         autoCapitalize={"characters"}
@@ -106,6 +108,7 @@ const CreditCardForm = ({
         label="Número de Tarjeta"
         keyboardType="numeric"
         errorText={errorCardNumber}
+        styleEditable={inputEditable}
         value={cardNumber}
         editable={inputEditable}
         onChangeText={handleCardNumberChange}
@@ -126,6 +129,7 @@ const CreditCardForm = ({
           label="Vencimiento MM/YY"
           keyboardType="numeric"
           errorText={errorExpiration}
+          styleEditable={inputEditable}
           value={expiration}
           editable={inputEditable}
           onChangeText={handleExpiryDateChange}
@@ -139,6 +143,7 @@ const CreditCardForm = ({
           label="CVC"
           keyboardType="numeric"
           errorText={errorCvv}
+          styleEditable={inputEditable}
           value={cvv}
           maxLength={4}
           editable={inputEditable}

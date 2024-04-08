@@ -12,10 +12,11 @@ import {
 type Props = React.ComponentProps<typeof TextInput> & {
   label: string;
   errorText?: string | null;
+  styleEditable?: boolean | null;
 };
 
 const TextField: React.FC<Props> = (props) => {
-  const { label, errorText, value, style, onBlur, onFocus, ...restOfProps } =
+  const { label, errorText, styleEditable, value, style, onBlur, onFocus, ...restOfProps } =
     props;
   const [isFocused, setIsFocused] = useState(false);
 
@@ -61,6 +62,8 @@ const TextField: React.FC<Props> = (props) => {
         <Animated.View
           style={[
             styles.labelContainer,
+            !styleEditable && { backgroundColor: "#EEEEEE" }, // Estilo condicional para cambiar el color de fondo
+            styleEditable && { backgroundColor: "white" },
             {
               transform: [
                 {
@@ -116,7 +119,8 @@ const styles = StyleSheet.create({
   labelContainer: {
     position: "absolute",
     paddingHorizontal: 8,
-    backgroundColor: "white",
+    //backgroundColor: "white",
+    //backgroundColor: "#EEEEEE",
   },
   label: {
     fontFamily: "Gotham-Medium",
