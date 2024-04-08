@@ -22,6 +22,7 @@ interface User{
     updatedAt:        Date;
     id_plan_alimenticio: number;
     nombre_plan: null | string;
+    tmb: null | string;
 }
 
 interface AuthResponse{

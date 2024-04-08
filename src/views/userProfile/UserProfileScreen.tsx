@@ -24,6 +24,7 @@ interface UserProps {
   updatedAt: Date;
   id_plan_alimenticio: number;
   nombre_plan: null | string;
+  tmb: null | string;
 }
 
 interface ListType {
@@ -78,8 +79,9 @@ export const UserProfileScreen = () => {
         {userState && (
           <>
             <View style={styles.generalInfoContainer}>
-
-              <Text style={styles.generalInfoSubtitleText}>{userState.email}</Text>
+              <Text style={styles.generalInfoSubtitleText}>
+                {userState.email}
+              </Text>
             </View>
 
             <View style={styles.infoUserContainer}>
@@ -98,7 +100,18 @@ export const UserProfileScreen = () => {
 
             <View style={styles.statusSuscriptionContainer}>
               <Text style={styles.suscriptionText}>SUSCRIPCIÓN ACTIVA</Text>
-              <Text style={styles.suscriptionPlan}>{userState.nombre_plan?.toUpperCase()}</Text>
+              <Text style={styles.suscriptionPlan}>
+                {userState.nombre_plan?.toUpperCase()}
+              </Text>
+            </View>
+
+            <View style={styles.dataUserContainer}>
+              <View style={styles.datosInfoBox}>
+                <Text style={styles.datosInfoText}>PLAN BASADO EN:</Text>
+                <Text style={styles.datosInfoText}>
+                  {Number(userState?.tmb).toFixed(2)} calorías
+                </Text>
+              </View>
             </View>
 
             <View style={styles.dataUserContainer}>
@@ -129,11 +142,13 @@ export const UserProfileScreen = () => {
               <View style={styles.datosInfoBox}>
                 <Text style={styles.datosInfoText}>ALIMENTOS A EVITAR:</Text>
                 <Text style={styles.datosInfoText}>
+                  { userState?.alimentos_evitar?.length == 0
+                    ? "Sin alergia y/o consume cualquier alimento"
+                    : userState?.alimentos_evitar}
                   {userState?.alimentos_evitar}
                 </Text>
               </View>
             </View>
-
           </>
         )}
       </ScrollView>

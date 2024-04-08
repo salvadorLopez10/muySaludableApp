@@ -63,25 +63,43 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         bodyUpdateUser
       )
         .then((responseUser) => {
-          closeIndicator();
-          //enableButton();
-          console.log("RESPUESTA USER CUESTIONARIO");
-          console.log(JSON.stringify(responseUser, null, 2));
 
-          Alert.alert(
-            "Información",
-            "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
-          );
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "LoginScreen" }],
-          });
+           console.log("RESPUESTA USER CUESTIONARIO");
+           console.log(JSON.stringify(responseUser, null, 2));
+
+          const calculaTMB = MuySaludableApi.get(
+            `/usuarios/calculateTMB/${route.params!.idUser}`
+          ).then( (responseTMB) => {
+            console.log("RESPUESTA USER TMB");
+            console.log(JSON.stringify(responseTMB, null, 2));
+
+            closeIndicator();
+            //enableButton();
+            Alert.alert(
+              "Información",
+              "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+            );
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "LoginScreen" }],
+            });
+
+          }).catch((errorTMB) => {
+
+            closeIndicator();
+            //enableButton();
+            console.log(
+              "Mensaje de error al calcular TMB: ",
+              errorTMB.response.data.message
+            );
+          } );
+          
         })
         .catch((errorUser) => {
-          //closeIndicator();
+          closeIndicator();
           //enableButton();
           console.log(
-            "Mensaje de error en suscripción: ",
+            "Mensaje de error en actualización: ",
             errorUser.response.data.message
           );
         });
@@ -135,8 +153,8 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
             <Text style={styles.textAnswer}>7. {route.params!.dietType}</Text>
             <Text style={styles.textAnswer}>
               8.{" "}
-              {route.params!.foodAvoidListFiltered.length > 0
-                ? "Sin alergia y/o consumo cualquier alimento"
+              {route.params!.foodAvoidListFiltered.length == 0
+                ? "Sin alergia y/o consume cualquier alimento"
                 : route
                     .params!.foodAvoidListFiltered.map(
                       (alimento: foodListItem) => alimento.label
