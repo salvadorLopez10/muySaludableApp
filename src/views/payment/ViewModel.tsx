@@ -21,6 +21,7 @@ interface ComponentsCreditCard {
 const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fechaExpiracionProp, setLoading, setCurrentPrice }: ComponentsCreditCard) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [idUsuario, setIdUsuario] = useState(null);
+  const [valStripe, setValStripe] = useState("")
   const [values, setValues] = useState({
     discountCode: "",
     cardHolder: "",
@@ -49,8 +50,21 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
   useEffect(() => {
     // console.log("EFFECT VALUES CREDITCARDFORM");
     // console.log("VALUES: " + JSON.stringify(values, null, 3));
-  }, [values]);
+    getValStripe();
+  }, []);
   
+  const getValStripe = async() =>{
+    console.log("ENTRA PARA OBTENER KEY DE STRIPE");
+    await MuySaludableApi.get("/config/stripe_client").then((response) => {
+      console.log("STRIPE DATA");
+      console.log(JSON.stringify(response.data.data,null,2));
+      setValStripe(response.data.data);
+
+    }).catch((error) =>{
+      console.log("Error al obtener key de stripe client");
+      console.log(error);
+    });
+  }
   //Se utiliza este useEffect para establecer los valores de email y precio  que vienen a través del padre CreditCardForm
   useEffect(() => {
     setValues((prevState) => ({
@@ -61,9 +75,10 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
     }));
   }, [emailProp, precioProp,fechaExpiracionProp]);
 
-  const stripeClient = stripe(
-    "pk_test_51Oq6azDzbFBwqYhA6mgKDESqSCCkb35K5f50LwY2MWh5QWYjm756QnFTrWt14E8lJNMttoxiYs7CXOYlmgjRdsOy00xHRmKGWg"
-  );
+  // const stripeClient = stripe(
+  //   "pk_test_51Oq6azDzbFBwqYhA6mgKDESqSCCkb35K5f50LwY2MWh5QWYjm756QnFTrWt14E8lJNMttoxiYs7CXOYlmgjRdsOy00xHRmKGWg"
+  // );
+  const stripeClient = stripe( valStripe );
 
   const createTokenPayment = async () => {
     setLoading(true);

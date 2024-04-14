@@ -25,8 +25,8 @@ interface Food {
 }
 
 const QuizScreen = ({route,navigation}: Props) => {
-  console.log("QUIZ");
-  console.log(route.params);
+  //console.log("QUIZ");
+  //console.log(route.params);
   const [idUser, setIdUser] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState("");

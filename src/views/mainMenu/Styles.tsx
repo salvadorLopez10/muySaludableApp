@@ -106,7 +106,7 @@ const MainMenuStyles = StyleSheet.create({
   },
   accordHeader: {
     padding: 20,
-    backgroundColor: "#faa029",
+    //backgroundColor: "#faa029",
     color: "#fffff",
     flex: 1,
     flexDirection: "row",
