@@ -35,7 +35,7 @@ export const LateralMenu = () => {
       />
       <Drawer.Screen
         name="Main"
-        options={{ title: "Inicio" }}
+        options={{ title: "Muy Saludable" }}
         component={BottomTabs}
       />
       {/* <Drawer.Screen
