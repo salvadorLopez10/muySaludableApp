@@ -6,6 +6,8 @@ import { Image,View } from "react-native";
 import { ImageBackground } from "react-native";
 import AccordionItem from "./AccordionItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PlanView from './PlanView';
+import { MuySaludableApi } from "../../api/MuySaludableApi";
 
 interface UserProps {
   id: number;
@@ -33,6 +35,7 @@ const MainMenuScreen = () => {
 
   const [userStatePlan, setUserStatePlan] = useState<UserProps>();
   const [numberMonths, setNumberMonths] = useState("");
+  const [planObj, setPlanObj] = useState({});
   //const [monthsArray, setMonthsArray] = useState([]);
 
   const monthsArray: Number[] = [];
@@ -53,7 +56,26 @@ const MainMenuScreen = () => {
       console.log(JSON.stringify(user, null, 3));
     };
     getInfoUserPlan();
+    getMealPlan();
   }, []);
+
+  const getMealPlan = async () => {
+    const body = {
+    "duracion": "zurdo@mail.com",
+    "tipo_dieta": "zurdo@mail.com",
+    "alimentos_evitar": "zurdo@mail.com",
+    "objetivo": "zurdo@mail.com",
+    "tmb": "zurdo@mail.com"
+    }
+    const resp = await MuySaludableApi.post("usuarios/generatePlan",body)
+      .then((response) => {
+        setPlanObj(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Error al obtener plan");
+        console.log(JSON.stringify(error, null, 2));
+      });
+  };
 
   const calculateContainerMonths = ( months: string ) => {
     const months_number = Number(months);
@@ -77,11 +99,11 @@ const MainMenuScreen = () => {
         <View style={styles.dataTitleContainer}>
           <View style={styles.datosInfoTitle}>
             <Text style={styles.datosTitleText}>PLAN GENERADO</Text>
-            <Text style={styles.datosTitleText}>{numberMonths}</Text>
+            {/* <Text style={styles.datosTitleText}>{numberMonths}</Text> */}
           </View>
         </View>
 
-        <ScrollView
+        {/* <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.containerScroll}
         >
@@ -291,7 +313,10 @@ const MainMenuScreen = () => {
               colorContainer="rgba(250, 160, 41, 0.6)"
             ></AccordionItem>
           </AccordionItem>
-        </ScrollView>
+        </ScrollView> */}
+
+        <PlanView objPlan={planObj} />
+
         <TouchableOpacity style={styles.btnPDF} onPress={onPressPDF}>
           <Text style={styles.textBtnPDF}>EXPORTAR PLAN COMO PDF</Text>
         </TouchableOpacity>
