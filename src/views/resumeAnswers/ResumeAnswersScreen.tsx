@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRoute, RouteProp } from "@react-navigation/native";
 import { StackScreenProps } from '@react-navigation/stack';
 import { StyleSheet, View, Image, ImageBackground, ScrollView, Text, TouchableOpacity } from 'react-native'
@@ -6,6 +6,9 @@ import { activityLevelSelect } from '../quiz/DataDropdown';
 import { Alert } from 'react-native';
 import { MuySaludableApi } from '../../api/MuySaludableApi';
 import { ActivityIndicator } from 'react-native';
+import { NotificationPush } from '../../utils/NotificationPush';
+import * as Notifications from "expo-notifications";
+
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -19,6 +22,42 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
     
     console.log(route.params);
     const [loading, setLoading] = useState(false);
+    const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
+
+    const { schedulePushNotification } = NotificationPush();
+      const {
+        notification,
+        notificationListener,
+        responseListener,
+        setNotification,
+        registerForPushNotificationsAsync,
+      } = NotificationPush();
+
+      useEffect(() => {
+        registerForPushNotificationsAsync().then((token) => {
+          console.log("TOKEN: " + token);
+          setExpoPushToken(token);
+        });
+
+        notificationListener.current =
+          Notifications.addNotificationReceivedListener((notification) => {
+            setNotification(notification);
+          });
+
+        responseListener.current =
+          Notifications.addNotificationResponseReceivedListener((response) => {
+            console.log(response);
+          });
+
+        return () => {
+          Notifications.removeNotificationSubscription(
+            notificationListener.current
+          );
+          Notifications.removeNotificationSubscription(
+            responseListener.current
+          );
+        };
+      }, []);
 
     const getLabelById = (id: string): string | undefined => {
         const selectedOption = activityLevelSelect.find(option => option.id === id);
@@ -52,6 +91,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         alimentos_evitar: alimentos_evitar,
         objetivo: route.params!.goal,
         estado_mexico: route.params!.stateMexico,
+        notification_token: (expoPushToken) ? expoPushToken : ""
       };
       console.log("URL ACTUALIZAR PASSWORD");
       console.log(JSON.stringify(bodyUpdateUser,null,2));
@@ -79,6 +119,9 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
               "Información",
               "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
             );
+
+            scheduleNotification();
+
             navigation.reset({
               index: 0,
               routes: [{ name: "LoginScreen" }],
@@ -120,6 +163,11 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
           <Text style={styles.indicatorText}>Cargando...</Text>
         </View>
       );
+    }
+
+    const scheduleNotification = async (  ) => {
+      console.log("SE PROCEDE A CALENDARIZAR PUSH NOTIFICATION")
+        await schedulePushNotification("¡Tu plan alimenticio ya está listo!","Hemos generado tu plan alimenticio acorde a tus necesidades, por favor accede con tu usuario y contraseña para que lo puedas ver");
     }
     
   return (

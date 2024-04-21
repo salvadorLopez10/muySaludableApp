@@ -8,6 +8,16 @@ import { useFonts } from "expo-font";
 import { Text, View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthStore } from './src/store/auth/useAuthStore';
+import * as Notifications from "expo-notifications";
+
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function App() {
   const [userPlanActive, setUserPlanActive] = useState("1");
@@ -28,7 +38,7 @@ export default function App() {
       <Text>No se cargaron las fuentes</Text>
     </View>
   }
-  
+
   const getInfoUser = async () => {
     const user = await AsyncStorage.getItem("user");
 
@@ -42,6 +52,7 @@ export default function App() {
   };
 
   getInfoUser();
+
   return (
     <NavigationContainer>
       {
