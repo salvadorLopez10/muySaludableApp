@@ -20,7 +20,8 @@ import { CustomTextInput } from "../../components/CustomTextInput";
 
 export const LoginScreen = () => {
     const [loading, setLoading] = useState(false);
-    const { email, password, onChange, handleLogin } = useViewModel();
+
+    const { email, password,isConnected, onChange, handleLogin } = useViewModel();
 
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
@@ -73,12 +74,14 @@ export const LoginScreen = () => {
         <View style={{ marginTop: 30 }}>
           <RoundedButton
             text="ENTRAR"
+            disabled={!isConnected}
             onPress={() => handleLogin(email, password, loading, setLoading)}
           />
         </View>
 
         <View style={styles.formForgotPassword}>
           <TouchableOpacity
+            disabled={!isConnected}
             onPress={() => navigation.navigate("ChoosePlanScreen")}
           >
             <Text style={styles.formForgotPasswordText}>
@@ -90,6 +93,7 @@ export const LoginScreen = () => {
           <Text>¿Aún no tienes cuenta?</Text>
 
           <TouchableOpacity
+            disabled={!isConnected}
             onPress={() => navigation.navigate("ChoosePlanScreen")}
           >
             <Text style={styles.formRegisterText}>Registrate</Text>

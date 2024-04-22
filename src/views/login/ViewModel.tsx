@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MuySaludableApi } from "../../api/MuySaludableApi";
 import { Alert } from "react-native";
 import { useNavigation, NavigationProp, CommonActions } from "@react-navigation/native";
@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RootStackParams } from "../../navigator/StackNavigator";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuthStore } from "../../store/auth/useAuthStore";
+import NetInfo from "@react-native-community/netinfo";
 
 
 const LoginViewModel = () => {
@@ -15,6 +16,30 @@ const LoginViewModel = () => {
         email: "",
         password: "",
     });
+    
+    const [isConnected, setIsConnected] = useState(true);
+
+    useEffect(() => {
+      const unsubscribe = NetInfo.addEventListener((state) => {
+        if (state.isConnected !== null) {
+            console.log("EFFECT NETINFO")
+          setIsConnected(state.isConnected);
+
+          if( !state.isConnected ){
+             Alert.alert(
+               "Información",
+               "Sin conexión a internet.\nPara acceder a todas las funcionalidades, por favor verifica que tengas una conexión a internet activa"
+             );
+          }else{
+            console.log("CONEXIÓN ACTIVA");
+          }
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }, [isConnected]);
 
     const onChange = (property: string, value: any) => {
         setValues({ ...values, [property]: value });
@@ -80,6 +105,7 @@ const LoginViewModel = () => {
 
     return {
         ...values,
+        isConnected,
         onChange,
         handleLogin
     };

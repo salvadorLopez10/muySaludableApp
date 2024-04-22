@@ -3,13 +3,15 @@ import { MyColors } from "../theme/AppTheme";
 
 interface Props {
     text: string,
+    disabled?:boolean,
     onPress : () => void
 }
 
-export const RoundedButton = ({ text, onPress}:Props) => {
+export const RoundedButton = ({ text,disabled ,onPress}:Props) => {
   return (
     <TouchableOpacity
         style={styles.roundedButton}
+        disabled={disabled}
         onPress={ onPress }
     >
         <Text style={styles.textButton}>{text}</Text>
