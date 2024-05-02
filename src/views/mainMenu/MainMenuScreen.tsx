@@ -1,8 +1,8 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, ScrollView, SafeAreaView, Button } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ScrollView, SafeAreaView, Button, Platform, ActivityIndicator } from "react-native";
 import useViewModel from "./ViewModel";
 import styles from "./Styles";
-import { Image,View } from "react-native";
+import { Image, View, Alert, Linking } from "react-native";
 import { ImageBackground } from "react-native";
 import AccordionItem from "./AccordionItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -40,10 +40,46 @@ const MainMenuScreen = () => {
 
   const monthsArray: Number[] = [];
 
-  const onPressPDF = () =>{
-    
-    console.log("PRESS PDF");
-  }
+  const { loading, onPressButtonPDF, printToFile } = useViewModel();
+
+  const onPressPDF = async() => {
+    console.log("CLICK");
+  };
+
+  // const requestPermission = async () => {
+  //   console.log("REQUESTPERMISSION");
+  //   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  //   if (status !== "granted") {
+  //     alert("Se requieren permisos para guardar el archivo.");
+  //     return false;
+  //   }
+  //   return true;
+  // };
+
+  // const generatePDF = async () => {
+  //   const htmlContent = `<h1>Mi PDF</h1><p>Este es el contenido de mi PDF.</p>`;
+
+  //   // Opciones de impresión
+  //   const options = {
+  //     html: htmlContent,
+  //   };
+
+  //   // Generar el PDF
+  //   const { uri } = await Print.printToFileAsync(options);
+  //   return uri;
+  // };
+
+  // const savePDF = async (uri: any) => {
+  //   const folder = `${FileSystem.documentDirectory}pdfs`;
+  //   await FileSystem.makeDirectoryAsync(folder, { intermediates: true });
+  //   const fileUri = `${folder}/archivo.pdf`;
+  //   await FileSystem.moveAsync({
+  //     from: uri,
+  //     to: fileUri,
+  //   });
+  //   return fileUri;
+  // };
+
 
   useEffect(() => {
     const getInfoUserPlan = async () => {
@@ -84,6 +120,15 @@ const MainMenuScreen = () => {
       monthsArray.push(index);
       
     }
+  }
+
+  function LoadingAnimation() {
+    return (
+      <View style={styles.indicatorWrapper}>
+        <ActivityIndicator size="large" color="#ffffff" />
+        <Text style={styles.indicatorText}>Cargando...</Text>
+      </View>
+    );
   }
 
   return (
@@ -317,10 +362,12 @@ const MainMenuScreen = () => {
 
         <PlanView objPlan={planObj} />
 
-        <TouchableOpacity style={styles.btnPDF} onPress={onPressPDF}>
+        {/* <TouchableOpacity style={styles.btnPDF} onPress={onPressButtonPDF}> */}
+        <TouchableOpacity style={styles.btnPDF} onPress={printToFile}>
           <Text style={styles.textBtnPDF}>EXPORTAR PLAN COMO PDF</Text>
         </TouchableOpacity>
       </ImageBackground>
+      {loading && <LoadingAnimation />}
     </SafeAreaView>
   );
 };

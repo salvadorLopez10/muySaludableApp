@@ -160,6 +160,29 @@ const MainMenuStyles = StyleSheet.create({
     marginVertical: 5,
     color: "#ffffff",
   },
+  spacer: {
+    height: 8,
+  },
+  printer: {
+    textAlign: "center",
+  },
+  indicatorWrapper: {
+    flex: 1,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(100, 100, 100, 0.6)",
+  },
+  indicatorText: {
+    fontSize: 18,
+    marginTop: 12,
+    color: "#ffffff",
+    fontFamily: "Gotham-Medium",
+  },
 });
 
 export default MainMenuStyles;
