@@ -306,33 +306,32 @@ const MainMenuViewModel = (  ) => {
 
   const clickLinkRecetario = async () =>{
     console.log("LINK A RECETARIO");
-    //https://muysaludable.com.mx/Recetario_Muy_Saludable.pdf
+    setLoading(true);
     const file_name = "Recetario_Muy_Saludable.pdf";
     const result = await FileSystem.downloadAsync(
       "https://muysaludable.com.mx/Recetario_Muy_Saludable.pdf",
       FileSystem.documentDirectory + file_name
-    );
+    ).then((response) => {
+        setLoading(false);
+        console.log("DESPUÉS DE RECETARIO");
+        console.log(JSON.stringify(response, null, 2));
+        if( response.status !== 200 ){
+          alert("Se ha producido un error al descargar recetario. Favor de intentarlo más tarde");
+        }else{
+          saveRecetario(response.uri);
+        }
 
-    console.log(result);
-
-    saveRecetario(result.uri)
+      }).catch((error) => {
+        setLoading(false);
+        console.log(JSON.stringify(error,null,2));
+        alert("Se ha producido un error al descargar recetario, favor de intentar más tarde");
+      });    
 
   }
 
   const saveRecetario = (uri: string) => {
     shareAsync(uri);
   }
-
-  // const requestPermission = async () =>{
-  //   console.log("REQUESTPERMISSION");
-  //   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  //   if (status !== "granted") {
-  //     alert("Se requieren permisos para guardar el archivo.");
-  //     return false;
-  //   }
-  //   return true;
-
-  // }
 
   // const generatePDF = async () => {
   //   const htmlContent = `<h1>Mi PDF</h1><p>Este es el contenido de mi PDF.</p>`;
