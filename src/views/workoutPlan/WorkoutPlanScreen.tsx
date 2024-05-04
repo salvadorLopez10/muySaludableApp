@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Styles";
 import {
   ImageBackground,
@@ -8,38 +8,55 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import PlanContent from "./PlanContent";
+import { useAuthStore } from "../../store/auth/useAuthStore";
+
+interface UserProps {
+  id: number;
+  nombre: null | string;
+  email: null | string;
+  password: null | string;
+  edad: null | string;
+  altura: null | string;
+  peso: null | string;
+  sexo: null | string;
+  actividad_fisica: null | string;
+  tipo_dieta: null | string;
+  alimentos_evitar: null | string;
+  objetivo: null | string;
+  estado_mexico: null | string;
+  activo: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  id_plan_alimenticio: number;
+  nombre_plan: null | string;
+  tmb: null | string;
+}
+
 export const WorkoutPlanScreen = () => {
+
+  const [userState, setUserState] = useState<UserProps | undefined>();
+
+  useEffect(() => {
+    const fetchDataUser = async () => {
+      const user = await useAuthStore.getState().user;
+      if (user) {
+        //console.log(user);
+        setUserState(user);
+      }
+    };
+    fetchDataUser();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
         source={require("../../../assets/WorkoutBG.jpg")}
         style={styles.imageBackground}
       >
-        <ScrollView>
-          <View style={styles.containerText}>
-            <Text style={styles.subtitleText}>
-              RUTINA DE CARDIO
-              {"\n"}
-            </Text>
-            <Text style={styles.textContent}>
-              <Image
-                source={{
-                  uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9IMH6evN9BBkVPCJEUDkWrl0qkzroikbBdFk4-wWcig&s",
-                }}
-                style={styles.image}
-              />
-            </Text>
-            <Text style={styles.subtitleText}>RUTINA DE ABDOMEN{"\n"}</Text>
-            <Text style={styles.textContent}>
-              <Image
-                source={{
-                  uri: "https://i.pinimg.com/564x/15/17/fc/1517fcaab8c44cbcfabf46566f901c8d.jpg",
-                }}
-                style={styles.image}
-              />
-            </Text>
-          </View>
-        </ScrollView>
+        {/* <ScrollView> */}
+          <PlanContent planName={userState?.nombre_plan}/>
+        {/* </ScrollView> */}
       </ImageBackground>
     </SafeAreaView>
   );

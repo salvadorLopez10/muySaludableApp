@@ -9,7 +9,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RootStackParams } from "../../navigator/StackNavigator";
 import { useAuthStore } from "../../store/auth/useAuthStore";
-
 import * as Permissions from "expo-permissions";
 import * as Print from "expo-print";
 import * as FileSystem from 'expo-file-system';
@@ -305,6 +304,24 @@ const MainMenuViewModel = (  ) => {
     setSelectedPrinter(printer);
   };
 
+  const clickLinkRecetario = async () =>{
+    console.log("LINK A RECETARIO");
+    //https://muysaludable.com.mx/Recetario_Muy_Saludable.pdf
+    const file_name = "Recetario_Muy_Saludable.pdf";
+    const result = await FileSystem.downloadAsync(
+      "https://muysaludable.com.mx/Recetario_Muy_Saludable.pdf",
+      FileSystem.documentDirectory + file_name
+    );
+
+    console.log(result);
+
+    saveRecetario(result.uri)
+
+  }
+
+  const saveRecetario = (uri: string) => {
+    shareAsync(uri);
+  }
 
   // const requestPermission = async () =>{
   //   console.log("REQUESTPERMISSION");
@@ -349,7 +366,8 @@ const MainMenuViewModel = (  ) => {
     handleLogout,
     onPressButtonPDF,
     selectPrinter,
-    printToFile
+    printToFile,
+    clickLinkRecetario
   };
 };
 

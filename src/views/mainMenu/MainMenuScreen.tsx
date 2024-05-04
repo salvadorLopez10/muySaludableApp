@@ -40,7 +40,7 @@ const MainMenuScreen = () => {
 
   const monthsArray: Number[] = [];
 
-  const { loading, onPressButtonPDF, printToFile } = useViewModel();
+  const { loading, onPressButtonPDF, printToFile, clickLinkRecetario } = useViewModel();
 
   const onPressPDF = async() => {
     console.log("CLICK");
@@ -129,6 +129,16 @@ const MainMenuScreen = () => {
         <Text style={styles.indicatorText}>Cargando...</Text>
       </View>
     );
+  }
+
+  function LinkRecetario() {
+    if( userStatePlan?.nombre_plan == "Paquete Premium" ){
+      return (
+        <TouchableOpacity style={styles.btnLinkRecetario} onPress={clickLinkRecetario}>
+          <Text style={styles.textBtnPDF}>DESCARGAR RECETARIO</Text>
+        </TouchableOpacity>
+      );
+    }
   }
 
   return (
@@ -361,6 +371,9 @@ const MainMenuScreen = () => {
         </ScrollView> */}
 
         <PlanView objPlan={planObj} />
+
+        {/* Solo disponible para Paquete Premium */}
+        <LinkRecetario />
 
         {/* <TouchableOpacity style={styles.btnPDF} onPress={onPressButtonPDF}> */}
         <TouchableOpacity style={styles.btnPDF} onPress={printToFile}>

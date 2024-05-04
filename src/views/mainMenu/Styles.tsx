@@ -9,6 +9,7 @@ const MainMenuStyles = StyleSheet.create({
   containerScroll: {
     flex: 1,
     width: "80%",
+    backgroundColor: "",
     //marginLeft: '5%',
     //marginRight: "5%"
   },
@@ -182,6 +183,26 @@ const MainMenuStyles = StyleSheet.create({
     marginTop: 12,
     color: "#ffffff",
     fontFamily: "Gotham-Medium",
+  },
+  link: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#007bff", // Color de fondo similar a los enlaces
+    borderRadius: 5,
+  },
+  linkText: {
+    color: "#fff", // Color del texto similar a los enlaces
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  btnLinkRecetario: {
+    backgroundColor: "#2E2A21",
+    padding: 10,
+    width: "80%",
+    alignItems: "center",
+    borderRadius: 15,
+    marginBottom: "5%",
   },
 });
 
