@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 import { RoundedButton } from "../../components/RoundedButton";
 import {
@@ -35,9 +36,9 @@ export const LoginScreen = () => {
     }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Image
-        source={require("../../../assets/chef.jpg")}
+        source={require("../../../assets/loginBack.jpeg")}
         style={styles.imageBackground}
       />
 
@@ -96,12 +97,12 @@ export const LoginScreen = () => {
             disabled={!isConnected}
             onPress={() => navigation.navigate("ChoosePlanScreen")}
           >
-            <Text style={styles.formRegisterText}>Registrate</Text>
+            <Text style={styles.formRegisterText}>Regístrate</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       {loading && <LoadingAnimation />}
-    </View>
+    </SafeAreaView>
   );
 };
