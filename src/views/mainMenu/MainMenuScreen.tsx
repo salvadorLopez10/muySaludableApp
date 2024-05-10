@@ -132,7 +132,7 @@ const MainMenuScreen = () => {
   }
 
   function LinkRecetario() {
-    if( userStatePlan?.nombre_plan == "Paquete Premium" ){
+    if( userStatePlan?.nombre_plan == "Paquete Premium" || userStatePlan?.nombre_plan == "Paquete Anual" ){
       return (
         <TouchableOpacity style={styles.btnLinkRecetario} onPress={clickLinkRecetario}>
           <Text style={styles.textBtnPDF}>DESCARGAR RECETARIO</Text>
