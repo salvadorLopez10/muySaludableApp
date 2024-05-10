@@ -12,7 +12,8 @@ import {
   Keyboard,
   Alert,
   Modal,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  SafeAreaView
 } from "react-native";
 import useViewModel from './ViewModel'
 import { RootStackParams } from "../../navigator/StackNavigator";
@@ -167,7 +168,7 @@ export const ResumeChoosenPlanScreen = () => {
   
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="height">
+    <SafeAreaView style={styles.container}>
       {/* Título */}
       <View style={styles.tituloContainer}>
         <Text style={styles.tituloText}>RESUMEN DEL PLAN</Text>
@@ -239,7 +240,7 @@ export const ResumeChoosenPlanScreen = () => {
           <Text style={styles.textoBoton}>Confirmar y proceder al pago</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -297,7 +298,9 @@ const styles = StyleSheet.create({
 
   caracteristicasContainer: {
     backgroundColor: "#FCFDBD",
-    flex: 6,
+    width: "90%",
+    //flex: 6,
+    height: "60%",
     marginLeft: 30,
     marginRight: 30,
     borderRadius: 20,
@@ -307,7 +310,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     //marginTop: "3%",
     //top:1,
-    padding: 10,
+    padding: 20,
   },
   containerBullets: {
     flex: 1,

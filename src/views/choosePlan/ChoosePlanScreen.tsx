@@ -1,5 +1,12 @@
 import { useEffect,useState } from 'react';
-import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  SafeAreaView,Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { RoundedButton } from '../../components/RoundedButton';
 import { MyColors } from '../../theme/AppTheme';
@@ -23,6 +30,7 @@ interface Planes {
   descripcion_detallada: string;
   duracion_meses: string;
   precio: string;
+  precio_regular: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -75,20 +83,8 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     return random + fecha;
   };
 
-  const plans: Characteristic[] = [
-    { id: 1, title: 'CLÁSICO', price: 200.00, resume:"Resumen plan Clásico Lorem ipsum dolor sit amet consectetur,adipisicing elit. Vitae fuga ut dolorem?", characteristics: [ 'Característica 1', 'Característica 2', 'Característica 3'] },
-    { id: 2, title: 'INTERMEDIO', price: 300.00, resume:"Resumen plan intermedio Resumen plan Clásico Lorem ipsum dolor sit amet consectetur,adipisicing elit. Vitae fuga ut dolorem?", characteristics: ['Característica 1', 'Característica 2', 'Característica 3'] },
-    { id: 3, title: 'PREMIUM', price: 400.00, resume:"Resumen plan premium Resumen plan Clásico Lorem ipsum dolor sit amet consectetur,adipisicing elit. Vitae fuga ut dolorem?", characteristics: ['Característica 1', 'Característica 2', 'Característica 3'] },
-  ];
-
-  const renderItem = ({ item }: { item: string }) => (
-    <View style={styles.characteristicItem}>
-      <Text>{item}</Text>
-    </View>
-  );
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Image
         source={require("../../../assets/background_carrete_frutas.jpg")}
         style={styles.imageBackground}
@@ -97,12 +93,8 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
       <View style={styles.tituloContainer}>
         <Text style={styles.tituloText}>ELIGE TU</Text>
         <Text style={styles.tituloText}>PLAN ALIMENTICIO</Text>
-        <Text style={styles.contentTitulo}>
-          Vive una vida más
-        </Text>
-        <Text style={styles.contentTitulo}>
-          saludable
-        </Text>
+        <Text style={styles.contentTitulo}>Vive una vida más</Text>
+        <Text style={styles.contentTitulo}>saludable</Text>
       </View>
 
       {/* Menú selección de planes */}
@@ -116,7 +108,14 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
           >
             <Text style={styles.titlePlanText}>{element.nombre}</Text>
             <Text style={styles.contentPlanText}>{element.resumen}</Text>
-            <Text style={styles.pricePlan}>${element.precio}</Text>
+            <Text style={styles.pricePlan}>
+              De{" "}
+              <Text style={styles.priceStrike}>${element.precio_regular}</Text>{" "}
+              a solo ${element.precio}
+            </Text>
+            <Text style={styles.textClic}>
+              DA CLIC
+            </Text>
           </TouchableOpacity>
         ))}
 
@@ -150,7 +149,9 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
               <View style={styles.modalSection}>
                 <View style={styles.characteristicItem}>
                   <View style={styles.containerBullet}>
-                    {selectedView?.descripcion_detallada.split("\n").map((linea, index) => (
+                    {selectedView?.descripcion_detallada
+                      .split("\n")
+                      .map((linea, index) => (
                         <View key={index} style={styles.itemContainer}>
                           <Text style={styles.bullet}>•</Text>
                           <Text style={styles.texto}>{linea}</Text>
@@ -164,14 +165,14 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
                 <RoundedButton
                   text="Seleccionar"
                   // onPress={() => navigation.navigate("ResumeChoosenPlanScreen",{ selectedPlan: selectedView })}
-                  onPress={ onNavigate }
+                  onPress={onNavigate}
                 />
               </View>
             </View>
           </View>
         </Modal>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
   tituloContainer: {
     position: "absolute",
     alignSelf: "center",
-    top: "10%",
+    top: "5%",
   },
   tituloText: {
     color: "#326807",
@@ -212,12 +213,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-    marginTop: 25,
+    marginTop: "12%",
   },
 
   containerPlan: {
     width: "80%",
-    height: "15%",
+    //height: "15%",
     backgroundColor: "#faa029",
     borderRadius: 9,
     padding: 7,
@@ -238,21 +239,39 @@ const styles = StyleSheet.create({
     color: "white",
     //fontWeight: "bold",
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "Gotham-Ultra",
   },
   contentPlanText: {
     color: "white",
     textAlign: "center",
-    fontSize: 15,
+    fontSize: 13,
     fontFamily: "Gotham-Medium",
     top: 5,
   },
   pricePlan: {
     color: "#326807",
-    fontSize: 20,
+    fontSize: 16,
     //fontWeight: "bold",
     fontFamily: "Gotham-Ultra",
+    textAlign: "center",
+    top: 10,
+    marginBottom: 7,
+  },
+  priceStrike: {
+    color: "#326807",
+    fontSize: 16,
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
+    textAlign: "center",
+    top: 10,
+    marginBottom: 7,
+    textDecorationLine: "line-through",
+  },
+  textClic: {
+    color: "#FCFCBD",
+    fontSize: 11,
+    fontFamily: "Gotham-Medium",
     textAlign: "center",
     top: 10,
     marginBottom: 7,
