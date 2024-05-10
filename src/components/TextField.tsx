@@ -118,13 +118,13 @@ const styles = StyleSheet.create({
   },
   labelContainer: {
     position: "absolute",
-    paddingHorizontal: 8,
+    paddingHorizontal: 1,
     //backgroundColor: "white",
     //backgroundColor: "#EEEEEE",
   },
   label: {
     fontFamily: "Gotham-Medium",
-    fontSize: 15,
+    fontSize: 13,
   },
   error: {
     marginTop: 4,

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Button, TouchableOpacity,Text } from "react-native";
+import { StyleSheet, View, Button, TouchableOpacity,Text, TouchableHighlight } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 import TextField from "../../components/TextField";
 import useViewModel from './ViewModel';
 import ModalError from "./ModalError";
@@ -40,8 +41,10 @@ const CreditCardForm = ({
     indicatorVisible,
     disableButton,
     inputEditable,
+    textButtonDiscount,
     onChange,
     setInputEditable,
+    clearDiscountCode,
     handleValidateDiscount,
     handleCardNumberChange,
     handleExpiryDateChange,
@@ -61,7 +64,13 @@ const CreditCardForm = ({
     setLoading,
     setCurrentPrice
   });
-
+  useEffect(() => {
+    //Se aplica useEffect ya que no se estaba limpiando el campo del código de descuento si se llamaba la función de limpieza en el ViewModel
+    //sobre la función handleValidateDiscount que se ejecuta al dar click en el botón para validar descuento
+    if (textButtonDiscount === "Validar descuento") {
+      clearDiscountCode();
+    }
+  }, [textButtonDiscount]);
   return (
     <View>
       <View style={styles.rowDiscount}>
@@ -71,7 +80,6 @@ const CreditCardForm = ({
           // errorText={errorCardHolder}
           value={discountCode}
           styleEditable={inputEditable}
-          // onChangeText={(text) => setCardHolder(text)}
           onChangeText={(text) => onChange("discountCode", text)}
         />
 
@@ -80,7 +88,7 @@ const CreditCardForm = ({
           style={styles.buttonDiscount}
         >
           <Text style={{ color: "#ffffff", fontFamily: "Gotham-Medium" }}>
-            Validar descuento
+            {textButtonDiscount}
           </Text>
         </TouchableOpacity>
       </View>
@@ -126,7 +134,7 @@ const CreditCardForm = ({
             { marginRight: 24 },
             !inputEditable && { backgroundColor: "#EEEEEE" },
           ]}
-          label="Vencimiento MM/YY"
+          label="Expiración MM/YY"
           keyboardType="numeric"
           errorText={errorExpiration}
           styleEditable={inputEditable}
@@ -175,6 +183,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   textFieldDiscount: {
+    flex: 1,
+    marginTop: "10%",
+    marginRight: 24,
+    fontFamily: "Gotham-Medium",
+  },
+  deleteCuppon: {
     flex: 1,
     marginTop: "10%",
     marginRight: 24,

@@ -29,7 +29,7 @@ export const PaymentScreen = (  ) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const params = useRoute<RouteProp<RootStackParams,"PaymentScreen">>().params;
-  console.log("LOS PARAMETROS");
+  console.log("");
   console.log(params);
   const { email, precio, plan, idPlan, fechaExpiracion} = params;
   const [currentPrice, setCurrentPrice] = useState(precio);
@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
   content: {
     //flex:1,
     paddingTop: 50,
-    paddingHorizontal: 36,
+    //paddingHorizontal: 36,
+    padding: '5%',
     backgroundColor: "white",
   },
   indicatorWrapper: {

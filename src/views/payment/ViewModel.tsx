@@ -21,7 +21,8 @@ interface ComponentsCreditCard {
 const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fechaExpiracionProp, setLoading, setCurrentPrice }: ComponentsCreditCard) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [idUsuario, setIdUsuario] = useState(null);
-  const [valStripe, setValStripe] = useState("")
+  const [valStripe, setValStripe] = useState("");
+  const [textButtonDiscount, setTextButtonDiscount] = useState("Validar descuento");
   const [values, setValues] = useState({
     discountCode: "",
     cardHolder: "",
@@ -370,6 +371,10 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
 
   }
 
+  const clearDiscountCode = () => {
+    onChange("discountCode", "");
+  };
+
   const handleValidateDiscount = async ( discount: string ) => {
     
     if( discount.trim().length == 0 ){
@@ -377,41 +382,49 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
       return;
     }
 
-    //Se envía petición para consultar código de descuento
-    setLoading(true);
-    const resp = await MuySaludableApi.get(
-      `/codigosDescuento/getCodigoName/${discount}`
-    ).then((response) => {
-      setLoading(false);
-      Alert.alert("Éxito", "El código de descuento se ha aplicado correctamente");
-      //Se calcula el porcentaje de descuento del cupón
-      const percent = response.data.data.valor / 100;
-      const discount = 1.0 - percent;
-
-      const finalPrice = (Number(values.precio) * discount).toFixed(2);
-      
-      setCurrentPrice(finalPrice.toString());
-      //Se cambia el estado de precio para poder enviar el valor correcto en la petición de pago a stripe
-      onChange("precio",finalPrice);
-
-      setInputEditable(finalPrice);
-      //console.log(JSON.stringify(response,null,3))
-
-    }).catch((errorDiscount) => {
+    if( textButtonDiscount == "Remover descuento" ){
+      setTextButtonDiscount("Validar descuento");
+      setCurrentPrice(values.precio);
+      setInputEditable(values.precio);
+      //return;
+    }else{
+      //Se envía petición para consultar código de descuento
+      setLoading(true);
+      const resp = await MuySaludableApi.get(
+        `/codigosDescuento/getCodigoName/${discount}`
+      ).then((response) => {
         setLoading(false);
-        console.log("Mensaje de error para consulta de código Postal");
-       // console.log(JSON.stringify(errorDiscount.response, null, 3));
-
-        if( errorDiscount.response.data ){
-          //Mensaje de respuesta de endpoint
-          if( errorDiscount.response.status == 404 ){
-
-            Alert.alert("Error", errorDiscount.response.data.msg);
-            console.log(errorDiscount.response.data.msg)
+        Alert.alert("Éxito", "El código de descuento se ha aplicado correctamente");
+        //Se calcula el porcentaje de descuento del cupón
+        const percent = response.data.data.valor / 100;
+        const discount = 1.0 - percent;
+  
+        const finalPrice = (Number(values.precio) * discount).toFixed(2);
+        
+        setCurrentPrice(finalPrice.toString());
+        //Se cambia el estado de precio para poder enviar el valor correcto en la petición de pago a stripe
+        onChange("precio",finalPrice);
+        //onChange("textButtonDiscount", "Remover descuento");
+        setTextButtonDiscount("Remover descuento");
+  
+        setInputEditable(finalPrice);
+        //console.log(JSON.stringify(response,null,3))
+  
+      }).catch((errorDiscount) => {
+          setLoading(false);
+          console.log("Mensaje de error para consulta de código Postal");
+         // console.log(JSON.stringify(errorDiscount.response, null, 3));
+  
+          if( errorDiscount.response.data ){
+            //Mensaje de respuesta de endpoint
+            if( errorDiscount.response.status == 404 ){
+  
+              Alert.alert("Error", errorDiscount.response.data.msg);
+              console.log(errorDiscount.response.data.msg)
+            }
           }
-        }
-    });
-
+      });
+    }
 
   }
 
@@ -546,8 +559,10 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
 
   return {
     ...values,
+    textButtonDiscount,
     onChange,
     setInputEditable,
+    clearDiscountCode,
     handleValidateDiscount,
     handleCardNumberChange,
     handleExpiryDateChange,
