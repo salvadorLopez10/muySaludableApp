@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PlanView from './PlanView';
 import { MuySaludableApi } from "../../api/MuySaludableApi";
 
-interface UserProps {
+export interface UserProps {
   id: number;
   nombre: null | string;
   email: null | string;
@@ -40,46 +40,11 @@ const MainMenuScreen = () => {
 
   const monthsArray: Number[] = [];
 
-  const { loading, onPressButtonPDF, printToFile, clickLinkRecetario } = useViewModel();
+  const { loading, printToFile, clickLinkRecetario } = useViewModel();
 
   const onPressPDF = async() => {
     console.log("CLICK");
   };
-
-  // const requestPermission = async () => {
-  //   console.log("REQUESTPERMISSION");
-  //   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  //   if (status !== "granted") {
-  //     alert("Se requieren permisos para guardar el archivo.");
-  //     return false;
-  //   }
-  //   return true;
-  // };
-
-  // const generatePDF = async () => {
-  //   const htmlContent = `<h1>Mi PDF</h1><p>Este es el contenido de mi PDF.</p>`;
-
-  //   // Opciones de impresión
-  //   const options = {
-  //     html: htmlContent,
-  //   };
-
-  //   // Generar el PDF
-  //   const { uri } = await Print.printToFileAsync(options);
-  //   return uri;
-  // };
-
-  // const savePDF = async (uri: any) => {
-  //   const folder = `${FileSystem.documentDirectory}pdfs`;
-  //   await FileSystem.makeDirectoryAsync(folder, { intermediates: true });
-  //   const fileUri = `${folder}/archivo.pdf`;
-  //   await FileSystem.moveAsync({
-  //     from: uri,
-  //     to: fileUri,
-  //   });
-  //   return fileUri;
-  // };
-
 
   useEffect(() => {
     const getInfoUserPlan = async () => {
@@ -121,6 +86,10 @@ const MainMenuScreen = () => {
       
     }
   }
+
+  const handlePrintToFile = (argumento: UserProps| undefined) => {
+    printToFile(argumento);
+  };
 
   function LoadingAnimation() {
     return (
@@ -375,8 +344,8 @@ const MainMenuScreen = () => {
         {/* Solo disponible para Paquete Premium */}
         <LinkRecetario />
 
-        {/* <TouchableOpacity style={styles.btnPDF} onPress={onPressButtonPDF}> */}
-        <TouchableOpacity style={styles.btnPDF} onPress={printToFile}>
+        {/* <TouchableOpacity style={styles.btnPDF} onPress={printToFile}> */}
+        <TouchableOpacity style={styles.btnPDF} onPress={() => handlePrintToFile(userStatePlan)}>
           <Text style={styles.textBtnPDF}>EXPORTAR PLAN COMO PDF</Text>
         </TouchableOpacity>
       </ImageBackground>
