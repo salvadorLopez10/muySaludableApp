@@ -54,7 +54,24 @@ const ManageAccountStyles = StyleSheet.create({
     //marginTop: 10,
     borderRadius: 15,
     marginVertical: 10,
-  }
+  },
+  indicatorWrapper: {
+    flex: 1,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(100, 100, 100, 0.6)",
+  },
+  indicatorText: {
+    fontSize: 18,
+    marginTop: 12,
+    color: "#ffffff",
+    fontFamily: "Gotham-Medium",
+  },
 });
 
 export default ManageAccountStyles;
