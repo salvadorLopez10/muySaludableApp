@@ -20,10 +20,13 @@ interface User{
     activo:           boolean;
     createdAt:        Date;
     updatedAt:        Date;
+    id_suscripcion: number;
     id_plan_alimenticio: number;
+    estado_plan: null | string;
     nombre_plan: null | string;
     tmb: null | string;
     duracion_meses: null | string;
+    fecha_expiracion: string;
 }
 
 interface AuthResponse{

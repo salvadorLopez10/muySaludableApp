@@ -6,6 +6,7 @@ import { AxiosError } from 'axios';
 import { Alert } from 'react-native';
 import { CommonActions, NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigator/StackNavigator';
+import { useAuthStore } from '../../store/auth/useAuthStore';
 
 
 interface ComponentsCreditCard {
@@ -47,6 +48,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
     disableButton: false,
     inputEditable: true,
   });
+  const userInfo = useAuthStore((state) => state.user);
 
   useEffect(() => {
     // console.log("EFFECT VALUES CREDITCARDFORM");
@@ -188,58 +190,136 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
   };
 
   const createUserSuscription = async () =>{
-    //Inserta usuario con su suscripción
-    const bodyUser = {
-      email: values.email,
-    };
-    console.log("BODY USER");
-    console.log(JSON.stringify(bodyUser, null, 2));
+    //Se procede a inactivar la suscripción anterior
+    //Si ya tenemos información del usuario, quiere decir que es una renovación, no se crea usuario, se procede a generar nueva suscripción
+    if(userInfo?.email !== ""){
 
-    const usuario = MuySaludableApi.post("/usuarios", bodyUser)
-      .then((responseUsuario) => {
-        console.log("RESPUESTA CREACIÓN DE USUARIO");
-        console.log(JSON.stringify(responseUsuario, null, 2));
-        //Una vez creado el usuario, se procede a generar el registro de suscripción
-        const bodySuscripcion = {
-          id_usuario: responseUsuario.data.data.id,
-          id_plan_alimenticio: values.idPlan,
-          id_pago: "FREE-DISCOUNT-CODE-"+values.discountCode,
-          fecha_expiracion: values.fechaExpiracion,
-          estado: "Activo",
-        };
+      const bodyInactiveSuscripcion = {
+        estado: "Vencido"
+      };
 
-        //Establece idUsuario en el state
-        setIdUsuario(responseUsuario.data.data.id);
-        //console.log(JSON.stringify(bodySuscripcion, null, 2));
-        //Una vez creado el usuario, se procede a generar el registro de suscripción
-        const suscripción = MuySaludableApi.post(
-          "/suscripciones",
-          bodySuscripcion
-        )
-          .then((responseSuscripcion) => {
-            console.log("RESPUESTA SUSCRIPCIÓN");
-            console.log(JSON.stringify(responseSuscripcion, null, 2));
+      setLoading(true);
 
-            setLoading(false);
+      const actualizaSuscripcion = await MuySaludableApi.put(
+        `/suscripciones/${userInfo?.id_suscripcion}`,
+        bodyInactiveSuscripcion
+      )
+        .then((responseSuscripcion) => {
+          //console.log(JSON.stringify(responseSuscripcion, null, 2));
+          const bodySuscripcion = {
+            id_usuario: userInfo?.id,
+            id_plan_alimenticio: values.idPlan,
+            id_pago: "FREE-DISCOUNT-CODE-" + values.discountCode,
+            fecha_expiracion: values.fechaExpiracion,
+            estado: "Activo",
+          };
 
-            //Muestra ventana modal para establecer contraseña
-            showSuccessModal();
-          })
-          .catch((errorSuscripcion) => {
-            setLoading(false);
-            console.log(
-              "Mensaje de error en suscripción: ",
-              errorSuscripcion.response.data.message
-            );
-          });
-      })
-      .catch((errorUsuario) => {
-        setLoading(false);
-        console.log(
-          "Mensaje de error en creación de usuario: ",
-          errorUsuario.response.data.message
-        );
-      });
+          const suscripción = MuySaludableApi.post(
+            "/suscripciones",
+            bodySuscripcion
+          )
+            .then((responseSuscripcion) => {
+              console.log("RESPUESTA SUSCRIPCIÓN");
+              console.log(JSON.stringify(responseSuscripcion, null, 2));
+
+              setLoading(false);
+
+              //Se muestra directamente el quiz resumido
+              Alert.alert(
+                "Éxito",
+                "¡Tu nueva suscripción se ha generado correctamente!.\nPara continuar es necesario contestar el siguiente cuestionario y de esta manera mantener actualizada tu información",
+                [
+                  {
+                    text: "Continuar",
+                    onPress: () =>
+                      navigation.dispatch(
+                        CommonActions.reset({
+                          index: 0,
+                          routes: [
+                            {
+                              name: "QuizSummaryScreen",
+                              params: { userInfo },
+                            },
+                          ],
+                        })
+                      ),
+                  },
+                ],
+                { cancelable: false }
+              );
+              
+            })
+            .catch((errorSuscripcion) => {
+              setLoading(false);
+              console.log(
+                "Mensaje de error en suscripción: ",
+                errorSuscripcion.response.data.message
+              );
+            });
+        })
+        .catch((errorDeleteAccount) => {
+          setLoading(false);
+
+          console.log(
+            "Mensaje de error al INACTIVAR suscripción: ",
+            errorDeleteAccount.response.data.message
+          );
+        });
+
+    }else{
+      //En otro caso, la suscripción se genera por primera vez, //Inserta usuario con su suscripción
+      const bodyUser = {
+        email: values.email,
+      };
+      console.log("BODY USER");
+      console.log(JSON.stringify(bodyUser, null, 2));
+
+      const usuario = MuySaludableApi.post("/usuarios", bodyUser)
+        .then((responseUsuario) => {
+          console.log("RESPUESTA CREACIÓN DE USUARIO");
+          console.log(JSON.stringify(responseUsuario, null, 2));
+          //Una vez creado el usuario, se procede a generar el registro de suscripción
+          const bodySuscripcion = {
+            id_usuario: responseUsuario.data.data.id,
+            id_plan_alimenticio: values.idPlan,
+            id_pago: "FREE-DISCOUNT-CODE-" + values.discountCode,
+            fecha_expiracion: values.fechaExpiracion,
+            estado: "Activo",
+          };
+
+          //Establece idUsuario en el state
+          setIdUsuario(responseUsuario.data.data.id);
+          //console.log(JSON.stringify(bodySuscripcion, null, 2));
+          //Una vez creado el usuario, se procede a generar el registro de suscripción
+          const suscripción = MuySaludableApi.post(
+            "/suscripciones",
+            bodySuscripcion
+          )
+            .then((responseSuscripcion) => {
+              console.log("RESPUESTA SUSCRIPCIÓN");
+              console.log(JSON.stringify(responseSuscripcion, null, 2));
+
+              setLoading(false);
+
+              //Muestra ventana modal para establecer contraseña
+              showSuccessModal();
+            })
+            .catch((errorSuscripcion) => {
+              setLoading(false);
+              console.log(
+                "Mensaje de error en suscripción: ",
+                errorSuscripcion.response.data.message
+              );
+            });
+        })
+        .catch((errorUsuario) => {
+          setLoading(false);
+          console.log(
+            "Mensaje de error en creación de usuario: ",
+            errorUsuario.response.data.message
+          );
+        });
+    }
   }
 
   const onChange = (property: string, value: any) => {

@@ -3,7 +3,9 @@ import { StyleSheet } from 'react-native';
 import { Text, View, ScrollView,Image, TouchableOpacity } from "react-native";
 import { useAuthStore } from "../../store/auth/useAuthStore";
 import { activityLevelSelect } from '../quiz/DataDropdown';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackScreenProps } from "@react-navigation/stack";
+
+interface Props extends StackScreenProps<any,any>{};
 
 interface UserProps {
   id: number;
@@ -33,39 +35,26 @@ interface ListType {
 }
 
 
-export const UserProfileScreen = () => {
-
+export const UserProfileScreen = ({ navigation }: Props) => {
   const [userState, setUserState] = useState<UserProps | undefined>();
   //const [userState, setUserState] = useState(null);
 
-  const handleDeleteAccount = () => {
-    console.log("SEGURO QUE DESEAS BORRAR TU CUENTA?");
-  };
-
-
-  const getLabelById = (id: string | undefined , list: ListType[]): string | undefined => {
-    const selectedOption = list.find(
-      (option) => option.id === id
-    );
+  const getLabelById = (
+    id: string | undefined,
+    list: ListType[]
+  ): string | undefined => {
+    const selectedOption = list.find((option) => option.id === id);
     return selectedOption?.label;
   };
 
-  const labelLevelActivity = getLabelById(
-    userState?.actividad_fisica ?? undefined,
-    activityLevelSelect
-  );
+   const userProfile = useAuthStore((state) => state.user);
+   console.log("USEEEER PROFILE");
+   console.log(JSON.stringify(userProfile, null, 2));
 
-  useEffect(() => {
-    const fetchDataUser = async () => {
-      const user = await useAuthStore.getState().user;
-      if (user ) {
-        //console.log(user);
-        setUserState(user);
-      }
-    };
-    fetchDataUser();
-  }, [])
-  
+    const labelLevelActivity = getLabelById(
+      userProfile?.actividad_fisica ?? undefined,
+      activityLevelSelect
+    );
 
   return (
     <View style={styles.container}>
@@ -76,32 +65,32 @@ export const UserProfileScreen = () => {
         />
       </View>
       <ScrollView>
-        {userState && (
+        {userProfile && (
           <>
             <View style={styles.generalInfoContainer}>
               <Text style={styles.generalInfoSubtitleText}>
-                {userState.email}
+                {userProfile.email}
               </Text>
             </View>
 
             <View style={styles.infoUserContainer}>
               <View style={styles.dataUserBox}>
-                <Text style={styles.dataUser}>{userState.edad} años</Text>
+                <Text style={styles.dataUser}>{userProfile.edad} años</Text>
               </View>
               <View style={styles.dataUserBox}>
                 <Text style={styles.dataUser}>
-                  {Number(userState?.altura) / 100} m
+                  {Number(userProfile?.altura) / 100} m
                 </Text>
               </View>
               <View style={styles.dataUserBox}>
-                <Text style={styles.dataUser}>{userState?.peso} kg</Text>
+                <Text style={styles.dataUser}>{userProfile?.peso} kg</Text>
               </View>
             </View>
 
             <View style={styles.statusSuscriptionContainer}>
               <Text style={styles.suscriptionText}>SUSCRIPCIÓN ACTIVA</Text>
               <Text style={styles.suscriptionPlan}>
-                {userState.nombre_plan?.toUpperCase()}
+                {userProfile.nombre_plan?.toUpperCase()}
               </Text>
             </View>
 
@@ -109,7 +98,7 @@ export const UserProfileScreen = () => {
               <View style={styles.datosInfoBox}>
                 <Text style={styles.datosInfoText}>PLAN BASADO EN:</Text>
                 <Text style={styles.datosInfoText}>
-                  {Number(userState?.tmb).toFixed(2)} calorías
+                  {Number(userProfile?.tmb).toFixed(2)} calorías
                 </Text>
               </View>
             </View>
@@ -117,7 +106,9 @@ export const UserProfileScreen = () => {
             <View style={styles.dataUserContainer}>
               <View style={styles.datosInfoBox}>
                 <Text style={styles.datosInfoText}>OBJETIVO:</Text>
-                <Text style={styles.datosInfoText}>{userState?.objetivo}</Text>
+                <Text style={styles.datosInfoText}>
+                  {userProfile?.objetivo}
+                </Text>
               </View>
             </View>
 
@@ -125,7 +116,7 @@ export const UserProfileScreen = () => {
               <View style={styles.datosInfoBox}>
                 <Text style={styles.datosInfoText}>TIPO DE DIETA:</Text>
                 <Text style={styles.datosInfoText}>
-                  {userState?.tipo_dieta}
+                  {userProfile?.tipo_dieta}
                 </Text>
               </View>
             </View>
@@ -142,10 +133,10 @@ export const UserProfileScreen = () => {
               <View style={styles.datosInfoBox}>
                 <Text style={styles.datosInfoText}>ALIMENTOS A EVITAR:</Text>
                 <Text style={styles.datosInfoText}>
-                  { userState?.alimentos_evitar?.length == 0
+                  {userProfile?.alimentos_evitar?.length == 0
                     ? "Sin alergia y/o consume cualquier alimento"
-                    : userState?.alimentos_evitar}
-                  {userState?.alimentos_evitar}
+                    : userProfile?.alimentos_evitar}
+                  {userProfile?.alimentos_evitar}
                 </Text>
               </View>
             </View>
@@ -154,7 +145,7 @@ export const UserProfileScreen = () => {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

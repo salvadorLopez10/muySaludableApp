@@ -18,6 +18,7 @@ import {
 import useViewModel from './ViewModel'
 import { RootStackParams } from "../../navigator/StackNavigator";
 import { MuySaludableApi } from "../../api/MuySaludableApi";
+import { useAuthStore } from "../../store/auth/useAuthStore";
 
 
 interface Props extends StackScreenProps<any,any>{};
@@ -42,9 +43,12 @@ export const ResumeChoosenPlanScreen = () => {
   const [isModalVisibleEmail, setIsModalVisibleEmail] = useState(false);
   const [validity, setValidity] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
+  const [disabledBtnEmail, setDisabledBtnEmail] = useState(false);
 
   const params = useRoute<RouteProp<RootStackParams,"ResumeChoosenPlanScreen">>().params;
   const { selectedPlan } = params;
+
+  const userInfo = useAuthStore((state) => state.user);
 
   const openModal = () => {
     setIsModalVisibleEmail(true);
@@ -109,6 +113,11 @@ export const ResumeChoosenPlanScreen = () => {
   };
 
   useEffect(() => {
+
+    if( userInfo?.email !== "" ){
+      setDisabledBtnEmail(true);
+      onChange("email",userInfo?.email);
+    }
     const vigencia = setValidityDate(selectedPlan);
     setValidity(vigencia[0]);
     setExpirationDate(vigencia[1]);
@@ -200,7 +209,7 @@ export const ResumeChoosenPlanScreen = () => {
       </View>
 
       {/* Sección email*/}
-      <TouchableOpacity style={styles.containerEmail} onPress={openModal}>
+      <TouchableOpacity style={styles.containerEmail} onPress={openModal} disabled={disabledBtnEmail}>
         <Text style={styles.labelEmail}>Ingresa tu correo electrónico</Text>
         <TextInput
           style={styles.inputEmail}

@@ -6,12 +6,14 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { RoundedButton } from '../../components/RoundedButton';
 import { MyColors } from '../../theme/AppTheme';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MuySaludableApi } from '../../api/MuySaludableApi';
+import { useAuthStore } from '../../store/auth/useAuthStore';
 
 interface Props extends StackScreenProps<any,any>{};
 
@@ -41,6 +43,8 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     const [selectedView, setSelectedView] = useState<Planes | null>(null);
     const [planes, setPlanes] = useState<Planes[]>([]);
 
+    const userInfo = useAuthStore((state) => state.user);
+
 
   const handleOpenModal = ( element: Planes ) => {
     setSelectedView(element);
@@ -52,7 +56,21 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
   }
 
   useEffect(() => {
-    console.log("entra effect");
+    //Cuando se tiene información en userInfo quiere decir que la pantalla se muestra a partir de una renovación
+    //Cuando está vacío, la pantalla se está mostrando por primera vez
+    if( userInfo ){
+      Alert.alert(
+        "Actualizar plan alimenticio",
+        "El paquete contratado ha vencido.\n¡Te invitamos a renovarlo!",
+        [
+          {
+            text: "Renovar paquete",
+            onPress: () => console.log("RENOVAR PLAN"),
+          },
+        ],
+        { cancelable: false }
+      );
+    }
     getPlanes();
   }, []);
 
