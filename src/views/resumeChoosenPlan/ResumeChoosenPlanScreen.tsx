@@ -113,8 +113,9 @@ export const ResumeChoosenPlanScreen = () => {
   };
 
   useEffect(() => {
-
-    if( userInfo?.email !== "" ){
+    //console.log("USER INFO");
+    //console.log(JSON.stringify(userInfo,null,4));
+    if( userInfo !== undefined ){
       setDisabledBtnEmail(true);
       onChange("email",userInfo?.email);
     }
