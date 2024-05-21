@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MuySaludableApi } from "../../api/MuySaludableApi";
 import { Alert, Linking } from "react-native";
 import {
@@ -24,6 +24,23 @@ const MainMenuViewModel = (  ) => {
 
   const [selectedPrinter, setSelectedPrinter] = useState<any>();
   const [loading, setLoading] = useState(false);
+  const [urlRecetario, setUrlRecetario] = useState("");
+
+  useEffect(() => {
+    getUrlRecetario();
+  }, []);
+
+  const getUrlRecetario = async () => {
+    await MuySaludableApi.get("/config/url_recetario")
+      .then((response) => {
+        console.log(JSON.stringify(response.data.data, null, 2));
+        setUrlRecetario(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Error al obtener url para descargar recetaario");
+        console.log(error);
+      });
+  };
 
   const onChange = (property: string, value: any) => {
     setValues({ ...values, [property]: value });
@@ -340,22 +357,6 @@ const MainMenuViewModel = (  ) => {
     return html;
   }
 
-  // const onPressButtonPDF = async () => {
-  //   console.log("PRESS PDF DESDE VIEW MODEL");
-
-  //   await Print.printAsync({
-  //     html,
-  //     printerUrl: selectedPrinter?.url, // iOS only
-  //   });
-    // const hasPermission = await requestPermission();
-    // if (!hasPermission) return;
-
-    // const pdfUri = await generatePDF();
-    // const fileUri = await savePDF(pdfUri);
-
-    // // Abrir la ventana del navegador para descargar el PDF
-    // Linking.openURL(fileUri);
-  //};
 
   const printToFile = async ( userInfo: UserProps | undefined ) => {
     //On iOS/android prints the given html. On web prints the HTML from the current page.
@@ -378,7 +379,7 @@ const MainMenuViewModel = (  ) => {
     setLoading(true);
     const file_name = "Recetario_Muy_Saludable.pdf";
     const result = await FileSystem.downloadAsync(
-      "https://muysaludable.com.mx/Recetario_Muy_Saludable.pdf",
+      urlRecetario,
       FileSystem.documentDirectory + file_name
     ).then((response) => {
         setLoading(false);
