@@ -6,6 +6,7 @@ import { heightOptions, weightOptions, hoursSleep, yesNoOptions, numberFoodsOpti
 import SelectField from "../../components/SelectField";
 import { MuySaludableApi } from "../../api/MuySaludableApi";
 import MultiSelectField from "../../components/MultiSelectField";
+import { useAuthStore } from "../../store/auth/useAuthStore";
 
 interface Props extends StackScreenProps<any,any>{};
 
@@ -42,6 +43,8 @@ const QuizScreen = ({route,navigation}: Props) => {
   const [goal, setGoal] = useState("");
   const [stateMexico, setStateMexico] = useState("");
 
+  const userInfo = useAuthStore((state) => state.user);
+
   const handleHeightSelect = (value: string) => {
     setHeight(value);
   };
@@ -76,7 +79,31 @@ const QuizScreen = ({route,navigation}: Props) => {
 
   useEffect(() => {
     console.log("entra effect");
-    setIdUser(route.params!.idUsuario);
+    console.log("USER INFO");
+    console.log(JSON.stringify(userInfo,null,3));
+
+    console.log("ROUTE PARAMS");
+    console.log(JSON.stringify(route.params, null, 3));
+    //Cuando los parámetros son undefined, quiere decir que la pantalla QUIZ se mostró al detectar que ya se creó el usuario pero no contestó cuestionario
+    if(userInfo?.nombre == undefined && route.params?.idUsuario == undefined){
+
+      let idUsuario = (userInfo?.id != undefined) ? userInfo?.id.toString() : "";
+      setIdUser(idUsuario);
+      Alert.alert(
+        "Contestar cuestionario",
+        "Hemos detectado que aún no contestas el cuestionario.\nEs necesario contestarlo para generar el plan correcto de acuerdo a tus objetivos.\n¡Te invitamos a contestarlo!",
+        [
+          {
+            text: "Comenzar",
+            onPress: () => console.log("RENOVAR PLAN"),
+          },
+        ],
+        { cancelable: false }
+      );
+    }else{
+
+      setIdUser(route.params!.idUsuario);
+    }
     getAlimentos();
   }, []);
 
