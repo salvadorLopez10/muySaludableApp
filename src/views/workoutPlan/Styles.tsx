@@ -10,7 +10,7 @@ const WorkoutStyles = StyleSheet.create({
     // width: "100%",
     // height: "100%",
     flex: 1,
-    justifyContent: "center",
+    //justifyContent: "center",
     alignItems: "center",
   },
   containerText: {
