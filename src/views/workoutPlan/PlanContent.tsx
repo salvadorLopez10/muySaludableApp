@@ -8,6 +8,7 @@ import {
 } from "expo-av";
 import Icon from "react-native-vector-icons/FontAwesome";
 import ExerciseModal from "./ExerciseModal";
+import VideoContent from "./VideoContent";
 
 interface PlanInfoProps {
   planName: null | string | undefined;
@@ -19,15 +20,34 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
     const [status, setStatus] = useState<AVPlaybackStatus>();
     const [statusButton, setStatusButton] = useState(false);
 
-    const [modalVisible, setModalVisible] = useState(false);
+    const [exerciseModalVisible, setExerciseModalVisible] = useState(false);
+    const [currentLevel, setCurrentLevel] = useState<'PRINCIPIANTE' | 'INTERMEDIO' | 'AVANZADO'>('PRINCIPIANTE');
 
-    const openModal = () => {
-      setModalVisible(true);
+    const [selectedVideoUri, setSelectedVideoUri] = useState<string | null>(null);
+    const [selectedVideoTitle, setSelectedVideoTitle] = useState<string>("");
+    const [selectedVideoDescription, setSelectedVideoDescription] = useState<string>('');
+
+
+    const openExerciseModal = (levelRoutine: 'PRINCIPIANTE' | 'INTERMEDIO' | 'AVANZADO') => {
+      setExerciseModalVisible(true);
+      setCurrentLevel(levelRoutine);
     };
 
-    const closeModal = () => {
-      setModalVisible(false);
+    const closeExerciseModal = () => {
+      setExerciseModalVisible(false);
+      setSelectedVideoUri(null);
     };
+
+    const handleCardPress = (videoUri: string, title: string, description: string) => {
+      setSelectedVideoUri(videoUri);
+      setSelectedVideoTitle(title);
+      setSelectedVideoDescription(description);
+    };
+
+    const handleVideoClose = () => {
+      setSelectedVideoUri(null);
+    };
+
 
     const renderContent = () => {
         switch (planName) {
@@ -98,33 +118,39 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
               {" "}
               DE RUTINAS QUE DESEAS REALIZAR
             </Text>
-
-            {/* <Text style={styles.datosTitleText}>SELECCIONA EL NIVEL DE</Text>
-            <Text style={styles.datosTitleText}>RUTINAS QUE DESEAS REALIZAR</Text> */}
           </View>
         </View>
 
         <TouchableOpacity
           style={styles.containerRuoutines}
-          onPress={openModal}
+          onPress={() => {
+            openExerciseModal("PRINCIPIANTE");
+          }}
         >
           <View style={styles.datosOptionsTitle}>
             <Text style={styles.datosOptionsText}>PRINCIPIANTE</Text>
-            {/* <Text style={styles.datosTitleText}>{numberMonths}</Text> */}
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.containerRuoutines}>
+        <TouchableOpacity
+          style={styles.containerRuoutines}
+          onPress={() => {
+            openExerciseModal("INTERMEDIO");
+          }}
+        >
           <View style={styles.datosOptionsTitle}>
             <Text style={styles.datosOptionsText}>INTERMEDIO</Text>
-            {/* <Text style={styles.datosTitleText}>{numberMonths}</Text> */}
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.containerRuoutines}>
+        <TouchableOpacity
+          style={styles.containerRuoutines}
+          onPress={() => {
+            openExerciseModal("AVANZADO");
+          }}
+        >
           <View style={styles.datosOptionsTitle}>
             <Text style={styles.datosOptionsText}>AVANZADO</Text>
-            {/* <Text style={styles.datosTitleText}>{numberMonths}</Text> */}
           </View>
         </TouchableOpacity>
 
@@ -136,7 +162,27 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
         </View>
 
         {/* Modal */}
-        <ExerciseModal visible={modalVisible} onClose={closeModal} />
+        <ExerciseModal
+          visible={exerciseModalVisible && !selectedVideoUri}
+          level={currentLevel}
+          onClose={closeExerciseModal}
+          onCardPress={handleCardPress}
+        />
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={selectedVideoUri !== null}
+          onRequestClose={handleVideoClose}
+        >
+          {selectedVideoUri && (
+            <VideoContent
+              videoUri={selectedVideoUri}
+              description={selectedVideoDescription}
+              title={selectedVideoTitle}
+              onClose={handleVideoClose}
+            />
+          )}
+        </Modal>
       </>
     );
 };

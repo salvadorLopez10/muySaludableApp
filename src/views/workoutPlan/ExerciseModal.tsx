@@ -12,10 +12,77 @@ import {
 
 interface ExerciseModalProps {
   visible: boolean;
+  level: "PRINCIPIANTE" | "INTERMEDIO" | "AVANZADO";
   onClose: () => void;
+  onCardPress: (videoUri: string, title: string, description: string) => void;
 }
 
-const ExerciseModal = ({ visible, onClose }: ExerciseModalProps) => {
+const ExerciseModal = ({ visible, level ,onClose, onCardPress }: ExerciseModalProps) => {
+
+    const exercises = {
+      PRINCIPIANTE: [
+        {
+          title: "CARDIOVASCULAR",
+          description:"Mejora resistencia, quema calorías y salud del corazón. Ideal para aumentar energía.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+        {
+          title: "FUERZA (TREN INFERIOR Y SUPERIOR)",
+          description:"Fortalece los principales grupos musculares. Ideal para desarrollar fuerza y tono.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+        {
+          title: "ABDOMEN",
+          description:"Fortalece y tonifica el abdomen. Ideal para mejorar estabilidad del core y reducir grasa abdominal.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+      ],
+      INTERMEDIO: [
+        {
+            title: "CARDIOVASCULAR",
+          description:"Aumenta resistencia, quema de calorías y salud del corazón. Ideal para un reto mayor.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+        {
+          title: "FUERZA (TREN INFERIOR Y SUPERIOR)",
+          description:"Desarrolla fuerza y tono muscular. Ideal para aumentar la intensidad.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+        {
+          title: "ABDOMEN",
+          description:"Fortalece y tonifica el abdomen. Ideal para un mayor reto en el core.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+      ],
+      AVANZADO: [
+        {
+          title: "CARDIOVASCULAR",
+          description:"Maximiza resistencia, capacidad aeróbica y anaeróbica, y quema de calorías. Ideal para desafíos intensos.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+        {
+          title: "FUERZA (TREN INFERIOR Y SUPERIOR)",
+          description:"Maximiza fuerza y tono muscular. Ideal para aumentar intensidad y complejidad.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+        {
+          title: "ABDOMEN",
+          description:"Maximiza fuerza y definición del abdomen. Ideal para ejercicios desafiantes.",
+          image: require("../../../assets/imagen_rutinas.jpg"),
+          videoUri: "https://muysaludable.com.mx/VideoTest.mp4",
+        },
+      ],
+    };
+
+
   return (
     <Modal
       animationType="slide"
@@ -23,65 +90,32 @@ const ExerciseModal = ({ visible, onClose }: ExerciseModalProps) => {
       visible={visible}
       onRequestClose={onClose}
     >
-        <View style={styles.modalContainer}>
-            
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Cerrar</Text>
+      <View style={styles.modalContainer}>
+        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <Text style={styles.closeButtonText}>Cerrar</Text>
+        </TouchableOpacity>
+
+        <ScrollView style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>{level}</Text>
+          </View>
+
+          {exercises[level].map((exercise, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.card}
+              onPress={() => onCardPress(exercise.videoUri, exercise.title, exercise.description)}
+            >
+              <Image source={exercise.image} style={styles.image} />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{exercise.title}</Text>
+                <Text style={styles.description}>{exercise.description}</Text>
+              </View>
             </TouchableOpacity>
-            
-            <ScrollView style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>PRINCIPIANTE</Text>
-                </View>
+          ))}
 
-                <View style={styles.card}>
-                    <Image
-                    source={require("../../../assets/imagen_rutinas.jpg")}
-                    style={styles.image}
-                    />
-                    <View style={styles.textContainer}>
-                    <Text style={styles.title}>CARDIOVASCULAR</Text>
-                    <Text style={styles.description}>
-                        Mejora la resistencia cardiovascular, quema calorías y aumenta
-                        la salud del corazón. Ideal para principiantes que desean
-                        mejorar su estado físico general y nivel de energía.
-                    </Text>
-                    </View>
-                </View>
-
-                <View style={styles.card}>
-                    <Image
-                    source={require("../../../assets/imagen_rutinas.jpg")}
-                    style={styles.image}
-                    />
-                    <View style={styles.textContainer}>
-                    <Text style={styles.title}>FUERZA SUPERIOR E INFERIOR</Text>
-                    <Text style={styles.description}>
-                        Mejora la resistencia cardiovascular, quema calorías y aumenta
-                        la salud del corazón. Ideal para principiantes que desean
-                        mejorar su estado físico general y nivel de energía.
-                    </Text>
-                    </View>
-                </View>
-
-                <View style={styles.card}>
-                    <Image
-                    source={require("../../../assets/imagen_rutinas.jpg")}
-                    style={styles.image}
-                    />
-                    <View style={styles.textContainer}>
-                    <Text style={styles.title}>ABDOMEN</Text>
-                    <Text style={styles.description}>
-                        Mejora la resistencia cardiovascular, quema calorías y aumenta
-                        la salud del corazón. Ideal para principiantes que desean
-                        mejorar su estado físico general y nivel de energía.
-                    </Text>
-                    </View>
-                </View>
-            </ScrollView>
-
-        </View>   
-    
+        </ScrollView>
+      </View>
     </Modal>
   );
 };
@@ -128,6 +162,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: "row",
+    padding:15,
     marginBottom: 20,
     backgroundColor: "#f0f0f0",
     borderRadius: 10,
