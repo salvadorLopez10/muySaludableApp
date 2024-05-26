@@ -127,6 +127,21 @@ const MainMenuScreen = () => {
           </View>
         </View>
 
+        <View style={styles.contentTitleContainer}>
+          <View style={styles.contentInfoTitle}>
+            <Text style={styles.contentTitleText}>
+              DA CLIC EN LA SECCIÓN QUE DESEES
+            </Text>
+            <Text style={styles.contentTitleText}>
+              {" "}
+              PARA DESPLEGAR EL CONTENIDO DE
+            </Text>
+            <Text style={styles.contentTitleText}>
+              TU PLAN ALIMENTICIO
+            </Text>
+          </View>
+        </View>
+
         {/* <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.containerScroll}
@@ -345,7 +360,10 @@ const MainMenuScreen = () => {
         <LinkRecetario />
 
         {/* <TouchableOpacity style={styles.btnPDF} onPress={printToFile}> */}
-        <TouchableOpacity style={styles.btnPDF} onPress={() => handlePrintToFile(userStatePlan)}>
+        <TouchableOpacity
+          style={styles.btnPDF}
+          onPress={() => handlePrintToFile(userStatePlan)}
+        >
           <Text style={styles.textBtnPDF}>EXPORTAR PLAN COMO PDF</Text>
         </TouchableOpacity>
       </ImageBackground>

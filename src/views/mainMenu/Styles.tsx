@@ -88,6 +88,24 @@ const MainMenuStyles = StyleSheet.create({
     marginVertical: 5,
     color: "#2E2A21",
   },
+  contentTitleContainer: {
+    width: "90%",
+    alignItems: "center",
+    //marginTop: 20,
+    marginBottom: 10,
+  },
+  contentInfoTitle: {
+    width: "90%",
+    alignItems: "center",
+    padding: 10,
+    margin: 3,
+  },
+  contentTitleText: {
+    fontSize: 14,
+    fontFamily: "Gotham-Ultra",
+    marginVertical: 5,
+    color: "#000000",
+  },
   textSmall: {
     fontSize: 16,
   },
