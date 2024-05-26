@@ -12,6 +12,7 @@ import VideoContent from "./VideoContent";
 
 interface PlanInfoProps {
   planName: null | string | undefined;
+  //planName: "Paquete Clásico" | "Paquete Intermedio" | "Paquete Premium" | "Paquete Anual" | undefined;
 }
 
 const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
@@ -165,6 +166,7 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
         <ExerciseModal
           visible={exerciseModalVisible && !selectedVideoUri}
           level={currentLevel}
+          planName={planName}
           onClose={closeExerciseModal}
           onCardPress={handleCardPress}
         />

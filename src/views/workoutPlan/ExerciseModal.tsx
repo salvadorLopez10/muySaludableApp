@@ -13,11 +13,13 @@ import {
 interface ExerciseModalProps {
   visible: boolean;
   level: "PRINCIPIANTE" | "INTERMEDIO" | "AVANZADO";
+  //planName: "Paquete Clásico" | "Paquete Intermedio" | "Paquete Premium" | "Paquete Anual";
+  planName: null | string | undefined;
   onClose: () => void;
   onCardPress: (videoUri: string, title: string, description: string) => void;
 }
 
-const ExerciseModal = ({ visible, level ,onClose, onCardPress }: ExerciseModalProps) => {
+const ExerciseModal = ({ visible, level , planName, onClose, onCardPress }: ExerciseModalProps) => {
 
     const exercises = {
       PRINCIPIANTE: [
@@ -83,6 +85,15 @@ const ExerciseModal = ({ visible, level ,onClose, onCardPress }: ExerciseModalPr
     };
 
 
+    const isSectionDisabled = (title: string) => {
+      if (planName === "Paquete Clásico") {
+        return true;
+      } else if (planName === "Paquete Intermedio" && title !== "ABDOMEN") {
+        return true;
+      }
+      return false;
+    };
+
   return (
     <Modal
       animationType="slide"
@@ -90,31 +101,59 @@ const ExerciseModal = ({ visible, level ,onClose, onCardPress }: ExerciseModalPr
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.modalContainer}>
-        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Text style={styles.closeButtonText}>Cerrar</Text>
-        </TouchableOpacity>
+      <View style={styles.modalBackground}>
+        <View style={styles.modalContainer}>
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Cerrar</Text>
+          </TouchableOpacity>
 
-        <ScrollView style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.headerText}>{level}</Text>
-          </View>
+          <ScrollView style={styles.container}>
+            <View style={styles.header}>
+              <Text style={styles.headerText}>{level}</Text>
+            </View>
 
-          {exercises[level].map((exercise, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.card}
-              onPress={() => onCardPress(exercise.videoUri, exercise.title, exercise.description)}
-            >
-              <Image source={exercise.image} style={styles.image} />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>{exercise.title}</Text>
-                <Text style={styles.description}>{exercise.description}</Text>
+            {exercises[level].map((exercise, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.card,
+                  isSectionDisabled(exercise.title) && styles.disabledCard,
+                ]}
+              >
+                {/* {isSectionDisabled(exercise.title) && (
+                  <View style={styles.overlay} />
+                )} */}
+                <TouchableOpacity
+                  disabled={isSectionDisabled(exercise.title)}
+                  style={styles.touchableCard}
+                  onPress={() =>
+                    onCardPress(
+                      exercise.videoUri,
+                      exercise.title,
+                      exercise.description
+                    )
+                  }
+                >
+                  <Image source={exercise.image} style={styles.image} />
+                  {isSectionDisabled(exercise.title) && (
+                    <View style={styles.overlay}>
+                      <Text style={styles.overlayText}>
+                        VIDEO NO DISPONIBLE EN TU SUSCRIPCIÓN
+                      </Text>
+                    </View>
+                  )}
+
+                  <View style={styles.textContainer}>
+                    <Text style={styles.title}>{exercise.title}</Text>
+                    <Text style={styles.description}>
+                      {exercise.description}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-          ))}
-
-        </ScrollView>
+            ))}
+          </ScrollView>
+        </View>
       </View>
     </Modal>
   );
@@ -126,10 +165,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   modalContainer: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    width: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     padding: 10,
+    borderRadius: 10,
   },
   closeButton: {
     alignSelf: "flex-end",
@@ -162,12 +209,41 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: "row",
-    padding:15,
+    padding: 15,
     marginBottom: 20,
     backgroundColor: "#f0f0f0",
     borderRadius: 10,
     overflow: "hidden",
     alignItems: "center",
+    position: "relative",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    zIndex: 1,
+  },
+  overlayText: {
+    color: "#ffffff",
+    fontSize: 14,
+    //
+    fontFamily: "Gotham-Ultra",
+    textAlign: "center",
+  },
+  touchableCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    zIndex: 2,
+  },
+  disabledCard: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   image: {
     width: 100,
@@ -188,6 +264,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 12,
     fontFamily: "Gotham-Book",
+    textAlign: "justify",
   },
 });
 

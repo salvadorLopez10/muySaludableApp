@@ -30,6 +30,7 @@ interface UserProps {
   updatedAt: Date;
   id_plan_alimenticio: number;
   nombre_plan: null | string;
+  //nombre_plan: "Paquete Clásico" | "Paquete Intermedio" | "Paquete Premium" | "Paquete Anual" | undefined;
   tmb: null | string;
 }
 
