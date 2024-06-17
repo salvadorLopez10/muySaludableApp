@@ -13,7 +13,13 @@ interface Props extends StackScreenProps<any,any>{};
 interface Alimentos {
   id: number;
   nombre: string;
-  tipo: string;
+  tipo_alimento: string;
+  porcion: string;
+  tipo_porcion: string;
+  proteinas: number;
+  carbohidratos: number;
+  grasas: number;
+  calorias: number;
   informacion_nutrimental: string;
   createdAt: string;
   updatedAt: string;

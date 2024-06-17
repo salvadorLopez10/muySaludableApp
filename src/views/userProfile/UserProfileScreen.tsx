@@ -136,7 +136,6 @@ export const UserProfileScreen = ({ navigation }: Props) => {
                   {userProfile?.alimentos_evitar?.length == 0
                     ? "Sin alergia y/o consume cualquier alimento"
                     : userProfile?.alimentos_evitar}
-                  {userProfile?.alimentos_evitar}
                 </Text>
               </View>
             </View>
