@@ -138,24 +138,39 @@ const MainMenuStyles = StyleSheet.create({
     fontSize: 20,
   },
   accordBody: {
-    padding: 12,
+    padding: 5,
   },
   containerTextOpcionTitle: {
     alignItems: "center",
     marginTop: 3,
+    marginBottom: 10
   },
   textTitleComida: {
     fontFamily: "Gotham-BlackItalic",
     fontSize: 15,
   },
-  textTitleOpcion: {
+  textTitleNumberOpcion: {
     fontFamily: "Gotham-Book",
+    textDecorationLine: "underline",
+    fontSize: 15,
+    marginBottom: 10,
+  },
+  textTitleOpcion: {
+    fontFamily: "Gotham-Ultra",
     fontSize: 15,
   },
   ingredienteContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
+  },
+  ingredientContainer: {
+    paddingVertical: 2,
+    paddingHorizontal: 10,
+  },
+  ingredientText: {
+    fontSize: 14,
+    color: '#333',
   },
   bullet: {
     fontSize: 20,

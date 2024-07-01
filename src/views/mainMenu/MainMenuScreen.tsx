@@ -62,14 +62,15 @@ const MainMenuScreen = () => {
 
   const getMealPlan = async () => {
     const body = {
-    "duracion": "zurdo@mail.com",
-    "tipo_dieta": "zurdo@mail.com",
-    "alimentos_evitar": "zurdo@mail.com",
-    "objetivo": "zurdo@mail.com",
-    "tmb": "zurdo@mail.com"
+      "tipo_dieta": "Todo",
+      "objetivo": "Ganar masa muscular",
+      "tmb":"3500",
+      "alimentos_evitar":[]
     }
     const resp = await MuySaludableApi.post("usuarios/generatePlan",body)
       .then((response) => {
+        //console.log("EL PLAN GENERADO");
+        //console.log(JSON.stringify( response.data.data, null, 2 ));
         setPlanObj(response.data.data);
       })
       .catch((error) => {
