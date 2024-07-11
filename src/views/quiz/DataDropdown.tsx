@@ -555,7 +555,7 @@
     { label: "Vegetariano", id: "Vegetariano" },
     { label: "Vegano", id: "Vegano" },
     { label: "Sin gluten", id: "Sin gluten" },
-    { label: "Intolerante a la lactosa", id: "Intolerante a la lactosa" },
+    // { label: "Intolerante a la lactosa", id: "Intolerante a la lactosa" },
   ];
 
   export const hoursSleep = [

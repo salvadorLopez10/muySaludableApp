@@ -96,7 +96,7 @@ export const UserProfileScreen = ({ navigation }: Props) => {
 
             <View style={styles.dataUserContainer}>
               <View style={styles.datosInfoBox}>
-                <Text style={styles.datosInfoText}>PLAN BASADO EN:</Text>
+                <Text style={styles.datosInfoText}>TU TASA METABÓLICA BASAL:</Text>
                 <Text style={styles.datosInfoText}>
                   {Number(userProfile?.tmb).toFixed(2)} calorías
                 </Text>

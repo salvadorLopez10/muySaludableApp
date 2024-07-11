@@ -427,6 +427,14 @@ const MainMenuViewModel = (  ) => {
   //   return fileUri;
   // }
 
+  const showLoading = () => {
+    setLoading(true);
+  }
+
+  const hideLoading = () => {
+    setLoading(false);
+  }
+
   return {
     ...values,
     selectedPrinter,
@@ -436,7 +444,9 @@ const MainMenuViewModel = (  ) => {
     //onPressButtonPDF,
     selectPrinter,
     printToFile,
-    clickLinkRecetario
+    clickLinkRecetario,
+    showLoading,
+    hideLoading
   };
 };
 

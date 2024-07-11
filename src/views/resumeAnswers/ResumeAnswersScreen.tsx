@@ -19,7 +19,7 @@ interface foodListItem{
 
 
 const ResumeAnswersScreen = ({route,navigation}:Props) => {
-    
+    console.log("PARAMETROS USUARIOO");
     console.log(route.params);
     const [loading, setLoading] = useState(false);
     const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
@@ -113,19 +113,59 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
             console.log("RESPUESTA USER TMB");
             console.log(JSON.stringify(responseTMB, null, 2));
 
-            closeIndicator();
-            //enableButton();
-            Alert.alert(
-              "Información",
-              "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
-            );
+            //Calcular plan alimenticio y guardar en bd
+            const body = convertDataUserToGeneratePlan(route.params,responseTMB.data.data);
+            const resp = MuySaludableApi.post("/usuarios/generatePlan",body)
+              .then((responsePlanGenerado) => {
+                console.log("RESPONSE GENERACIÓN PLAN");
+                console.log(JSON.stringify(responsePlanGenerado,null,2));
+                //Una vez obtenido el plan, procedemos a guardarlo en la bd
+                const bodyPlanAlimenticio = buildBodyToPlanNutricional(route.params,responsePlanGenerado.data.data);
 
-            scheduleNotification();
+                MuySaludableApi.post("/planNutricional", bodyPlanAlimenticio)
+                .then(( responsePlanNutricionalSaved ) => {
+                  console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
+                  console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
+                  closeIndicator();
+                  Alert.alert(
+                    "Información",
+                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+                  );
 
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "LoginScreen" }],
-            });
+                  scheduleNotification();
+
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "LoginScreen" }],
+                  });
+
+                }).catch((errorInsertPlanNutricional) => {
+                  console.log("ERROR AL GUARDAR PLAN CON USUARIO");
+                  console.log(JSON.stringify(errorInsertPlanNutricional,null,1));
+                  closeIndicator();
+                });
+               
+              })
+              .catch((error) => {
+                console.log("Error al obtener plan");
+                console.log(JSON.stringify(error, null, 2));
+                closeIndicator();
+            
+              });
+
+            // closeIndicator();
+            // //enableButton();
+            // Alert.alert(
+            //   "Información",
+            //   "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+            // );
+
+            // scheduleNotification();
+
+            // navigation.reset({
+            //   index: 0,
+            //   routes: [{ name: "LoginScreen" }],
+            // });
 
           }).catch((errorTMB) => {
 
@@ -146,6 +186,62 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
             errorUser.response.data.message
           );
         });
+    }
+
+    const convertDataUserToGeneratePlan = ( objDataUser:any, tmb: string ) => {
+      var dietType = "";
+
+      switch (objDataUser.dietType) {
+        case "Todo tipo de alimentos":
+          dietType = "Todo";
+          break;
+
+        case "Sin gluten":
+          dietType = "GlutenFree";
+          break;
+      
+        default:
+          dietType = objDataUser.dietType;
+          break;
+      }
+
+      interface Item {
+        id: string;
+        label: string;
+      };
+
+      const arrayOfFoodAvoid: Item[] = objDataUser.foodAvoidListFiltered;
+      const arrayOfIdsFoods: string[] = arrayOfFoodAvoid.map((item: Item) => item.id);
+
+      const resultBody = {
+        "tipo_dieta": dietType,
+        "objetivo": objDataUser.goal,
+        "tmb":tmb,
+        "alimentos_evitar": arrayOfIdsFoods
+      };
+      
+      console.log("BODY GENERA PLAN");
+      console.log(JSON.stringify(resultBody,null,2));
+
+      return resultBody;
+    }
+
+    const buildBodyToPlanNutricional = ( objDataUser:any, generatedPlan: any ) => {
+
+      const today = new Date();
+      // Obtener el día, mes y año
+      const day = String(today.getDate()).padStart(2, '0');
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript son 0-indexed
+      const year = today.getFullYear();
+      // Formatear la fecha como "DD/MM/YYYY"
+      const formattedDate = `${day}/${month}/${year}`;
+
+      return {
+        "nombre": "Plan generado para "+ objDataUser.name + " " +formattedDate ,
+        "id_usuario": objDataUser.idUser,
+        "contenido": JSON.stringify(generatedPlan)
+      }
+
     }
 
     const showIndicator = () =>{

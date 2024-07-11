@@ -8,6 +8,7 @@ import AccordionItem from "./AccordionItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PlanView from './PlanView';
 import { MuySaludableApi } from "../../api/MuySaludableApi";
+import { useAuthStore } from "../../store/auth/useAuthStore";
 
 export interface UserProps {
   id: number;
@@ -35,16 +36,15 @@ const MainMenuScreen = () => {
 
   const [userStatePlan, setUserStatePlan] = useState<UserProps>();
   const [numberMonths, setNumberMonths] = useState("");
+  const [caloriesPlan, setCaloriesPlan] = useState("");
   const [planObj, setPlanObj] = useState({});
   //const [monthsArray, setMonthsArray] = useState([]);
 
   const monthsArray: Number[] = [];
 
-  const { loading, printToFile, clickLinkRecetario } = useViewModel();
+  const { loading, printToFile, clickLinkRecetario, showLoading, hideLoading } = useViewModel();
 
-  const onPressPDF = async() => {
-    console.log("CLICK");
-  };
+  const userInfo = useAuthStore((state) => state.user);
 
   useEffect(() => {
     const getInfoUserPlan = async () => {
@@ -58,6 +58,7 @@ const MainMenuScreen = () => {
     };
     getInfoUserPlan();
     getMealPlan();
+    calculateCaloriesForPlan();
   }, []);
 
   const getMealPlan = async () => {
@@ -66,18 +67,44 @@ const MainMenuScreen = () => {
       "objetivo": "Ganar masa muscular",
       "tmb":"3500",
       "alimentos_evitar":[]
-    }
-    const resp = await MuySaludableApi.post("usuarios/generatePlan",body)
+    };
+
+    console.log("INFORMACIÓN USUARIO");
+    console.log(JSON.stringify(userInfo));
+    console.log("STRING URL: " + "/planNutricional/"+userInfo?.id);
+    showLoading();
+    const resp = await MuySaludableApi.get("/planNutricional/"+userInfo?.id)
       .then((response) => {
-        //console.log("EL PLAN GENERADO");
-        //console.log(JSON.stringify( response.data.data, null, 2 ));
-        setPlanObj(response.data.data);
+        console.log("EL PLAN OBTENIDO DESDE PLAN NUTRICIONAL BD");
+        console.log(JSON.stringify( response.data.data, null, 2 ));
+        setPlanObj(JSON.parse(response.data.data.contenido));
+        hideLoading();
       })
       .catch((error) => {
+
+        hideLoading();
         console.log("Error al obtener plan");
         console.log(JSON.stringify(error, null, 2));
       });
   };
+
+  const calculateCaloriesForPlan = () => {
+    const calorias = ajustarCaloriasPorObjetivo(Number(userInfo?.tmb), userInfo?.objetivo);
+    setCaloriesPlan(calorias.toFixed(2).toString());
+  }
+
+  const ajustarCaloriasPorObjetivo = (tmb: number, objetivo: string | null | undefined): number => {
+    switch (objetivo) {
+        case 'Bajar de peso':
+            return tmb * 0.8; // Reducir en 20%
+        case 'Mantenimiento':
+            return tmb; // Mismo que la TMB
+        case 'Ganar masa muscular':
+            return tmb * 1.2; // Incrementar en 20%
+        default:
+            throw new Error('Objetivo no válido');
+    }
+}
 
   const calculateContainerMonths = ( months: string ) => {
     const months_number = Number(months);
@@ -131,13 +158,29 @@ const MainMenuScreen = () => {
         <View style={styles.contentTitleContainer}>
           <View style={styles.contentInfoTitle}>
             <Text style={styles.contentTitleText}>
-              DA CLIC EN LA SECCIÓN QUE DESEES
+              CON BASE A TU OBJETIVO
             </Text>
             <Text style={styles.contentTitleText}>
               {" "}
+              SE HA GENERADO UN PLAN DE
+            </Text>
+            <Text style={styles.contentTitleCalories}>
+              {" "}
+              { caloriesPlan } CALORÍAS
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.contentTitleContainer}>
+          <View style={styles.contentInstructionTitle}>
+            <Text style={styles.contentInstructionText}>
+              DA CLIC EN LA SECCIÓN QUE DESEES
+            </Text>
+            <Text style={styles.contentInstructionText}>
+              {" "}
               PARA DESPLEGAR EL CONTENIDO DE
             </Text>
-            <Text style={styles.contentTitleText}>
+            <Text style={styles.contentInstructionText}>
               TU PLAN ALIMENTICIO
             </Text>
           </View>
