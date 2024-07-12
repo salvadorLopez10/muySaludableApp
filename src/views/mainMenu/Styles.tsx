@@ -36,7 +36,7 @@ const MainMenuStyles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   datosInfoBox: {
     width: "80%",
@@ -98,18 +98,18 @@ const MainMenuStyles = StyleSheet.create({
     width: "90%",
     alignItems: "center",
     padding: 5,
-    margin: 2,
+    //margin: 2,
   },
   contentInstructionTitle: {
     width: "90%",
     alignItems: "center",
     padding: 5,
-    margin: 2,
+    //margin: 2,
   },
   contentTitleText: {
     fontSize: 16,
     fontFamily: "Gotham-Ultra",
-    marginVertical: 5,
+    //marginVertical: 5,
     color: "#2E2A21",
   },
   contentTitleCalories: {
@@ -143,7 +143,7 @@ const MainMenuStyles = StyleSheet.create({
     // elevation: 10,
   },
   accordHeader: {
-    padding: 20,
+    padding: 15,
     //backgroundColor: "#faa029",
     color: "#fffff",
     flex: 1,
