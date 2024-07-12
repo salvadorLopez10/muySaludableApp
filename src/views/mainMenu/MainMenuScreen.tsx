@@ -115,8 +115,8 @@ const MainMenuScreen = () => {
     }
   }
 
-  const handlePrintToFile = (argumento: UserProps| undefined) => {
-    printToFile(argumento);
+  const handlePrintToFile = (argumento: UserProps| undefined, planObj:any) => {
+    printToFile(argumento, planObj);
   };
 
   function LoadingAnimation() {
@@ -186,218 +186,6 @@ const MainMenuScreen = () => {
           </View>
         </View>
 
-        {/* <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.containerScroll}
-        >
-          <AccordionItem title="Detox">
-            <AccordionItem
-              title="Desayuno"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            >
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 1</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Omelette Verde:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 2</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Omelette Azul:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 3</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Huevos al gusto:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-            </AccordionItem>
-            <AccordionItem
-              title="Colación 1"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Comida"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Colación 2"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Cena"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-          </AccordionItem>
-
-          <AccordionItem title="Mes 1">
-            <AccordionItem
-              title="Desayuno"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            >
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 1</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Omelette Verde:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 2</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Omelette Azul:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 3</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Huevos al gusto:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-            </AccordionItem>
-            <AccordionItem
-              title="Colación 1"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Comida"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Colación 2"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Cena"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-          </AccordionItem>
-
-          <AccordionItem title="Mes 2">
-            <AccordionItem
-              title="Desayuno"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            >
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 1</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Omelette Verde:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 2</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Omelette Azul:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleOpcion}>Opción 3</Text>
-              </View>
-              <View style={styles.containerTextOpcionTitle}>
-                <Text style={styles.textTitleComida}>Huevos al gusto:</Text>
-              </View>
-              <View style={styles.ingredienteContainer}>
-                <Text style={styles.bullet}>•</Text>
-                <Text style={styles.textoComida}>
-                  {" "}
-                  1 huevo entero y 2 claras de huevo revuelto con 1/2 Calabaza o
-                  Espinacas de Espárragos, 1/4 de Aguacate y 2 tortillas de
-                  nopal o 1 de maíz
-                </Text>
-              </View>
-            </AccordionItem>
-            <AccordionItem
-              title="Colación 1"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Comida"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Colación 2"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-            <AccordionItem
-              title="Cena"
-              colorContainer="rgba(250, 160, 41, 0.6)"
-            ></AccordionItem>
-          </AccordionItem>
-        </ScrollView> */}
-
         <PlanView objPlan={planObj} />
 
         {/* Solo disponible para Paquete Premium */}
@@ -406,7 +194,7 @@ const MainMenuScreen = () => {
         {/* <TouchableOpacity style={styles.btnPDF} onPress={printToFile}> */}
         <TouchableOpacity
           style={styles.btnPDF}
-          onPress={() => handlePrintToFile(userStatePlan)}
+          onPress={() => handlePrintToFile(userStatePlan, planObj)}
         >
           <Text style={styles.textBtnPDF}>EXPORTAR PLAN COMO PDF</Text>
         </TouchableOpacity>
