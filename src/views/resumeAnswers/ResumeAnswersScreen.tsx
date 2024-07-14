@@ -239,7 +239,8 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
       return {
         "nombre": "Plan generado para "+ objDataUser.name + " " +formattedDate ,
         "id_usuario": objDataUser.idUser,
-        "contenido": JSON.stringify(generatedPlan)
+        "contenido": JSON.stringify(generatedPlan),
+        "activo": 1 //Se agrega 1, para que el plan nazca como Activo
       }
 
     }
