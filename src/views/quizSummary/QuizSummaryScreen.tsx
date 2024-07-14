@@ -125,6 +125,83 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
             console.log("RESPUESTA USER TMB");
             console.log(JSON.stringify(responseTMB, null, 2));
 
+            //Calcular nuevo plan alimenticio y guardar en bd
+            const body = convertDataUserToGeneratePlanRenovacion(route.params!.userInfo,responseTMB.data.data);
+            const resp = MuySaludableApi.post("/usuarios/generatePlan",body)
+              .then((responsePlanGenerado) => {
+                console.log("RESPONSE GENERACIÓN PLAN");
+                console.log(JSON.stringify(responsePlanGenerado,null,2));
+
+                
+                //Obtener todos los planes Activos del usuario, para que en caso de que tenga, TODOS se establezcan INACTIVOS
+                MuySaludableApi.get(`/planNutricional/planesActivos/${route.params!.userInfo.id}`)
+                .then(( responsePlanesActivos ) => {
+                  console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
+                  console.log(JSON.stringify(responsePlanesActivos,null,2));
+                  if( responsePlanesActivos.data.data.length > 0 ){
+                    //Actualizar como inactivos cada uno de los planes ACTIVOS encontrados
+                    for (let index = 0; index < responsePlanesActivos.data.data.length; index++) {
+                      let planActivo = responsePlanesActivos.data.data[index];
+                      console.log("ELEMENTO PLAN ACTIVO");
+                      console.log(JSON.stringify(planActivo,null,2));
+                      let idPlanActivo = planActivo.id;
+
+                      const bodyUpdateInactivePlan = {
+                        activo: 0,
+                      };
+                      //Por cada uno de los planes encontrados se procede a desactivarlos
+                      MuySaludableApi.put(`planNutricional/${idPlanActivo}`,
+                        bodyUpdateInactivePlan
+                      ).then((responseInactivePlan) => {
+                        console.log("SE HA INACTIVADO EL PLAAAN ");
+                        console.log(JSON.stringify(responseInactivePlan,null,2));
+
+                      }).catch((errorInactivePlan) => {
+                        console.log("ERROR AL INACTIVAR PLAAAN ");
+                        console.log(JSON.stringify(errorInactivePlan,null,2));
+                      });
+                    }
+                  }
+                  //Una vez obtenido el plan, procedemos a guardarlo en la bd
+                const bodyPlanAlimenticio = buildBodyRenovacionToPlanNutricional(route.params!.userInfo,responsePlanGenerado.data.data);
+
+                MuySaludableApi.post("/planNutricional", bodyPlanAlimenticio)
+                .then(( responsePlanNutricionalSaved ) => {
+                  console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
+                  console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
+                  closeIndicator();
+                  Alert.alert(
+                    "Información",
+                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+                  );
+
+                  scheduleNotification();
+
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "LoginScreen" }],
+                  });
+
+                }).catch((errorInsertPlanNutricional) => {
+                  console.log("ERROR AL GUARDAR PLAN CON USUARIO");
+                  console.log(JSON.stringify(errorInsertPlanNutricional,null,1));
+                  closeIndicator();
+                });
+                  
+                }).catch((errorGetPlanesActivos) => {
+                  console.log("ERROR AL OBTENER PLANES ACTIVOS");
+                  console.log(JSON.stringify(errorGetPlanesActivos,null,1));
+                  closeIndicator();
+                });
+               
+              })
+              .catch((error) => {
+                console.log("Error al obtener plan");
+                console.log(JSON.stringify(error, null, 2));
+                closeIndicator();
+            
+              });
+
             closeIndicator();
             Alert.alert(
               "Información",
@@ -158,6 +235,58 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
           errorUser.response.data.message
         );
       });
+
+  }
+
+  const convertDataUserToGeneratePlanRenovacion = ( objDataUser:any, tmb: string ) => {
+    var dietType = "";
+
+    switch (objDataUser.tipo_dieta) {
+      case "Todo tipo de alimentos":
+        dietType = "Todo";
+        break;
+
+      case "Sin gluten":
+        dietType = "GlutenFree";
+        break;
+    
+      default:
+        dietType = objDataUser.tipo_dieta;
+        break;
+    }
+
+    //const arrayOfFoodAvoid: Item[] = objDataUser.alimentos_evitar.split(',');
+    const arrayOfIdsFoods: string[] = objDataUser.alimentos_evitar.split(',').map((item: string) => item.trim());
+
+    const resultBody = {
+      "tipo_dieta": dietType,
+      "objetivo": objDataUser.objetivo,
+      "tmb":tmb,
+      "alimentos_evitar": arrayOfIdsFoods
+    };
+    
+    console.log("BODY GENERA PLAN");
+    console.log(JSON.stringify(resultBody,null,2));
+
+    return resultBody;
+  }
+
+  const buildBodyRenovacionToPlanNutricional = ( objDataUser:any, generatedPlan: any ) => {
+
+    const today = new Date();
+    // Obtener el día, mes y año
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript son 0-indexed
+    const year = today.getFullYear();
+    // Formatear la fecha como "DD/MM/YYYY"
+    const formattedDate = `${day}/${month}/${year}`;
+
+    return {
+      "nombre": "Plan generado para "+ objDataUser.nombre + " " +formattedDate ,
+      "id_usuario": objDataUser.id,
+      "contenido": JSON.stringify(generatedPlan),
+      "activo": 1 //Se agrega 1, para que el plan nazca como Activo
+    }
 
   }
 
