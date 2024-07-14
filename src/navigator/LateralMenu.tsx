@@ -114,6 +114,7 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
         style={styles.logoutContainer}
         onPress={async () => {
           await AsyncStorage.removeItem("user");
+          await AsyncStorage.removeItem("mealPlan");
 
           useAuthStore.setState({ status: "unauthenticated" });
           useAuthStore.setState({ user: undefined });
