@@ -256,6 +256,17 @@ const MainMenuStyles = StyleSheet.create({
     borderRadius: 15,
     marginBottom: "5%",
   },
+  containerSinPlan:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  centeredTextSinPlan:{
+    fontSize: 18,
+    fontFamily: "Gotham-Ultra",
+    //marginVertical: 5,
+    color: "#2E2A21",
+  }
 });
 
 export default MainMenuStyles;

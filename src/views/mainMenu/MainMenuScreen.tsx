@@ -38,6 +38,7 @@ const MainMenuScreen = () => {
   const [numberMonths, setNumberMonths] = useState("");
   const [caloriesPlan, setCaloriesPlan] = useState("");
   const [planObj, setPlanObj] = useState({});
+  const [showMealPlanElements, setShowMealPlanElements] = useState(false);
   //const [monthsArray, setMonthsArray] = useState([]);
 
   const monthsArray: Number[] = [];
@@ -62,31 +63,79 @@ const MainMenuScreen = () => {
   }, []);
 
   const getMealPlan = async () => {
-    const body = {
-      "tipo_dieta": "Todo",
-      "objetivo": "Ganar masa muscular",
-      "tmb":"3500",
-      "alimentos_evitar":[]
-    };
-
-    console.log("INFORMACIÓN USUARIO");
-    console.log(JSON.stringify(userInfo));
-    console.log("STRING URL: " + "/planNutricional/"+userInfo?.id);
+    // Antes de mostrar Plan, validamos que ya se haya cumplido el tiempo para mostrar el Plan
+    //Validamos que el plan exista en el almacenamiento local
     showLoading();
-    const resp = await MuySaludableApi.get("/planNutricional/"+userInfo?.id)
-      .then((response) => {
-        console.log("EL PLAN OBTENIDO DESDE PLAN NUTRICIONAL BD");
-        console.log(JSON.stringify( response.data.data, null, 2 ));
-        setPlanObj(JSON.parse(response.data.data.contenido));
-        hideLoading();
-      })
-      .catch((error) => {
+    const mealPlanLocal = await AsyncStorage.getItem("mealPlan");
+    //console.log("MEAL PLAN LOCAL");
+    //console.log(JSON.stringify(mealPlanLocal,null,1));
+    if( mealPlanLocal == null ){
+      console.log("ENTRA CONSUMO API");
+      
+      const resp = await MuySaludableApi.get("/planNutricional/"+userInfo?.id)
+        .then((response) => {
+          //Antes de establecer el plan en pantalla, validamos que se hayan cumplido las 2 horas de "espera" (tiempo en lo que el plan está listo)
+          const showMealPlan = validateShowMealPlan(response.data.data.createdAt);
 
-        hideLoading();
-        console.log("Error al obtener plan");
-        console.log(JSON.stringify(error, null, 2));
-      });
+          if( showMealPlan ){ //Ya se cumplió el tiempo de espera para la creación del plan
+            setShowMealPlanElements(true);
+            AsyncStorage.setItem("mealPlan", JSON.stringify(response.data.data) );
+    
+            console.log("EL PLAN OBTENIDO DESDE PLAN NUTRICIONAL BD");
+            console.log(JSON.stringify( response.data.data, null, 2 ));
+            setPlanObj(JSON.parse(response.data.data.contenido));
+          }else{
+            //Aún no se cumplen las 2 horas
+            setShowMealPlanElements(false);
+          }
+          
+          hideLoading();
+          
+        })
+        .catch((error) => {
+  
+          hideLoading();
+          console.log("Error al obtener plan");
+          console.log(JSON.stringify(error, null, 2));
+        });
+    }else{ //Se tiene información del plan en AsyncStorage
+      console.log("ENTRA CONSUMO ASYNCSTORAGE");
+      console.log("Contenido local");
+      console.log(JSON.stringify(mealPlanLocal,null,1));
+      console.log("JSON PARSE");
+      //console.log(JSON.stringify(JSON.parse(mealPlanLocal).createdAt,null,2));
+      const showMealPlan = validateShowMealPlan(JSON.parse(mealPlanLocal).createdAt);
+      if( showMealPlan ){
+        setShowMealPlanElements(true);
+        setPlanObj(JSON.parse(JSON.parse(mealPlanLocal).contenido));
+      }else{
+        setShowMealPlanElements(false);
+      }
+      hideLoading();
+    }
+  
   };
+
+  const validateShowMealPlan = ( dateCreated: string ): Boolean => {
+    console.log("ENTRA VALIDACIÓN VISTA PLAN");
+    console.log(dateCreated);
+    const createdAtDate = new Date(dateCreated);
+    const createdAtPlus2Hours = new Date(createdAtDate.getTime() + 2 * 60 * 60 * 1000); // Sumar 2 horas en milisegundos
+    // Obtener la fecha y hora actual
+    const now = new Date();
+    //const now = new Date(2024, 6, 14, 2, 58, 24);
+
+    console.log("comparación:"),
+    console.log("Creación: " + dateCreated, " Más 2: "+createdAtPlus2Hours, " actual: "+ now)
+
+    if (now >= createdAtPlus2Hours) {
+      console.log("RETURN TRUE");
+      return true;
+    } else {
+      console.log("RETURN false");
+      return false;
+    }
+  }
 
   const calculateCaloriesForPlan = () => {
     const calorias = ajustarCaloriasPorObjetivo(Number(userInfo?.tmb), userInfo?.objetivo);
@@ -149,55 +198,70 @@ const MainMenuScreen = () => {
         style={styles.imageBackground}
       >
         <View style={styles.dataTitleContainer}>
-          <View style={styles.datosInfoTitle}>
-            <Text style={styles.datosTitleText}>PLAN GENERADO</Text>
-            {/* <Text style={styles.datosTitleText}>{numberMonths}</Text> */}
-          </View>
-        </View>
+              <View style={styles.datosInfoTitle}>
+                <Text style={styles.datosTitleText}>PLAN GENERADO</Text>
+                {/* <Text style={styles.datosTitleText}>{numberMonths}</Text> */}
+              </View>
+            </View>
 
-        <View style={styles.contentTitleContainer}>
-          <View style={styles.contentInfoTitle}>
-            <Text style={styles.contentTitleText}>
-              CON BASE A TU OBJETIVO
-            </Text>
-            <Text style={styles.contentTitleText}>
-              {" "}
-              SE HA GENERADO UN PLAN DE
-            </Text>
-            <Text style={styles.contentTitleCalories}>
-              {" "}
-              { caloriesPlan } CALORÍAS
-            </Text>
-          </View>
-        </View>
+        { showMealPlanElements ? (
+          <>
+            <View style={styles.contentTitleContainer}>
+              <View style={styles.contentInfoTitle}>
+                <Text style={styles.contentTitleText}>
+                  CON BASE A TU OBJETIVO
+                </Text>
+                <Text style={styles.contentTitleText}>
+                  {" "}
+                  SE HA GENERADO UN PLAN DE
+                </Text>
+                <Text style={styles.contentTitleCalories}>
+                  {" "}
+                  { caloriesPlan } CALORÍAS
+                </Text>
+              </View>
+            </View>
 
-        <View style={styles.contentTitleContainer}>
-          <View style={styles.contentInstructionTitle}>
-            <Text style={styles.contentInstructionText}>
-              DA CLIC EN LA SECCIÓN QUE DESEES
-            </Text>
-            <Text style={styles.contentInstructionText}>
-              {" "}
-              PARA DESPLEGAR EL CONTENIDO DE
-            </Text>
-            <Text style={styles.contentInstructionText}>
-              TU PLAN ALIMENTICIO
-            </Text>
-          </View>
-        </View>
+            <View style={styles.contentTitleContainer}>
+              <View style={styles.contentInstructionTitle}>
+                <Text style={styles.contentInstructionText}>
+                  DA CLIC EN LA SECCIÓN QUE DESEES
+                </Text>
+                <Text style={styles.contentInstructionText}>
+                  {" "}
+                  PARA DESPLEGAR EL CONTENIDO DE
+                </Text>
+                <Text style={styles.contentInstructionText}>
+                  TU PLAN ALIMENTICIO
+                </Text>
+              </View>
+            </View>
 
-        <PlanView objPlan={planObj} />
+            <PlanView objPlan={planObj} />
 
-        {/* Solo disponible para Paquete Premium */}
-        <LinkRecetario />
+            {/* Solo disponible para Paquete Premium */}
+            <LinkRecetario />
+              <TouchableOpacity
+                style={styles.btnPDF}
+                onPress={() => handlePrintToFile(userStatePlan, planObj)}
+              >
+                <Text style={styles.textBtnPDF}>EXPORTAR PLAN COMO PDF</Text>
+              </TouchableOpacity>
+        
+          </>
 
-        {/* <TouchableOpacity style={styles.btnPDF} onPress={printToFile}> */}
-        <TouchableOpacity
-          style={styles.btnPDF}
-          onPress={() => handlePrintToFile(userStatePlan, planObj)}
-        >
-          <Text style={styles.textBtnPDF}>EXPORTAR PLAN COMO PDF</Text>
-        </TouchableOpacity>
+          ): 
+          (
+            <View style={styles.containerSinPlan}>
+              <Text style={styles.centeredTextSinPlan}>Seguimos trabajando para</Text>
+              <Text style={styles.centeredTextSinPlan}>tener el plan ideal para ti.</Text>
+              <Text style={styles.centeredTextSinPlan}>Por favor vuelve a consultar</Text>
+              <Text style={styles.centeredTextSinPlan}>más tarde</Text>
+            </View>
+          ) 
+        }
+        
+        
       </ImageBackground>
       {loading && <LoadingAnimation />}
     </SafeAreaView>
