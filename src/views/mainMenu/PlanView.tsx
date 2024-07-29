@@ -44,8 +44,16 @@ const PlanView: React.FC<PlanViewProps> = ({ objPlan }) => {
     for (const key in objPlan) {
       if (Object.hasOwnProperty.call(objPlan, key)) {
         const subPlan = objPlan[key];
+        var titleAccordion = "";
+        if( key == "Mes1" ){
+          titleAccordion = "Mes 1";
+        }else if ( key == "Mes2" ){
+          titleAccordion = "Mes 2"
+        }else{
+          titleAccordion = "Detox";
+        }
         const accordionItem = (
-          <AccordionItem key={key} title={key}>
+          <AccordionItem key={key} title={titleAccordion}>
             {renderSubPlan(subPlan)}
           </AccordionItem>
         );
