@@ -87,7 +87,7 @@ const MainMenuViewModel = (  ) => {
           display: flex;
           justify-content: center;
           align-items: center;
-          background-image: url('https://i.ibb.co/NVHzjW2/imagen-PDF-Portada.jpg');
+          background-image: url('https://muysaludable.com.mx/img-pdf/imagenPDF_Portada.jpeg');
           background-size: cover;
           background-position: center;
         }
@@ -139,7 +139,7 @@ const MainMenuViewModel = (  ) => {
           width: 100%;
           height: 100%;
           position: relative;
-          background-image: url('https://i.ibb.co/9cCGD1S/imagen-Fondo-PDFPlan.jpg');
+          background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg');
           background-size: cover;
           margin: 0;
           padding: 0;
@@ -168,7 +168,7 @@ const MainMenuViewModel = (  ) => {
           padding: 0;
           width: 100%;
           height: 100%;
-          background-image: url('https://i.ibb.co/9cCGD1S/imagen-Fondo-PDFPlan.jpg'); /* URL de la imagen de fondo */
+          background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg'); /* URL de la imagen de fondo */
           background-size: cover;
           display: flex;
           flex-direction: row;
@@ -210,7 +210,7 @@ const MainMenuViewModel = (  ) => {
           width: 100%;
           height: 100%;
           position: relative;
-          background-image: url('https://i.ibb.co/9cCGD1S/imagen-Fondo-PDFPlan.jpg');
+          background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg');
           background-size: cover;
           margin: 0;
           padding: 0;
@@ -240,7 +240,7 @@ const MainMenuViewModel = (  ) => {
           width: 100%;
           height: 100%;
           position: relative;
-          background-image: url('https://i.ibb.co/7SqKswy/img-Fondo-PDF.jpg');
+          background-image: url('https://muysaludable.com.mx/img-pdf/imgFondoPDF.jpeg');
           background-size: cover;
           margin: 0;
           padding: 0;
@@ -276,7 +276,7 @@ const MainMenuViewModel = (  ) => {
     <body>
       <div class="page">
         <div class="left">
-          <img src="https://i.ibb.co/KsrVQqG/logo-Muy-Saludable-PDF.png" alt="logo" class="logo" />
+          <img src="https://muysaludable.com.mx/img-pdf/logoMuySaludablePDF.png" alt="logo" class="logo" />
           <div class="text-container">
             <p class="text">MUY SALUDABLE</p>
           </div>
@@ -301,7 +301,7 @@ const MainMenuViewModel = (  ) => {
               </ul>
               <p class="titleRecomendacion">Fotos:</p>
               <p class="textMedidas">Ahora toma tus fotos para tener tu antes y después de acuerdo a los encuadres que a continuación se muestran.</p>
-              <img src="https://i.ibb.co/mX1dcXC/guia-medidas.jpg" alt="Imagen" class="centerImage">
+              <img src="https://muysaludable.com.mx/img-pdf/guia_medidas.jpg" alt="Imagen" class="centerImage">
           </div>
         </div>
         <div class="pageRecomendaciones">
@@ -317,7 +317,7 @@ const MainMenuViewModel = (  ) => {
                   <li>Combina tu plan alimenticio con ejercicio regular, ya que es un excelente complemento para alcanzar tus objetivos.</li>
                   <li>Para controlar la ansiedad por la falta de azúcar, puedes optar por chocolate con 80% de cacao o frutas como la manzana.</li>
               </ul>
-              <img src="https://i.ibb.co/Q87W0VY/plato-del-bien-comer-sin-fondo.png" alt="Imagen" class="centerImage">
+              <img src="https://muysaludable.com.mx/img-pdf/plato_del_bien_comer_sin_fondo.png" alt="Imagen" class="centerImage">
           </div>
         </div>
         <div class="pageFrase">
@@ -339,9 +339,15 @@ const MainMenuViewModel = (  ) => {
     let html = '';
   
     for (const plan in data) {
+      var namePlan = plan;
+      if( plan == "Mes1" ){
+        namePlan = "Mes 1";
+      }else if( plan == "Mes2" ){
+        namePlan = "Mes 2";
+      }
       html += ` <div class="pageNamePlan">
           <div class="contentNamePlan">
-            <p class="titleNamePlan">PLAN ${plan.toUpperCase()}</p>
+            <p class="titleNamePlan">PLAN ${namePlan.toUpperCase()}</p>
           </div>
       </div>`;
       
