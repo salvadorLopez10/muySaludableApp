@@ -35,14 +35,20 @@ interface Plan {
 
 interface PlanViewProps {
   objPlan: Plan;
+  planContratado: string | null | undefined;
 }
 
-const PlanView: React.FC<PlanViewProps> = ({ objPlan }) => {
+const PlanView: React.FC<PlanViewProps> = ({ objPlan, planContratado }) => {
   const renderAccordionItems = (): JSX.Element[] => {
     const accordionItems: JSX.Element[] = [];
 
     for (const key in objPlan) {
       if (Object.hasOwnProperty.call(objPlan, key)) {
+
+        //Condición para mostrar únicamente 1 mes en caso de que el usuario tenga el plan clásico con duración de 1 mes
+        //continue - se refiere a saltar la iteración actual en caso de cumplir con la condición
+        if (planContratado === "Paquete Clásico" && key === "Mes2") continue;
+        
         const subPlan = objPlan[key];
         var titleAccordion = "";
         if( key == "Mes1" ){

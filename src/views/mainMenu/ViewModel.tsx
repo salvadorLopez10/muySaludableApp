@@ -65,9 +65,9 @@ const MainMenuViewModel = (  ) => {
     //navigation.navigate();
   };
 
-  const generateHTML = (userName: string, planObj:any) => {
+  const generateHTML = (userName: string, planObj:any, nombrePlan: string | null | undefined) => {
 
-    const htmlDrawComidas = buildComidasHtml(planObj);
+    const htmlDrawComidas = buildComidasHtml(planObj, nombrePlan );
 
     const html = `
     <html>
@@ -335,10 +335,12 @@ const MainMenuViewModel = (  ) => {
     return html;
   }
 
-  const buildComidasHtml = (data:any) => {
+  const buildComidasHtml = ( data:any, nombrePlan: string | null | undefined ) => {
     let html = '';
   
     for (const plan in data) {
+
+      if (nombrePlan === "Paquete Clásico" && plan === "Mes2") continue;
       var namePlan = plan;
       if( plan == "Mes1" ){
         namePlan = "Mes 1";
@@ -384,7 +386,7 @@ const MainMenuViewModel = (  ) => {
     //On iOS/android prints the given html. On web prints the HTML from the current page.
     setLoading(true);
     let userName = ( userInfo?.nombre ) ? userInfo.nombre : "Usuario";
-    let html = generateHTML(userName, planObj);
+    let html = generateHTML(userName, planObj, userInfo?.nombre_plan);
     const { uri } = await Print.printToFileAsync({ html });
     setLoading(false);
     console.log("File has been saved to:", uri);

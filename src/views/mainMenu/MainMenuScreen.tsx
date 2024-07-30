@@ -123,7 +123,7 @@ const MainMenuScreen = () => {
     const createdAtPlus2Hours = new Date(createdAtDate.getTime() + 2 * 60 * 60 * 1000); // Sumar 2 horas en milisegundos
     // Obtener la fecha y hora actual
     const now = new Date();
-    //const now = new Date(2024, 6, 14, 2, 58, 24);
+    //const now = new Date(2024, 7, 29, 2, 58, 24);
 
     console.log("comparación:"),
     console.log("Creación: " + dateCreated, " Más 2: "+createdAtPlus2Hours, " actual: "+ now)
@@ -237,7 +237,7 @@ const MainMenuScreen = () => {
               </View>
             </View>
 
-            <PlanView objPlan={planObj} />
+            <PlanView objPlan={planObj} planContratado={userInfo?.nombre_plan} />
 
             {/* Solo disponible para Paquete Premium */}
             <LinkRecetario />
