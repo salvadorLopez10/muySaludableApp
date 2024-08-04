@@ -10,6 +10,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthStore } from './src/store/auth/useAuthStore';
 import * as Notifications from "expo-notifications";
 import UserProfileStackNavigator from './src/navigator/UserProfileStackNavigator';
+import { QuizNavigator } from "./src/navigator/QuizNavigator";
+import { MuySaludableApi } from "./src/api/MuySaludableApi";
+import { UpdateAnualPlanNavigator } from "./src/navigator/UpdateAnualPlanNavigator";
 
 
 Notifications.setNotificationHandler({
@@ -23,6 +26,9 @@ Notifications.setNotificationHandler({
 export default function App() {
   const [userPlanActive, setUserPlanActive] = useState("1");
   const [authenticated, setAuthenticated] = useState(false);
+  const [showUpdateMessage, setShowUpdateMessage] = useState(false);
+  const [navigatorComponent, setNavigatorComponent] = useState(<View><Text>Cargando...</Text></View>);
+
 
   const [fontsLoaded, fontError] = useFonts({
     "Gotham-Ultra": require("./assets/fonts/Gotham-Ultra.otf"),
@@ -38,6 +44,60 @@ export default function App() {
   useEffect(() => {
     getInfoUser();
   }, []);
+
+  useEffect(() => {
+
+    const renderNavigator = async  () => {
+      console.log("RENDER NAVIGATOR");
+      console.log(JSON.stringify(userInfo,null,2))
+       if (!userInfo) {
+          console.log("STACKNAVIGATOR") //Stack para compra de plan (usuario nuevo)
+          //return <StackNavigator />;
+          setNavigatorComponent(<StackNavigator />);
+       } else if (isExpiratedPlan(userInfo.fecha_expiracion)) { //isExpiratedPlan("2024-05-11T05:59:00.000Z") -  isExpiratedPlan(userInfo.fecha_expiracion)
+        console.log("UserProfileStackNavigator"); //Stack parfa renovación de plan
+         //return <UserProfileStackNavigator />;
+         setNavigatorComponent(<UserProfileStackNavigator />);
+       }else if(userInfo.nombre == null ){//Stack para completar cuestionario (EL USUARIO NO COMPLETÓ EL CUESTIONARIO CORRECATAMENTE)
+          console.log("QUIZ NAVIGATOR");
+          //return <QuizNavigator />;
+          setNavigatorComponent(<QuizNavigator />);
+       } else {
+          if( userInfo.nombre_plan == "Paquete Anual" ){
+            console.log("TIENE PLAN ANUAL, PROCEDEMOS A VALIDAR SI YA PASARON 2 MESES, PARA QUE EN CASO DE QUE SEA ASÍ, SE PROCEDE A VALIDAR");
+            //Obtenemos fecha de compra del plan
+            const actualizaPlan = await validate2meses();
+            console.log("RESPUESTA ACTUALIZA PLAN: " + actualizaPlan);
+            if (actualizaPlan) {
+              Alert.alert(
+                "Actualizar plan alimenticio",
+                "Para mantener actualizado tu plan alimenticio, es necesario actualizar información de tu perfil.\n¡Te invitamos a contestar las siguientes preguntas!",
+                [
+                  {
+                    text: "Actualizar información",
+                    onPress: () => setNavigatorComponent(<UpdateAnualPlanNavigator />),
+                  },
+                ],
+                { cancelable: false }
+              );
+
+              
+              
+            }
+            //return <LateralMenu />;
+            setNavigatorComponent(<LateralMenu />);
+    
+          }else{
+    
+            console.log("LateralMenu");//Stack con usuario logueado
+            //return <LateralMenu />;
+            setNavigatorComponent(<LateralMenu />);
+          }
+       }
+     };
+
+    renderNavigator();
+  }, [userInfo]);
 
   const getInfoUser = async () => {
     const user = await AsyncStorage.getItem("user");
@@ -55,21 +115,6 @@ export default function App() {
     </View>
   }
 
-
- const renderNavigator = () => {
-  console.log("RENDER NAVIGATOR");
-  console.log(JSON.stringify(userInfo,null,2))
-   if (!userInfo) {
-    console.log("STACKNAVIGATOR")
-     return <StackNavigator />;
-   } else if (isExpiratedPlan(userInfo.fecha_expiracion)) { //isExpiratedPlan("2024-05-11T05:59:00.000Z")
-    console.log("UserProfileStackNavigator");
-     return <UserProfileStackNavigator />;
-   } else {
-    console.log("LateralMenu");
-     return <LateralMenu />;
-   }
- };
   const isExpiratedPlan = (fechaExpiracion: string) => {
     console.log("ENTRA COMPARACION DE FECHAS");
     const currentDate = new Date();
@@ -84,16 +129,54 @@ export default function App() {
     return false;
   };
 
-  return (
-    <NavigationContainer>
-      {
-         //status !== "authenticated" ? <StackNavigator /> : <LateralMenu />
-        // <BottomTabs />
-        renderNavigator()
+
+  const validate2meses = async () => {
+
+    var actualizaPlan = false;
+    try {
+      const response = await MuySaludableApi.get(`/suscripciones/${userInfo?.id_suscripcion}`);
+      console.log("SUSCRIPCIOOONN :");
+      console.log(JSON.stringify(response, null, 2));
+      const fechaCompra = response.data.data.fecha_compra;
+      //const fechaCompra = "2024-05-29T20:18:34.000Z";
+      const fechaActual = new Date();
+  
+      if (fechaCompra !== undefined) {
+        const fechaCompraSuscripcion = new Date(fechaCompra);
+        console.log("COMPARANDO ACTUAL: " + fechaActual + " COMPARANDO CREACIÓN: " + fechaCompraSuscripcion);
+        const diferenciaMeses = fechaActual.getMonth() - fechaCompraSuscripcion.getMonth() + (12 * (fechaActual.getFullYear() - fechaCompraSuscripcion.getFullYear()));
+        console.log("diff meses: " + diferenciaMeses);
+        if (diferenciaMeses >= 2) {
+          console.log("YA HAN PASADO 2 MESES");
+          actualizaPlan = true;
+        }
       }
-      {/* <BottomTabs /> */}
-      {/* <StackNavigator /> */}
-      {/* <LateralMenu /> */}
+    } catch (error) {
+      console.log("Error al obtener la suscripción");
+      console.log(error);
+    }
+  
+    return actualizaPlan;
+  }
+
+  return (
+    // <NavigationContainer>
+    //   {
+    //      //status !== "authenticated" ? <StackNavigator /> : <LateralMenu />
+    //     // <BottomTabs />
+    //     renderNavigator()
+    //   }
+    //   {/* <BottomTabs /> */}
+    //   {/* <StackNavigator /> */}
+    //   {/* <LateralMenu /> */}
+    // </NavigationContainer>
+    <NavigationContainer>
+      {showUpdateMessage && (
+        <View style={{ position: 'absolute', top: 0, left: 0, right: 0, backgroundColor: 'yellow', padding: 10 }}>
+          <Text>Han pasado 2 meses desde tu última actualización. ¡Es momento de actualizar tu plan!</Text>
+        </View>
+      )}
+      {navigatorComponent}
     </NavigationContainer>
   );
 }
