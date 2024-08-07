@@ -24,8 +24,6 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
-  const [userPlanActive, setUserPlanActive] = useState("1");
-  const [authenticated, setAuthenticated] = useState(false);
   const [showUpdateMessage, setShowUpdateMessage] = useState(false);
   const [navigatorComponent, setNavigatorComponent] = useState(<View><Text>Cargando...</Text></View>);
 
@@ -46,56 +44,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-
-    const renderNavigator = async  () => {
-      console.log("RENDER NAVIGATOR");
-      console.log(JSON.stringify(userInfo,null,2))
-       if (!userInfo) {
-          console.log("STACKNAVIGATOR") //Stack para compra de plan (usuario nuevo)
-          //return <StackNavigator />;
-          setNavigatorComponent(<StackNavigator />);
-       } else if (isExpiratedPlan(userInfo.fecha_expiracion)) { //isExpiratedPlan("2024-05-11T05:59:00.000Z") -  isExpiratedPlan(userInfo.fecha_expiracion)
-        console.log("UserProfileStackNavigator"); //Stack parfa renovación de plan
-         //return <UserProfileStackNavigator />;
-         setNavigatorComponent(<UserProfileStackNavigator />);
-       }else if(userInfo.nombre == null ){//Stack para completar cuestionario (EL USUARIO NO COMPLETÓ EL CUESTIONARIO CORRECATAMENTE)
-          console.log("QUIZ NAVIGATOR");
-          //return <QuizNavigator />;
-          setNavigatorComponent(<QuizNavigator />);
-       } else {
-          if( userInfo.nombre_plan == "Paquete Anual" ){
-            console.log("TIENE PLAN ANUAL, PROCEDEMOS A VALIDAR SI YA PASARON 2 MESES, PARA QUE EN CASO DE QUE SEA ASÍ, SE PROCEDE A VALIDAR");
-            //Obtenemos fecha de compra del plan
-            const actualizaPlan = await validate2meses();
-            console.log("RESPUESTA ACTUALIZA PLAN: " + actualizaPlan);
-            if (actualizaPlan) {
-              Alert.alert(
-                "Actualizar plan alimenticio",
-                "Para mantener actualizado tu plan alimenticio, es necesario actualizar información de tu perfil.\n¡Te invitamos a contestar las siguientes preguntas!",
-                [
-                  {
-                    text: "Actualizar información",
-                    onPress: () => setNavigatorComponent(<UpdateAnualPlanNavigator />),
-                  },
-                ],
-                { cancelable: false }
-              );
-
-              
-              
-            }
-            //return <LateralMenu />;
-            setNavigatorComponent(<LateralMenu />);
-    
-          }else{
-    
-            console.log("LateralMenu");//Stack con usuario logueado
-            //return <LateralMenu />;
-            setNavigatorComponent(<LateralMenu />);
-          }
-       }
-     };
-
+    console.log("EFFFECT RENDERNAVIGATOR");
     renderNavigator();
   }, [userInfo]);
 
@@ -103,44 +52,33 @@ export default function App() {
     const user = await AsyncStorage.getItem("user");
 
     if (user != null) {
+      const parsedUser = JSON.parse(user);
       useAuthStore.setState({ status: "authenticated" });
-      useAuthStore.setState({ user: JSON.parse(user) });
+      useAuthStore.setState({ user: parsedUser });      
     }
   };
 
-  if( !fontsLoaded ){
-    console.log("SIN FUENTES");
-    return <View>
-      <Text>No se cargaron las fuentes</Text>
-    </View>
-  }
-
-  const isExpiratedPlan = (fechaExpiracion: string) => {
-    console.log("ENTRA COMPARACION DE FECHAS");
+  const isExpiratedPlan = (fechaExpiracion: string | undefined) => {
+    //fechaExpiracion = "2024-08-04T05:59:00.000Z";
     const currentDate = new Date();
-    const expirationDate = new Date(fechaExpiracion);
-
-    console.log(currentDate, expirationDate);
-
-    if (currentDate > expirationDate) {
-      return true;
+    if(fechaExpiracion !== undefined){
+      const expirationDate = new Date(fechaExpiracion);
+      if (currentDate > expirationDate) {
+        return true;
+      }
     }
 
     return false;
   };
 
-
   const validate2meses = async () => {
-
     var actualizaPlan = false;
     try {
       const response = await MuySaludableApi.get(`/suscripciones/${userInfo?.id_suscripcion}`);
-      console.log("SUSCRIPCIOOONN :");
-      console.log(JSON.stringify(response, null, 2));
+      //console.log(JSON.stringify(response, null, 2));
       const fechaCompra = response.data.data.fecha_compra;
-      //const fechaCompra = "2024-05-29T20:18:34.000Z";
       const fechaActual = new Date();
-  
+
       if (fechaCompra !== undefined) {
         const fechaCompraSuscripcion = new Date(fechaCompra);
         console.log("COMPARANDO ACTUAL: " + fechaActual + " COMPARANDO CREACIÓN: " + fechaCompraSuscripcion);
@@ -155,8 +93,52 @@ export default function App() {
       console.log("Error al obtener la suscripción");
       console.log(error);
     }
-  
     return actualizaPlan;
+  };
+
+  const renderNavigator = async () => {
+    console.log("RENDER NAVIGATOR");
+    //console.log(JSON.stringify(userInfo,null,2));
+    if (!userInfo) {
+      console.log("STACKNAVIGATOR"); //Stack para compra de plan (usuario nuevo)
+      setNavigatorComponent(<StackNavigator />);
+    } else if (isExpiratedPlan(userInfo.fecha_expiracion)) {  //isExpiratedPlan("2024-05-11T05:59:00.000Z") -  isExpiratedPlan(userInfo.fecha_expiracion)
+      console.log("UserProfileStackNavigator"); //Stack para renovación de plan
+      setNavigatorComponent(<UserProfileStackNavigator />);
+    } else if (userInfo.nombre == null) { //Stack para completar cuestionario (EL USUARIO NO COMPLETÓ EL CUESTIONARIO CORRECTAMENTE)
+      console.log("QUIZ NAVIGATOR");
+      setNavigatorComponent(<QuizNavigator />);
+    } else {
+      if (userInfo.nombre_plan == "Paquete Anual") {
+        console.log("TIENE PLAN ANUAL, PROCEDEMOS A VALIDAR SI YA PASARON 2 MESES, PARA QUE EN CASO DE QUE SEA ASÍ, SE PROCEDE A VALIDAR");
+        const actualizaPlan = await validate2meses();
+        console.log("RESPUESTA ACTUALIZA PLAN: " + actualizaPlan);
+        if (actualizaPlan) {
+          Alert.alert(
+            "Actualizar plan alimenticio",
+            "Para mantener actualizado tu plan alimenticio, es necesario actualizar información de tu perfil.\n¡Te invitamos a contestar las siguientes preguntas!",
+            [
+              {
+                text: "Actualizar información",
+                onPress: () => setNavigatorComponent(<UpdateAnualPlanNavigator />),
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+        setNavigatorComponent(<LateralMenu />);
+      } else {
+        console.log("LateralMenu"); //Stack con usuario logueado
+        setNavigatorComponent(<LateralMenu />);
+      }
+    }
+  };
+
+  if( !fontsLoaded ){
+    console.log("SIN FUENTES");
+    return <View>
+      <Text>No se cargaron las fuentes</Text>
+    </View>
   }
 
   return (

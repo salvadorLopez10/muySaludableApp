@@ -266,7 +266,23 @@ const MainMenuStyles = StyleSheet.create({
     fontFamily: "Gotham-Ultra",
     //marginVertical: 5,
     color: "#2E2A21",
-  }
+  },
+  btnVerify: {
+    marginTop:15,
+    backgroundColor: "#326807",
+    //backgroundColor: "#009144",
+    padding: 10,
+    //width: "90%",
+    alignItems: "center", 
+    borderRadius: 15,
+    marginBottom: "5%",
+  },
+  textVerify: {
+    fontSize: 16,
+    fontFamily: "Gotham-Ultra",
+    marginVertical: 5,
+    color: "#ffffff",
+  },
 });
 
 export default MainMenuStyles;

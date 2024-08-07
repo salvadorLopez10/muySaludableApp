@@ -177,6 +177,8 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
 
                   scheduleNotification();
 
+                  AsyncStorage.removeItem("mealPlan");
+
                   navigation.reset({
                     index: 0,
                     routes: [{ name: "LoginScreen" }],
@@ -331,7 +333,7 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
         weight + " kg" +
         "\n" +
         "Objetivo: " + goal +
-        "\n\n¿Deseas confirmar las información para poder generar tu nuevo plan alimenticio?",
+        "\n\n¿Deseas confirmar la información para poder generar tu nuevo plan alimenticio?",
       [
         {
           text: "Cancelar",

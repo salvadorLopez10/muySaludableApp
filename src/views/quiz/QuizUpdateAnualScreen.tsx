@@ -9,6 +9,7 @@ import { useAuthStore } from "../../store/auth/useAuthStore";
 import { ActivityIndicator } from "react-native";
 import { NotificationPush } from "../../utils/NotificationPush";
 import * as Notifications from "expo-notifications";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Props extends StackScreenProps<any,any>{};
 
@@ -36,27 +37,32 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
   } = NotificationPush();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => {
-      console.log("TOKEN: " + token);
-      setExpoPushToken(token);
-    });
+    // registerForPushNotificationsAsync().then((token) => {
+    //   console.log("TOKEN: " + token);
+    //   setExpoPushToken(token);
+    // });
 
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
-      });
+    // notificationListener.current =
+    //   Notifications.addNotificationReceivedListener((notification) => {
+    //     setNotification(notification);
+    //   });
 
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
+    // responseListener.current =
+    //   Notifications.addNotificationResponseReceivedListener((response) => {
+    //     console.log(response);
+    //   });
 
-    return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current
-      );
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
+    // return () => {
+    //   Notifications.removeNotificationSubscription(
+    //     notificationListener.current
+    //   );
+    //   Notifications.removeNotificationSubscription(responseListener.current);
+    // };
+    if( userInfo ){
+        console.log("DENTRO DE QUIZ UPDATE");
+        console.log(JSON.stringify(userInfo,null,2));
+        setExpoPushToken(userInfo.notification_token);
+    }
   }, []);
 
   const handlePhysicalActivitySelect = (value: string) => {
@@ -194,18 +200,43 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                                 .then(( responsePlanNutricionalSaved ) => {
                                     console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
                                     console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
-                                    closeIndicator();
-                                    Alert.alert(
-                                        "Información",
-                                        "Agradecemos la actualización de tu información.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
-                                    );
+                                    
+                                    //Actualiza fecha compra de la suscripción para mantener actualizada la suscripción del plan anual (se actualiza cada 2 meses)
+                                    //fecha_compra = new Date().toISOString();
+                                    const bodyUpdateFechaCompra = {
+                                        fecha_compra: new Date().toISOString()
+                                    };
+                                    const actualizaSuscripcion = MuySaludableApi.put(
+                                        `/suscripciones/${userInfo?.id_suscripcion}`,
+                                        bodyUpdateFechaCompra
+                                      ).then((responseUpdateFechaCompra) => {
+                                        console.log("SE ACTUALIZA FECHA COMPRA");
+                                        console.log(JSON.stringify( responseUpdateFechaCompra.data.data,null,2 ));
 
-                                    scheduleNotification();
+                                        Alert.alert(
+                                            "Información",
+                                            "Agradecemos la actualización de tu información.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+                                        );
 
-                                    navigation.reset({
-                                        index: 0,
-                                        routes: [{ name: "LoginScreen" }],
-                                    });
+                                        closeIndicator();
+
+                                        scheduleNotification();
+
+                                        clearDataUser();
+
+                                        navigation.reset({
+                                            index: 0,
+                                            routes: [{ name: "LoginScreen" }],
+                                        });
+
+                                      }).catch((errorUpdateActualizaFechaCompra) => {
+                                            closeIndicator();
+
+                                            console.log(
+                                            "Mensaje de error al INACTIVAR suscripción: ",
+                                            errorUpdateActualizaFechaCompra.response.data.message
+                                            );
+                                        });
 
                                 }).catch((errorInsertPlanNutricional) => {
                                     console.log("ERROR AL GUARDAR PLAN CON USUARIO");
@@ -248,6 +279,14 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
       ]);
 
   };
+
+    const clearDataUser = async () => {
+        await AsyncStorage.removeItem("user");
+        await AsyncStorage.removeItem("mealPlan");
+
+        useAuthStore.setState({ status: "unauthenticated" });
+        useAuthStore.setState({ user: undefined });
+    }
 
     const getLabelById = (id: string): string | undefined => {
         const selectedOption = activityLevelSelect.find(option => option.id === id);

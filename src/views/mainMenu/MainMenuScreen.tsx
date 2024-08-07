@@ -58,18 +58,18 @@ const MainMenuScreen = () => {
       console.log(JSON.stringify(user, null, 3));
     };
     getInfoUserPlan();
-    getMealPlan();
+    getMealPlan(false);
     calculateCaloriesForPlan();
   }, []);
 
-  const getMealPlan = async () => {
+  const getMealPlan = async ( fromVerify: boolean ) => {
     // Antes de mostrar Plan, validamos que ya se haya cumplido el tiempo para mostrar el Plan
     //Validamos que el plan exista en el almacenamiento local
     showLoading();
     const mealPlanLocal = await AsyncStorage.getItem("mealPlan");
     //console.log("MEAL PLAN LOCAL");
     //console.log(JSON.stringify(mealPlanLocal,null,1));
-    if( mealPlanLocal == null ){
+    if( mealPlanLocal == null || fromVerify ){
       console.log("ENTRA CONSUMO API");
       
       const resp = await MuySaludableApi.get("/planNutricional/"+userInfo?.id)
@@ -123,7 +123,7 @@ const MainMenuScreen = () => {
     const createdAtPlus2Hours = new Date(createdAtDate.getTime() + 2 * 60 * 60 * 1000); // Sumar 2 horas en milisegundos
     // Obtener la fecha y hora actual
     const now = new Date();
-    //const now = new Date(2024, 7, 29, 2, 58, 24);
+    //const now = new Date(2024, 8, 5, 2, 58, 24);
 
     console.log("comparación:"),
     console.log("Creación: " + dateCreated, " Más 2: "+createdAtPlus2Hours, " actual: "+ now)
@@ -185,6 +185,10 @@ const MainMenuScreen = () => {
         </TouchableOpacity>
       );
     }
+  }
+
+  function verifyShowMealPlan(){
+    getMealPlan(true);
   }
 
   return (
@@ -255,8 +259,14 @@ const MainMenuScreen = () => {
             <View style={styles.containerSinPlan}>
               <Text style={styles.centeredTextSinPlan}>Seguimos trabajando para</Text>
               <Text style={styles.centeredTextSinPlan}>tener el plan ideal para ti.</Text>
+              <Text style={styles.centeredTextSinPlan}>{ "\n" }</Text>
               <Text style={styles.centeredTextSinPlan}>Por favor vuelve a consultar</Text>
-              <Text style={styles.centeredTextSinPlan}>más tarde</Text>
+              <Text style={styles.centeredTextSinPlan}>más tarde o verifica nuevamente</Text>
+              <Text style={styles.centeredTextSinPlan}>dando click en el siguiente botón</Text>
+
+              <TouchableOpacity style={styles.btnVerify} onPress={verifyShowMealPlan}>
+                <Text style={styles.textVerify}>VERIFICAR NUEVAMENTE</Text>
+              </TouchableOpacity>
             </View>
           ) 
         }

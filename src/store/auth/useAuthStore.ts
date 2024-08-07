@@ -27,6 +27,7 @@ interface User{
     tmb: null | string;
     duracion_meses: null | string;
     fecha_expiracion: string;
+    notification_token: undefined | string;
 }
 
 interface AuthResponse{

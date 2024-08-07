@@ -83,7 +83,7 @@ export const LoginScreen = () => {
         <View style={styles.formForgotPassword}>
           <TouchableOpacity
             disabled={!isConnected}
-            onPress={() => navigation.navigate("ChoosePlanScreen")}
+            onPress={() => console.log("OLVIDASTE CONTRASEÑA") }
           >
             <Text style={styles.formForgotPasswordText}>
               ¿Olvidaste tu contraseña?
