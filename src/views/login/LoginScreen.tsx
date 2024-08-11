@@ -18,11 +18,12 @@ import { RootStackParams } from "../../navigator/StackNavigator";
 import useViewModel from "./ViewModel";
 import styles from "./Styles";
 import { CustomTextInput } from "../../components/CustomTextInput";
+import ModalForgotPassword from "./ModalForgotPassword";
 
 export const LoginScreen = () => {
     const [loading, setLoading] = useState(false);
 
-    const { email, password,isConnected, onChange, handleLogin } = useViewModel();
+    const { email, password, visibleModal, isConnected, onChange, handleLogin, handleForgotPassword } = useViewModel();
 
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
@@ -83,7 +84,7 @@ export const LoginScreen = () => {
         <View style={styles.formForgotPassword}>
           <TouchableOpacity
             disabled={!isConnected}
-            onPress={() => console.log("OLVIDASTE CONTRASEÑA") }
+            onPress={handleForgotPassword}
           >
             <Text style={styles.formForgotPasswordText}>
               ¿Olvidaste tu contraseña?
@@ -101,6 +102,11 @@ export const LoginScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      <ModalForgotPassword
+          visible={visibleModal}
+          onCloseModal={handleForgotPassword}
+        />
 
       {loading && <LoadingAnimation />}
     </SafeAreaView>

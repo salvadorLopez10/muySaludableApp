@@ -12,6 +12,7 @@ import NetInfo from "@react-native-community/netinfo";
 const LoginViewModel = () => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParams>>();
+    const [visibleModal, setVisibleModal] = useState(false);
     const [values, setValues] = useState({
         email: "",
         password: "",
@@ -102,11 +103,18 @@ const LoginViewModel = () => {
         
     };
 
+    const handleForgotPassword = () => {
+        
+        setVisibleModal(!visibleModal);
+    }
+
     return {
         ...values,
+        visibleModal,
         isConnected,
         onChange,
-        handleLogin
+        handleLogin,
+        handleForgotPassword
     };
   
 };
