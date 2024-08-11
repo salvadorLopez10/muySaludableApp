@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { RoundedButton } from '../../components/RoundedButton';
@@ -42,6 +43,7 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedView, setSelectedView] = useState<Planes | null>(null);
     const [planes, setPlanes] = useState<Planes[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const userInfo = useAuthStore((state) => state.user);
 
@@ -81,14 +83,23 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
   const getPlanes = async() => {
     try {
-
-        const resp = await MuySaludableApi.get("/planesAlimenticios");
+        setLoading(true);
+        const resp = await MuySaludableApi.get("/planesAlimenticios")
+        .then((responsePlanes) => {
+          setPlanes(responsePlanes.data.elementos);
+          setLoading(false);
+        })
+        .catch((error) =>{
+          console.log(JSON.stringify( error,null,3 ));
+          setLoading(false);
+        });
 
         //console.log( resp.data.elementos )
-        setPlanes(resp.data.elementos);
+        //setPlanes(resp.data.elementos);
 
     } catch (error) {
         console.log(error)
+        setLoading(false);
     }
 
   }
@@ -100,6 +111,15 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
     return random + fecha;
   };
+
+  function LoadingAnimation() {
+    return (
+      <View style={styles.indicatorWrapper}>
+        <ActivityIndicator size="large" color="#ffffff" />
+        <Text style={styles.indicatorText}>Cargando...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -190,6 +210,8 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
           </View>
         </Modal>
       </View>
+
+      {loading && <LoadingAnimation />}
     </SafeAreaView>
   );
 }
@@ -345,6 +367,23 @@ const styles = StyleSheet.create({
   texto: {
     color: "#55851F",
     fontSize: 15,
+    fontFamily: "Gotham-Medium",
+  },
+  indicatorWrapper: {
+    flex: 1,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(100, 100, 100, 0.6)",
+  },
+  indicatorText: {
+    fontSize: 18,
+    marginTop: 12,
+    color: "#ffffff",
     fontFamily: "Gotham-Medium",
   },
 });
