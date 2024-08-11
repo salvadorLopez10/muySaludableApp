@@ -62,7 +62,7 @@ export const ManageAccountScreen = () => {
        `/usuarios/${idUsuario}`,
        bodyDelete
      )
-       .then((responsePassword) => {
+       .then((responsePassword:any) => {
          //console.log(JSON.stringify(responsePassword, null, 2));
          setLoading(false);
 
@@ -83,7 +83,7 @@ export const ManageAccountScreen = () => {
            { cancelable: false }
          );
        })
-       .catch((errorDeleteAccount) => {
+       .catch((errorDeleteAccount:any) => {
          setLoading(false);
 
          console.log(

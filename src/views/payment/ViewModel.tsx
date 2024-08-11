@@ -58,12 +58,12 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
   
   const getValStripe = async() =>{
     console.log("ENTRA PARA OBTENER KEY DE STRIPE");
-    await MuySaludableApi.get("/config/stripe_client").then((response) => {
+    await MuySaludableApi.get("/config/stripe_client").then((response:any) => {
       console.log("STRIPE DATA");
       console.log(JSON.stringify(response.data.data,null,2));
       setValStripe(response.data.data);
 
-    }).catch((error) =>{
+    }).catch((error:any) =>{
       console.log("Error al obtener key de stripe client");
       console.log(error);
     });
@@ -112,7 +112,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
       const responsePayment = await MuySaludableApi.post(
         "/stripe/create",
         body
-      ).then((respuesta) => {
+      ).then((respuesta:any) => {
           
           console.log("RESPUESTA PAGO");
           console.log(JSON.stringify(respuesta, null, 2));
@@ -131,7 +131,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
               `/suscripciones/${userInfo?.id_suscripcion}`,
               bodyInactiveSuscripcion
             )
-              .then((responseSuscripcion) => {
+              .then((responseSuscripcion:any) => {
                 //console.log(JSON.stringify(responseSuscripcion, null, 2));
                 const bodySuscripcion = {
                   id_usuario: userInfo?.id,
@@ -150,7 +150,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
                   "/suscripciones",
                   bodySuscripcion
                 )
-                  .then((responseSuscripcion) => {
+                  .then((responseSuscripcion:any) => {
                     console.log("RESPUESTA SUSCRIPCIÓN");
                     console.log(JSON.stringify(responseSuscripcion, null, 2));
 
@@ -180,7 +180,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
                       { cancelable: false }
                     );
                   })
-                  .catch((errorSuscripcion) => {
+                  .catch((errorSuscripcion:any) => {
                     setLoading(false);
                     console.log(
                       "Mensaje de error en suscripción: ",
@@ -188,7 +188,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
                     );
                   });
               })
-              .catch((errorDeleteAccount) => {
+              .catch((errorDeleteAccount:any) => {
                 setLoading(false);
 
                 console.log(
@@ -205,7 +205,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
             console.log(JSON.stringify(bodyUser, null, 2));
 
             const usuario = MuySaludableApi.post("/usuarios", bodyUser)
-              .then((responseUsuario) => {
+              .then((responseUsuario:any) => {
                 console.log("RESPUESTA CREACIÓN DE USUARIO");
                 console.log(JSON.stringify(responseUsuario, null, 2));
                 //Una vez creado el usuario, se procede a generar el registro de suscripción
@@ -230,7 +230,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
                   "/suscripciones",
                   bodySuscripcion
                 )
-                  .then((responseSuscripcion) => {
+                  .then((responseSuscripcion:any) => {
                     console.log("RESPUESTA SUSCRIPCIÓN");
                     console.log(JSON.stringify(responseSuscripcion, null, 2));
 
@@ -239,7 +239,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
                     //Muestra ventana modal para establecer contraseña
                     showSuccessModal();
                   })
-                  .catch((errorSuscripcion) => {
+                  .catch((errorSuscripcion:any) => {
                     setLoading(false);
                     console.log(
                       "Mensaje de error en suscripción: ",
@@ -247,7 +247,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
                     );
                   });
               })
-              .catch((errorUsuario) => {
+              .catch((errorUsuario:any) => {
                 setLoading(false);
                 console.log(
                   "Mensaje de error en creación de usuario: ",
@@ -257,7 +257,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
           }
 
 
-      }).catch(error => {
+      }).catch((error:any) => {
         // Manejar el error
           setLoading(false);
           console.log("ERROR POST PAGO CATCH BLOQUE");
@@ -295,7 +295,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
         `/suscripciones/${userInfo?.id_suscripcion}`,
         bodyInactiveSuscripcion
       )
-        .then((responseSuscripcion) => {
+        .then((responseSuscripcion:any) => {
           //console.log(JSON.stringify(responseSuscripcion, null, 2));
           const bodySuscripcion = {
             id_usuario: userInfo?.id,
@@ -309,7 +309,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
             "/suscripciones",
             bodySuscripcion
           )
-            .then((responseSuscripcion) => {
+            .then((responseSuscripcion:any) => {
               console.log("RESPUESTA SUSCRIPCIÓN");
               console.log(JSON.stringify(responseSuscripcion, null, 2));
 
@@ -339,7 +339,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
                 { cancelable: false }
               );
             })
-            .catch((errorSuscripcion) => {
+            .catch((errorSuscripcion:any) => {
               setLoading(false);
               console.log(
                 "Mensaje de error en suscripción: ",
@@ -347,7 +347,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
               );
             });
         })
-        .catch((errorDeleteAccount) => {
+        .catch((errorDeleteAccount:any) => {
           setLoading(false);
 
           console.log(
@@ -364,7 +364,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
       console.log(JSON.stringify(bodyUser, null, 2));
 
       const usuario = MuySaludableApi.post("/usuarios", bodyUser)
-        .then((responseUsuario) => {
+        .then((responseUsuario:any) => {
           console.log("RESPUESTA CREACIÓN DE USUARIO");
           console.log(JSON.stringify(responseUsuario, null, 2));
           //Una vez creado el usuario, se procede a generar el registro de suscripción
@@ -384,7 +384,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
             "/suscripciones",
             bodySuscripcion
           )
-            .then((responseSuscripcion) => {
+            .then((responseSuscripcion:any) => {
               console.log("RESPUESTA SUSCRIPCIÓN");
               console.log(JSON.stringify(responseSuscripcion, null, 2));
 
@@ -393,7 +393,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
               //Muestra ventana modal para establecer contraseña
               showSuccessModal();
             })
-            .catch((errorSuscripcion) => {
+            .catch((errorSuscripcion:any) => {
               setLoading(false);
               console.log(
                 "Mensaje de error en suscripción: ",
@@ -401,7 +401,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
               );
             });
         })
-        .catch((errorUsuario) => {
+        .catch((errorUsuario:any) => {
           setLoading(false);
           console.log(
             "Mensaje de error en creación de usuario: ",
@@ -505,7 +505,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
     showIndicator();
     disableButton();
     const actualizaPassword = await MuySaludableApi.put(`/usuarios/${idUsuario}`, bodyUpdatePass)
-    .then((responsePassword) => {
+    .then((responsePassword:any) => {
       closeIndicator();
       enableButton();
       //console.log("RESPUESTA PASSWORD CREADO");
@@ -529,7 +529,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
         { cancelable: false }
       );
       
-    }).catch((errorSuscripcion) => {
+    }).catch((errorSuscripcion:any) => {
         closeIndicator();
         enableButton();
         console.log("Mensaje de error en suscripción: ",errorSuscripcion.response.data.message);
@@ -561,7 +561,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
       setLoading(true);
       const resp = await MuySaludableApi.get(
         `/codigosDescuento/getCodigoName/${discount}`
-      ).then((response) => {
+      ).then((response:any) => {
         setLoading(false);
         Alert.alert("Éxito", "El código de descuento se ha aplicado correctamente");
         //Se calcula el porcentaje de descuento del cupón
@@ -579,7 +579,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
         setInputEditable(finalPrice);
         //console.log(JSON.stringify(response,null,3))
   
-      }).catch((errorDiscount) => {
+      }).catch((errorDiscount:any) => {
           setLoading(false);
           console.log("Mensaje de error para consulta de código Postal");
          // console.log(JSON.stringify(errorDiscount.response, null, 3));

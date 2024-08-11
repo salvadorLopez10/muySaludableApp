@@ -33,11 +33,11 @@ const MainMenuViewModel = (  ) => {
 
   const getUrlRecetario = async () => {
     await MuySaludableApi.get("/config/url_recetario")
-      .then((response) => {
+      .then((response:any) => {
         console.log(JSON.stringify(response.data.data, null, 2));
         setUrlRecetario(response.data.data);
       })
-      .catch((error) => {
+      .catch((error:any) => {
         console.log("Error al obtener url para descargar recetaario");
         console.log(error);
       });

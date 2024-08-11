@@ -145,12 +145,12 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                   const updateUsuario = await MuySaludableApi.put(
                     `/usuarios/${userInfo?.id}`,
                     bodyUpdateUser
-                  ).then((responseUpdateUsuario)=>{
+                  ).then((responseUpdateUsuario:any)=>{
 
                     //Genera nuevo tmb
                     const calculaTMB = MuySaludableApi.get(
                         `/usuarios/calculateTMB/${responseUpdateUsuario.data.data.id}`
-                      ).then((responseTMB) => {
+                      ).then((responseTMB:any) => {
 
                         console.log("RESPUESTA USER TMB");
                         console.log(JSON.stringify(responseTMB, null, 2));
@@ -159,14 +159,14 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                         const body = convertDataUserToGeneratePlanRenovacion(userInfo,goal,responseTMB.data.data);
 
                         const resp = MuySaludableApi.post("/usuarios/generatePlan",body)
-                        .then((responsePlanGenerado) => {
+                        .then((responsePlanGenerado:any) => {
                             console.log("RESPONSE GENERACIÓN PLAN");
                             console.log(JSON.stringify(responsePlanGenerado,null,2));
                             console.log("SE OBTUVO ID DE USARIO DESDE UPDATE *********");
                             console.log(responseUpdateUsuario.data.data.id);
                             //Obtener todos los planes Activos del usuario, para que en caso de que tenga, TODOS se establezcan INACTIVOS
                             MuySaludableApi.get(`/planNutricional/planesActivos/${responseUpdateUsuario.data.data.id}`)
-                            .then(( responsePlanesActivos ) => {
+                            .then(( responsePlanesActivos:any ) => {
                                 console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
                                 console.log(JSON.stringify(responsePlanesActivos,null,2));
                                 if( responsePlanesActivos.data.data.length > 0 ){
@@ -183,11 +183,11 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                                         //Por cada uno de los planes encontrados se procede a desactivarlos
                                         MuySaludableApi.put(`planNutricional/${idPlanActivo}`,
                                             bodyUpdateInactivePlan
-                                        ).then((responseInactivePlan) => {
+                                        ).then((responseInactivePlan:any) => {
                                             console.log("SE HA INACTIVADO EL PLAAAN ");
                                             console.log(JSON.stringify(responseInactivePlan,null,2));
 
-                                        }).catch((errorInactivePlan) => {
+                                        }).catch((errorInactivePlan:any) => {
                                             console.log("ERROR AL INACTIVAR PLAAAN ");
                                             console.log(JSON.stringify(errorInactivePlan,null,2));
                                         });
@@ -197,7 +197,7 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                                 const bodyPlanAlimenticio = buildBodyRenovacionToPlanNutricional(userInfo,responsePlanGenerado.data.data);
 
                                 MuySaludableApi.post("/planNutricional", bodyPlanAlimenticio)
-                                .then(( responsePlanNutricionalSaved ) => {
+                                .then(( responsePlanNutricionalSaved:any ) => {
                                     console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
                                     console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
                                     
@@ -209,7 +209,7 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                                     const actualizaSuscripcion = MuySaludableApi.put(
                                         `/suscripciones/${userInfo?.id_suscripcion}`,
                                         bodyUpdateFechaCompra
-                                      ).then((responseUpdateFechaCompra) => {
+                                      ).then((responseUpdateFechaCompra:any) => {
                                         console.log("SE ACTUALIZA FECHA COMPRA");
                                         console.log(JSON.stringify( responseUpdateFechaCompra.data.data,null,2 ));
 
@@ -229,7 +229,7 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                                             routes: [{ name: "LoginScreen" }],
                                         });
 
-                                      }).catch((errorUpdateActualizaFechaCompra) => {
+                                      }).catch((errorUpdateActualizaFechaCompra:any) => {
                                             closeIndicator();
 
                                             console.log(
@@ -238,27 +238,27 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                                             );
                                         });
 
-                                }).catch((errorInsertPlanNutricional) => {
+                                }).catch((errorInsertPlanNutricional:any) => {
                                     console.log("ERROR AL GUARDAR PLAN CON USUARIO");
                                     console.log(JSON.stringify(errorInsertPlanNutricional,null,1));
                                     closeIndicator();
                                 });
                             })
-                            .catch((errorPlanesActivos) => {
+                            .catch((errorPlanesActivos:any) => {
                                 console.log("Error al obtener planes activos");
                                 console.log(JSON.stringify(errorPlanesActivos, null, 2));
                                 closeIndicator();
                             
                             });
                         })
-                        .catch((errorPlanGenerado) => {
+                        .catch((errorPlanGenerado:any) => {
                             console.log("Error al obtener plan");
                             console.log(JSON.stringify(errorPlanGenerado, null, 2));
                             closeIndicator();
                         
                         });
 
-                      }).catch((errorTMB) => {
+                      }).catch((errorTMB:any) => {
                         closeIndicator();
                         //enableButton();
                         console.log(
@@ -267,7 +267,7 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                         );
                       });
 
-                  }).catch((errorUpdateUsuario) => {
+                  }).catch((errorUpdateUsuario:any) => {
                   console.log("ERROR AL ACTUALIZAR USUARIO");
                   console.log(JSON.stringify(errorUpdateUsuario,null,1));
                   closeIndicator();

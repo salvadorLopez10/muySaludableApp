@@ -114,28 +114,28 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
       `/usuarios/${route.params!.userInfo.id}`,
       bodyUpdateUser
     )
-      .then((responseUser) => {
+      .then((responseUser:any) => {
         console.log("RESPUESTA USER CUESTIONARIO");
         console.log(JSON.stringify(responseUser, null, 2));
 
         const calculaTMB = MuySaludableApi.get(
           `/usuarios/calculateTMB/${route.params!.userInfo.id}`
         )
-          .then((responseTMB) => {
+          .then((responseTMB:any) => {
             console.log("RESPUESTA USER TMB");
             console.log(JSON.stringify(responseTMB, null, 2));
 
             //Calcular nuevo plan alimenticio y guardar en bd
             const body = convertDataUserToGeneratePlanRenovacion(route.params!.userInfo,responseTMB.data.data);
             const resp = MuySaludableApi.post("/usuarios/generatePlan",body)
-              .then((responsePlanGenerado) => {
+              .then((responsePlanGenerado:any) => {
                 console.log("RESPONSE GENERACIÓN PLAN");
                 console.log(JSON.stringify(responsePlanGenerado,null,2));
 
                 
                 //Obtener todos los planes Activos del usuario, para que en caso de que tenga, TODOS se establezcan INACTIVOS
                 MuySaludableApi.get(`/planNutricional/planesActivos/${route.params!.userInfo.id}`)
-                .then(( responsePlanesActivos ) => {
+                .then(( responsePlanesActivos:any ) => {
                   console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
                   console.log(JSON.stringify(responsePlanesActivos,null,2));
                   if( responsePlanesActivos.data.data.length > 0 ){
@@ -152,11 +152,11 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
                       //Por cada uno de los planes encontrados se procede a desactivarlos
                       MuySaludableApi.put(`planNutricional/${idPlanActivo}`,
                         bodyUpdateInactivePlan
-                      ).then((responseInactivePlan) => {
+                      ).then((responseInactivePlan:any) => {
                         console.log("SE HA INACTIVADO EL PLAAAN ");
                         console.log(JSON.stringify(responseInactivePlan,null,2));
 
-                      }).catch((errorInactivePlan) => {
+                      }).catch((errorInactivePlan:any) => {
                         console.log("ERROR AL INACTIVAR PLAAAN ");
                         console.log(JSON.stringify(errorInactivePlan,null,2));
                       });
@@ -166,7 +166,7 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
                 const bodyPlanAlimenticio = buildBodyRenovacionToPlanNutricional(route.params!.userInfo,responsePlanGenerado.data.data);
 
                 MuySaludableApi.post("/planNutricional", bodyPlanAlimenticio)
-                .then(( responsePlanNutricionalSaved ) => {
+                .then(( responsePlanNutricionalSaved:any ) => {
                   console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
                   console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
                   closeIndicator();
@@ -184,20 +184,20 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
                     routes: [{ name: "LoginScreen" }],
                   });
 
-                }).catch((errorInsertPlanNutricional) => {
+                }).catch((errorInsertPlanNutricional:any) => {
                   console.log("ERROR AL GUARDAR PLAN CON USUARIO");
                   console.log(JSON.stringify(errorInsertPlanNutricional,null,1));
                   closeIndicator();
                 });
                   
-                }).catch((errorGetPlanesActivos) => {
+                }).catch((errorGetPlanesActivos:any) => {
                   console.log("ERROR AL OBTENER PLANES ACTIVOS");
                   console.log(JSON.stringify(errorGetPlanesActivos,null,1));
                   closeIndicator();
                 });
                
               })
-              .catch((error) => {
+              .catch((error:any) => {
                 console.log("Error al obtener plan");
                 console.log(JSON.stringify(error, null, 2));
                 closeIndicator();
@@ -219,7 +219,7 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
               routes: [{ name: "LoginScreen" }],
             });
           })
-          .catch((errorTMB) => {
+          .catch((errorTMB:any) => {
             closeIndicator();
             //enableButton();
             console.log(
@@ -228,7 +228,7 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
             );
           });
       })
-      .catch((errorUser) => {
+      .catch((errorUser:any) => {
         console.log(JSON.stringify(errorUser, null, 3));
         closeIndicator();
         //enableButton();

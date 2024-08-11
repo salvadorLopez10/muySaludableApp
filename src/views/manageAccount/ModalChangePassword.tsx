@@ -71,7 +71,7 @@ const ModalChangePassword = ({visible, onCloseModal}:PropsModal) => {
         `/usuarios/${idUsuario}`,
         bodyUpdatePass
       )
-        .then((responsePassword) => {
+        .then((responsePassword:any) => {
           setIndicator();
           
 
@@ -88,7 +88,7 @@ const ModalChangePassword = ({visible, onCloseModal}:PropsModal) => {
             { cancelable: false }
           );
         })
-        .catch((errorNewPassword) => {
+        .catch((errorNewPassword:any) => {
           setIndicator();
           
           console.log(

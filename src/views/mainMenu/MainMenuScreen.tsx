@@ -73,7 +73,7 @@ const MainMenuScreen = () => {
       console.log("ENTRA CONSUMO API");
       
       const resp = await MuySaludableApi.get("/planNutricional/"+userInfo?.id)
-        .then((response) => {
+        .then((response:any) => {
           //Antes de establecer el plan en pantalla, validamos que se hayan cumplido las 2 horas de "espera" (tiempo en lo que el plan está listo)
           const showMealPlan = validateShowMealPlan(response.data.data.createdAt);
 
@@ -92,7 +92,7 @@ const MainMenuScreen = () => {
           hideLoading();
           
         })
-        .catch((error) => {
+        .catch((error:any) => {
   
           hideLoading();
           console.log("Error al obtener plan");

@@ -17,11 +17,11 @@ export const MentalHealthScreen = () => {
   const getContentSaludMental = async () => {
     setLoading(true);
     const resp = await MuySaludableApi.get("salud/salud_mental")
-      .then((response) => {
+      .then((response:any) => {
         setContentMental(response.data.data);
         setLoading(false);
       })
-      .catch((error) => {
+      .catch((error:any) => {
         setLoading(false);
         console.log("Error contenido salud mental");
         console.log(JSON.stringify(error, null, 2));

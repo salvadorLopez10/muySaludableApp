@@ -17,11 +17,11 @@ export const FinancialHealthScreen = () => {
   
   const getContentSaludFinanciera = async () => {
     setLoading(true);
-      const resp = await MuySaludableApi.get("salud/salud_financiera").then((response)=>{
+      const resp = await MuySaludableApi.get("salud/salud_financiera").then((response:any)=>{
         setContentFinancial(response.data.data);
         setLoading(false);
 
-      }).catch( (error) => {
+      }).catch( (error:any) => {
         setLoading(false);
         console.log("Error contenido salud financiera");
         console.log(JSON.stringify(error,null,2));

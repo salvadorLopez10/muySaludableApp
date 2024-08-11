@@ -85,11 +85,11 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     try {
         setLoading(true);
         const resp = await MuySaludableApi.get("/planesAlimenticios")
-        .then((responsePlanes) => {
+        .then((responsePlanes:any) => {
           setPlanes(responsePlanes.data.elementos);
           setLoading(false);
         })
-        .catch((error) =>{
+        .catch((error:any) =>{
           console.log(JSON.stringify( error,null,3 ));
           setLoading(false);
         });

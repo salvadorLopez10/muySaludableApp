@@ -78,7 +78,7 @@ export const ResumeChoosenPlanScreen = () => {
      const responseEmailExists = await MuySaludableApi.post(
        "/usuarios/checkEmail",
        requestEmail
-     ).then((response) => {
+     ).then((response:any) => {
 
       //console.log(JSON.stringify(response,null,2));
       if (response.data.status == "Duplicate") {
@@ -92,7 +92,7 @@ export const ResumeChoosenPlanScreen = () => {
 
       closeModal();
 
-     }).catch((error) => {
+     }).catch((error:any) => {
         // console.log("Error al verificar el email");
         // console.log(JSON.stringify(error, null, 2));
         Alert.alert(

@@ -3,7 +3,7 @@
     "name": "muy-saludable-app",
     "slug": "muysaludableapp-d8f5kruwje72eutfoyah3",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "plugins": [

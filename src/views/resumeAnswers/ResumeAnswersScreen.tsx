@@ -102,28 +102,28 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         `/usuarios/${route.params!.idUser}`,
         bodyUpdateUser
       )
-        .then((responseUser) => {
+        .then((responseUser:any) => {
 
            console.log("RESPUESTA USER CUESTIONARIO");
            console.log(JSON.stringify(responseUser, null, 2));
 
           const calculaTMB = MuySaludableApi.get(
             `/usuarios/calculateTMB/${route.params!.idUser}`
-          ).then( (responseTMB) => {
+          ).then( (responseTMB:any) => {
             console.log("RESPUESTA USER TMB");
             console.log(JSON.stringify(responseTMB, null, 2));
 
             //Calcular plan alimenticio y guardar en bd
             const body = convertDataUserToGeneratePlan(route.params,responseTMB.data.data);
             const resp = MuySaludableApi.post("/usuarios/generatePlan",body)
-              .then((responsePlanGenerado) => {
+              .then((responsePlanGenerado:any) => {
                 console.log("RESPONSE GENERACIÓN PLAN");
                 console.log(JSON.stringify(responsePlanGenerado,null,2));
                 //Una vez obtenido el plan, procedemos a guardarlo en la bd
                 const bodyPlanAlimenticio = buildBodyToPlanNutricional(route.params,responsePlanGenerado.data.data);
 
                 MuySaludableApi.post("/planNutricional", bodyPlanAlimenticio)
-                .then(( responsePlanNutricionalSaved ) => {
+                .then(( responsePlanNutricionalSaved:any ) => {
                   console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
                   console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
                   closeIndicator();
@@ -139,14 +139,14 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
                     routes: [{ name: "LoginScreen" }],
                   });
 
-                }).catch((errorInsertPlanNutricional) => {
+                }).catch((errorInsertPlanNutricional:any) => {
                   console.log("ERROR AL GUARDAR PLAN CON USUARIO");
                   console.log(JSON.stringify(errorInsertPlanNutricional,null,1));
                   closeIndicator();
                 });
                
               })
-              .catch((error) => {
+              .catch((error:any) => {
                 console.log("Error al obtener plan");
                 console.log(JSON.stringify(error, null, 2));
                 closeIndicator();
@@ -167,7 +167,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
             //   routes: [{ name: "LoginScreen" }],
             // });
 
-          }).catch((errorTMB) => {
+          }).catch((errorTMB:any) => {
 
             closeIndicator();
             //enableButton();
@@ -178,7 +178,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
           } );
           
         })
-        .catch((errorUser) => {
+        .catch((errorUser:any) => {
           closeIndicator();
           //enableButton();
           console.log(

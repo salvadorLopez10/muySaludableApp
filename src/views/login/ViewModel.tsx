@@ -62,11 +62,10 @@ const LoginViewModel = () => {
         const requestLogin = {
             email, password
         };
-
         const responseEmailExists = await  MuySaludableApi.post(
             "/usuarios/login",
             requestLogin
-        ).then((responseLogin) => {
+        ).then((responseLogin:any) => {
             setLoading(false);
             console.log(JSON.stringify(responseLogin.data, null, 2));
             if (responseLogin.data.status == "Ok") {
@@ -85,7 +84,7 @@ const LoginViewModel = () => {
                 //La credenciales son incorrectas
                 Alert.alert("Error", responseLogin.data.msg);
             }
-        }).catch((error) => {
+        }).catch((error:any) => {
             setLoading(false);
             Alert.alert(
                 "Error",
