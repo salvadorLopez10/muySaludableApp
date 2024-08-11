@@ -1,5 +1,10 @@
-import { AVPlaybackStatus, ResizeMode, Video } from "expo-av";
-import { useRef, useState } from "react";
+import {
+  AVPlaybackStatus,
+  ResizeMode,
+  Video as ExpoVideo,
+  VideoFullscreenUpdateEvent,
+} from "expo-av";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "react-native";
 import { View } from "react-native";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
@@ -13,16 +18,75 @@ interface VideoContentProps {
 
 const VideoContent = ({ videoUri, description, title, onClose }: VideoContentProps) => {
 
-    const videoRef = useRef<Video>(null);
-    const [status, setStatus] = useState<AVPlaybackStatus>();
+    const videoRef = useRef<ExpoVideo>(null);
+    const [status, setStatus] = useState<AVPlaybackStatus | null>(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     const playFullscreen = async () => {
-      if (videoRef.current) {
-        await videoRef.current.presentFullscreenPlayer();
-        videoRef.current.playAsync();
+      if (videoRef.current && !isFullscreen) {
+        try {
+          await videoRef.current.presentFullscreenPlayer();
+          videoRef.current.playAsync();
+        } catch (error) {
+          console.log("Error presenting fullscreen player", error);
+        }
       }
     };
 
+    const handlePlaybackStatusUpdate = (newStatus: AVPlaybackStatus) => {
+        if (
+          newStatus.isLoaded &&
+          newStatus.didJustFinish &&
+          !newStatus.isLooping
+        ) {
+          if (isFullscreen) {
+            videoRef.current?.dismissFullscreenPlayer();
+          } else {
+            onClose();
+          }
+        }
+        setStatus(newStatus);
+    };
+
+    const handleClose = () => {
+      if (isFullscreen) {
+        // Si está en pantalla completa, sal de pantalla completa
+        videoRef.current?.dismissFullscreenPlayer();
+      }
+      onClose();
+    };
+
+    const handleFullscreenUpdate = (event: VideoFullscreenUpdateEvent) => {
+      console.log("actualización FULL SCREEN");
+      console.log(event);
+      console.log(event.fullscreenUpdate);
+      /**
+       * Describing that the fullscreen player is about to present.
+       */
+      //PLAYER_WILL_PRESENT = 0,
+      /**
+       * Describing that the fullscreen player just finished presenting.
+       */
+      //PLAYER_DID_PRESENT = 1,
+      /**
+       * Describing that the fullscreen player is about to dismiss.
+       */
+      //PLAYER_WILL_DISMISS = 2,
+      /**
+       * Describing that the fullscreen player just finished dismissing.
+       */
+      // PLAYER_DID_DISMISS = 3,
+        if (event.fullscreenUpdate === 0 ) { // 0
+            setIsFullscreen(true);
+        } else if (event.fullscreenUpdate === 1 ) { // 1
+            setIsFullscreen(true);
+        } else if (event.fullscreenUpdate === 2) { // 2
+            setIsFullscreen(false);
+        } else if (event.fullscreenUpdate ===3 ) { // 3
+            setIsFullscreen(false);
+            onClose();
+        }
+    };
 
   return (
     <View style={styles.modalContainer}>
@@ -34,19 +98,31 @@ const VideoContent = ({ videoUri, description, title, onClose }: VideoContentPro
         <Text style={styles.headerText}>{title}</Text>
       </View>
 
-      <Video
+      <ExpoVideo
         ref={videoRef}
         source={{ uri: videoUri }}
         resizeMode={ResizeMode.CONTAIN}
         useNativeControls
         style={styles.video}
-        onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        //onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        shouldPlay
+        // isLooping
+        onLoad={() => {
+          videoRef?.current?.presentFullscreenPlayer();
+        }}
+        //onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
+        //onFullscreenUpdate={handleFullscreenUpdate}
       />
 
       <View style={styles.videoDescriptionContainer}>
         <Text style={styles.videoDescription}>{description}</Text>
-        <TouchableOpacity style={styles.buttonFullScreen} onPress={playFullscreen}>
-          <Text style={styles.textButtonFullScreen}>Ver en Pantalla Completa</Text>
+        <TouchableOpacity
+          style={styles.buttonFullScreen}
+          onPress={playFullscreen}
+        >
+          <Text style={styles.textButtonFullScreen}>
+            Ver en Pantalla Completa
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -76,7 +152,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: "100%",
-    height: 300,
+    height: "50%",
   },
   videoDescriptionContainer: {
     padding: 10,
@@ -92,7 +168,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: "center",
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 10,
     width: "80%",
     borderRadius: 15,
   },
