@@ -49,15 +49,6 @@ export const NotificationPush = () => {
     async function registerForPushNotificationsAsync() {
         let token;
         
-        if (Platform.OS === "android") {
-            await Notifications.setNotificationChannelAsync("default", {
-            name: "default",
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: "#FF231F7C",
-            });
-        }
-
         if (Device.isDevice) {
             const { status: existingStatus } =
             await Notifications.getPermissionsAsync();
@@ -82,6 +73,16 @@ export const NotificationPush = () => {
                 })
               ).data;
               console.log(pushTokenString);
+
+              if (Platform.OS === "android") {
+                await Notifications.setNotificationChannelAsync("default", {
+                name: "default",
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: "#FF231F7C",
+                });
+              }
+              
               return pushTokenString;
             } catch (e: unknown) {
               handleRegistrationError(`${e}`);

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "muy-saludable-app",
+    "name": "Muy Saludable",
     "slug": "muysaludableapp-d8f5kruwje72eutfoyah3",
     "version": "1.0.0",
     "orientation": "default",
@@ -10,11 +10,10 @@
       [
         "expo-notifications",
         {
-          "icon": "./local/assets/notification-icon.png",
-          "color": "#082849",
+          "icon": "./assets/adaptive-icon.png",
+          "color": "#faa029",
           "sounds": [
-            "./local/assets/notification-sound.wav",
-            "./local/assets/notification-sound-other.wav"
+            "./assets/notification_sound.wav"
           ]
         }
       ]
@@ -28,13 +27,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.muysaludable.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.muysaludable.app",
+      "googleServicesFile": "./android/app/google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
