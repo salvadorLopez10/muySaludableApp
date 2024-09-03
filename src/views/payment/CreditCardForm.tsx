@@ -15,6 +15,19 @@ interface ComponentsCreditCard {
   setLoading: (val: boolean) => void;
   setCurrentPrice: (val: string) => void;
 }
+
+const formatCurrency = (amount: number | string) => {
+  if (typeof amount === "string") {
+    amount = parseFloat(amount);
+  }
+  return amount.toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
 const CreditCardForm = ({
   emailProp,
   precioProp,
@@ -42,6 +55,9 @@ const CreditCardForm = ({
     disableButton,
     inputEditable,
     textButtonDiscount,
+    codeDiscount,
+    discountAmount,
+    finalPrice,
     onChange,
     setInputEditable,
     clearDiscountCode,
@@ -76,7 +92,7 @@ const CreditCardForm = ({
       <View style={styles.rowDiscount}>
         <TextField
           style={styles.textFieldDiscount}
-          label="Código de descuento"
+          label="Descuento"
           // errorText={errorCardHolder}
           value={discountCode}
           styleEditable={inputEditable}
@@ -158,6 +174,18 @@ const CreditCardForm = ({
           onChangeText={handleCvvChange}
         />
       </View>
+
+      <View style={styles.containerDataUser}>
+          <Text style={styles.userDetail}>EMAIL: {emailProp}</Text>
+          <Text style={styles.userDetail}>COSTO PLAN: {formatCurrency(precioProp)}</Text>
+          {
+            //Solo se muestra la sección de descuento en caso de que se aplique un cupón
+            codeDiscount && <Text style={styles.userDiscount}>DESCUENTO : {codeDiscount} - {discountAmount}</Text>
+          }
+          
+          <Text style={styles.userDetailTotal}>TOTAL A PAGAR: {finalPrice}</Text>
+      </View>
+
       <TouchableOpacity onPress={onSubmitPayment} style={styles.styleButton}>
         <Text style={{ color: "white" }}>
           {inputEditable ? "Pagar" : "Registrar"}
@@ -208,7 +236,7 @@ const styles = StyleSheet.create({
   row: {
     flex: 1,
     flexDirection: "row",
-    marginBottom: "10%",
+    marginBottom: "5%",
   },
   textField: {
     flex: 1,
@@ -223,6 +251,26 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignContent: "center",
     fontFamily: "Gotham-Medium",
+  },
+  containerDataUser: {
+    backgroundColor: "white",
+    alignItems: "center",
+    padding: 5,
+  },
+  userDetail: {
+    color: "#326807",
+    fontSize: 14,
+    fontFamily: "Gotham-Ultra",
+  },
+  userDiscount:{
+    color: "#FAA029",
+    fontSize: 14,
+    fontFamily: "Gotham-Ultra",
+  },
+  userDetailTotal: {
+    color: "#326807",
+    fontSize: 18,
+    fontFamily: "Gotham-Ultra",
   },
 });
 export default CreditCardForm;

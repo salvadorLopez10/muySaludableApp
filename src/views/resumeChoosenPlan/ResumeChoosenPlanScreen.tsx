@@ -266,10 +266,10 @@ const styles = StyleSheet.create({
   },
   tituloContainer: {
     //position: "absolute",
-    flex: 1,
+    //flex: 1,
     alignSelf: "center",
     //top:50,
-    marginTop: "10%",
+    marginTop: 20,
     justifyContent: "center",
   },
   tituloText: {
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FCFDBD",
     width: "90%",
     //flex: 6,
-    height: "60%",
+    height: "55%",
     marginLeft: 30,
     marginRight: 30,
     borderRadius: 20,
@@ -344,11 +344,11 @@ const styles = StyleSheet.create({
     fontFamily: "Gotham-Medium",
   },
   bottomContainer: {
-    flex: 1,
+    //flex: 1,
     //position: "relative",
     alignSelf: "center",
     //top:70
-    //marginTop: "3%",
+    marginTop: "1%",
     //bottom:10,
   },
   textVigencia: {
@@ -357,6 +357,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     fontFamily: "Gotham-Ultra",
+    //marginBottom: -5
   },
   fechaVigencia: {
     color: "#55851F",
@@ -365,10 +366,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     //fontWeight: "bold",
     fontFamily: "Gotham-Ultra",
+    marginBottom: 10
   },
   containerEmail: {
     //position: "absolute",
-    //top: "65%",
+    marginTop: "2%",
     flex: 1,
     //marginTop: "3%",
     alignSelf: "center",

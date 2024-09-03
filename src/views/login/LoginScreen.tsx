@@ -45,7 +45,7 @@ export const LoginScreen = () => {
 
       <View style={styles.logoContainer}>
         <Image
-          source={require("../../../assets/logoMuySaludable.png")}
+          source={require("../../../assets/logoMuySaludableMR.png")}
           style={styles.logoImage}
         />
         <Text style={styles.logoText}>Muy Saludable</Text>

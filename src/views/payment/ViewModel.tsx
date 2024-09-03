@@ -19,11 +19,26 @@ interface ComponentsCreditCard {
   setCurrentPrice: (val: string) => void;
 }
 
+const formatCurrency = (amount: number | string) => {
+  if (typeof amount === "string") {
+    amount = parseFloat(amount);
+  }
+  return amount.toLocaleString("es-MX", {
+    style: "currency",
+    currency: "MXN",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
 const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fechaExpiracionProp, setLoading, setCurrentPrice }: ComponentsCreditCard) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const [idUsuario, setIdUsuario] = useState(null);
   const [valStripe, setValStripe] = useState("");
   const [textButtonDiscount, setTextButtonDiscount] = useState("Validar descuento");
+  const [codeDiscount, setCodeDiscount] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(formatCurrency(""));
+  const [finalPrice, setFinalPrice] = useState(formatCurrency(precioProp));
   const [values, setValues] = useState({
     discountCode: "",
     cardHolder: "",
@@ -103,9 +118,13 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
         "SE MANDA EL PAGO STRIPE CON EL TOKEN OBTENIDO : " + response.id
       );
 
+      //El precio final se obtiene y se convierte a número
+      const total = parseFloat( finalPrice.replace(/[^0-9.-]+/g, ""));
+
       const body = {
         id: response.id,
-        amount: parseInt(values.precio) * 100, //Se multiplica * 100 ya que el monto se envía en centavos
+        //amount: parseInt(values.precio) * 100, //Se multiplica * 100 ya que el monto se envía en centavos
+        amount: total * 100,
         plan: values.plan
       };
 
@@ -555,6 +574,9 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
       setTextButtonDiscount("Validar descuento");
       setCurrentPrice(values.precio);
       setInputEditable(values.precio);
+      setCodeDiscount("");
+      setDiscountAmount("");
+      setFinalPrice( formatCurrency( precioProp ));
       //return;
     }else{
       //Se envía petición para consultar código de descuento
@@ -563,14 +585,19 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
         `/codigosDescuento/getCodigoName/${discount}`
       ).then((response:any) => {
         setLoading(false);
+        setCodeDiscount( response.data.data.nombre );
         Alert.alert("Éxito", "El código de descuento se ha aplicado correctamente");
         //Se calcula el porcentaje de descuento del cupón
         const percent = response.data.data.valor / 100;
         const discount = 1.0 - percent;
+
+        const montoDescontado = (Number( values.precio ) * percent).toFixed(2);
   
         const finalPrice = (Number(values.precio) * discount).toFixed(2);
         
         setCurrentPrice(finalPrice.toString());
+        setDiscountAmount( formatCurrency(montoDescontado) );
+        setFinalPrice( formatCurrency(finalPrice));
         //Se cambia el estado de precio para poder enviar el valor correcto en la petición de pago a stripe
         onChange("precio",finalPrice);
         //onChange("textButtonDiscount", "Remover descuento");
@@ -616,6 +643,11 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
   const handleExpiryDateChange = (text: string) => {
     // Eliminar cualquier caracter no numérico
     let formattedText = text.replace(/\D/g, "");
+
+    // Limitar a los primeros 4 dígitos
+    if (formattedText.length > 4) {
+      formattedText = formattedText.slice(0, 4);
+    }
 
     // Agregar una barra después de los primeros 2 dígitos
     if (formattedText.length > 2) {
@@ -684,14 +716,17 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
           );
           return;
         } else {
-          const [month, year] = formattedExpiryDate.split("/");
-          const currentYear = new Date().getFullYear() % 100;
-          const currentMonth = new Date().getMonth() + 1;
+          const [month, year] = formattedExpiryDate.split("/").map(Number);
+          const currentYear = new Date().getFullYear() % 100; // Últimos 2 dígitos del año actual
+          const currentMonth = new Date().getMonth() + 1; // Mes actual (de 1 a 12)
+
+          if (month < 1 || month > 12) {
+            onChange("errorExpiration", "Mes inválido");
+            return;
+          }
   
           if (
-            parseInt(year, 10) < currentYear ||
-            (parseInt(year, 10) === currentYear &&
-              parseInt(month, 10) < currentMonth)
+            year < currentYear || (year === currentYear && month < currentMonth)
           ) {
             onChange("errorExpiration", "La tarjeta está vencida");
             return;
@@ -729,6 +764,9 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
   return {
     ...values,
     textButtonDiscount,
+    codeDiscount,
+    discountAmount,
+    finalPrice,
     onChange,
     setInputEditable,
     clearDiscountCode,

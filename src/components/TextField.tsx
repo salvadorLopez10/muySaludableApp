@@ -108,23 +108,24 @@ const TextField: React.FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
   input: {
-    padding: 24,
+    padding: 18,
     borderWidth: 1,
     borderColor: "#326807",
     color: "#55851F",
     borderRadius: 4,
     fontFamily: "Gotham-Medium",
     fontSize: 14,
+    justifyContent: 'center',
   },
   labelContainer: {
     position: "absolute",
-    paddingHorizontal: 1,
-    //backgroundColor: "white",
-    //backgroundColor: "#EEEEEE",
+    //paddingHorizontal: 1,
+    justifyContent: "center",
   },
   label: {
     fontFamily: "Gotham-Medium",
     fontSize: 13,
+    textAlignVertical: "center",
   },
   error: {
     marginTop: 4,

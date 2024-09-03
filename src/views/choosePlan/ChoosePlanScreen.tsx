@@ -8,6 +8,7 @@ import {
   View,
   Alert,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { RoundedButton } from '../../components/RoundedButton';
@@ -129,16 +130,15 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
       />
       {/* Título */}
       <View style={styles.tituloContainer}>
-        <Text style={styles.tituloText}>ELIGE TU</Text>
-        <Text style={styles.tituloText}>PLAN ALIMENTICIO</Text>
-        <Text style={styles.contentTitulo}>Vive una vida más</Text>
+        <Text style={styles.tituloText}>ELIGE ALGUNO DE</Text>
+        <Text style={styles.tituloText}>LOS 4 PLANES</Text>
+        <Text style={styles.contentTitulo}>Y vive una vida más</Text>
         <Text style={styles.contentTitulo}>saludable</Text>
       </View>
 
       {/* Menú selección de planes */}
-      <View style={styles.planContainerMain}>
-        {/* Contenedores con descripción del plan */}
-        {planes.map((element) => (
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+      {planes.map((element) => (
           <TouchableOpacity
             key={element.id}
             onPress={() => handleOpenModal(element)}
@@ -146,19 +146,25 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
           >
             <Text style={styles.titlePlanText}>{element.nombre}</Text>
             <Text style={styles.contentPlanText}>{element.resumen}</Text>
-            <Text style={styles.pricePlan}>
-              De{" "}
-              <Text style={styles.priceStrike}>${element.precio_regular}</Text>{" "}
-              a solo ${element.precio}
-            </Text>
-            <Text style={styles.textClic}>
-              DA CLIC
-            </Text>
+            <View style={styles.priceContainer}>
+              <Text style={styles.priceText}>De </Text>
+              <View style={styles.strikeThroughContainer}>
+                <Text style={styles.priceStrike}>${element.precio_regular}</Text>
+                <View style={styles.strikeThroughLine} />
+              </View>
+              <Text style={styles.priceText}> a ${element.precio}</Text>
+            </View>
+            <View style={styles.containerClick}>
+              <Text style={styles.textClic}>
+                DA CLIC
+              </Text>
+            </View>
           </TouchableOpacity>
         ))}
-
-        {/* Modal */}
-        <Modal
+      </ScrollView>
+      
+      {/* Modal */}
+      <Modal
           animationType="slide"
           transparent={true}
           visible={modalVisible}
@@ -209,7 +215,6 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
             </View>
           </View>
         </Modal>
-      </View>
 
       {loading && <LoadingAnimation />}
     </SafeAreaView>
@@ -224,11 +229,13 @@ const styles = StyleSheet.create({
   imageBackground: {
     width: "100%",
     height: "100%",
+    position: 'absolute',
   },
   tituloContainer: {
-    position: "absolute",
+    //position: "absolute",
     alignSelf: "center",
-    top: "5%",
+    //top: "5%",
+    marginTop: 20,
   },
   tituloText: {
     color: "#326807",
@@ -254,67 +261,93 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     marginTop: "12%",
+    //backgroundColor: "blue",
+    // flex: 1,
+    // width: "80%",
   },
 
   containerPlan: {
-    width: "80%",
+    width: "90%",
     //height: "15%",
-    backgroundColor: "#faa029",
+    //backgroundColor: "#faa029",
     borderRadius: 9,
     padding: 7,
     top: 5,
+    borderColor: "#faa029",
+    borderWidth: 2,
     marginVertical: 13,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
     alignItems: "center",
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    //shadowOpacity: 0.1,
+    //shadowRadius: 3.84,
+    //elevation: 5,
   },
 
   titlePlanText: {
-    color: "white",
+    color: "#faa029",
     //fontWeight: "bold",
     textAlign: "center",
-    fontSize: 14,
+    fontSize: 18,
     fontFamily: "Gotham-Ultra",
   },
   contentPlanText: {
-    color: "white",
+    color: "#326807",
     textAlign: "center",
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: "Gotham-Medium",
     top: 5,
   },
-  pricePlan: {
+  priceContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  priceText: {
+    fontSize: 20,
     color: "#326807",
-    fontSize: 16,
-    //fontWeight: "bold",
     fontFamily: "Gotham-Ultra",
-    textAlign: "center",
-    top: 10,
-    marginBottom: 7,
+  },
+  strikeThroughContainer: {
+    position: "relative",
   },
   priceStrike: {
     color: "#326807",
-    fontSize: 16,
-    //fontWeight: "bold",
+    fontSize: 20,
     fontFamily: "Gotham-Ultra",
-    textAlign: "center",
-    top: 10,
-    marginBottom: 7,
     textDecorationLine: "line-through",
+    textDecorationColor: "red", // No afecta el color de la línea en todos los dispositivos
+  },
+  strikeThroughLine: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    height: 2, // Grosor de la línea
+    backgroundColor: "#faa029", // Color de la línea
+    top: "50%", // Coloca la línea en la mitad vertical del texto
+  },
+  containerClick: {
+    borderRadius: 15,
+    padding: 10,
+    width: '50%',
+    //top: 5,
+    backgroundColor: "#faa029",
+    marginVertical: 13,
+    alignItems: "center",
+    
   },
   textClic: {
-    color: "#FCFCBD",
+    color: "#ffffff",
     fontSize: 11,
     fontFamily: "Gotham-Medium",
     textAlign: "center",
-    top: 10,
-    marginBottom: 7,
+    //top: 10,
+    //marginBottom: 7,
   },
   modalContainer: {
     flex: 1,
@@ -385,6 +418,22 @@ const styles = StyleSheet.create({
     marginTop: 12,
     color: "#ffffff",
     fontFamily: "Gotham-Medium",
+  },
+  scrollView: {
+    flex: 1, // Ocupa el espacio restante debajo de título.
+    marginTop: 20, // Ajustar según sea necesario.
+    width: '100%', // Asegura que el ScrollView ocupe todo el ancho disponible.
+    height: '80%',
+    paddingHorizontal: 20,
+    marginBottom: '25%',
+  },
+  scrollViewContent: {
+    justifyContent: "center",
+    alignItems: "center",
+    //paddingBottom: '25%', // Ajuste adicional para asegurar el contenido no toque el borde.
+  },
+  text: {
+    fontSize: 42,
   },
 });
 

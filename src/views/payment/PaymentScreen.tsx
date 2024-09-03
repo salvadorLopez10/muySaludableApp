@@ -1,7 +1,7 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import { useRoute, RouteProp, useNavigation, NavigationProp } from "@react-navigation/native";
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, ScrollView, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, ScrollView, ActivityIndicator, SafeAreaView } from "react-native";
 import useViewModel from './ViewModel';
 import TextField from '../../components/TextField';
 import CreditCardForm from './CreditCardForm';
@@ -57,17 +57,17 @@ export const PaymentScreen = (  ) => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.tituloContainer}>
-          <Text style={styles.title}>Detalles de Pago</Text>
+          <Text style={styles.title}>DETALLES DE PAGO</Text>
 
-          <View style={styles.containerDataUser}>
+          {/* <View style={styles.containerDataUser}>
             <Text style={styles.userDetail}>Email: {email}</Text>
             <Text style={styles.userDetail}>
               Total a pagar: ${currentPrice}
             </Text>
-          </View>
+          </View> */}
         </View>
         <CreditCardForm
           emailProp={email}
@@ -80,7 +80,7 @@ export const PaymentScreen = (  ) => {
         />
       </ScrollView>
       {loading && <LoadingAnimation />}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   content: {
     //flex:1,
-    paddingTop: 50,
+    marginTop: 20,
     //paddingHorizontal: 36,
     padding: '5%',
     backgroundColor: "white",
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     //alignSelf: "center",
     //top:50,
-    marginTop: "10%",
+    marginTop: 20,
     //justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
