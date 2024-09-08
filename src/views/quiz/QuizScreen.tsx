@@ -241,7 +241,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
         >
           <View style={styles.logoContainer}>
             <Image
-              source={require("../../../assets/logoMuySaludable.png")}
+              source={require("../../../assets/logoMuySaludableMR_resize.png")}
               style={styles.logoImage}
             />
           </View>
@@ -252,7 +252,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
                 Contesta el siguiente cuestionario
               </Text>
               <Text style={styles.text2}>para poder desarrollar tu plan</Text>
-              <Text style={styles.text2}>alimenticio</Text>
+              <Text style={styles.text2}>alimenticio.</Text>
             </View>
           </View>
           <TouchableOpacity onPress={goNext} style={styles.styleBeginButton}>
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 10,
+    //paddingHorizontal: 10,
     //padding: 5
   },
   textInputStyle: {
@@ -489,13 +489,13 @@ const styles = StyleSheet.create({
     fontFamily: "Gotham-Medium",
   },
   textInputStyleEdad: {
-    //backgroundColor: "white",
+    backgroundColor: "white",
     color: "#2A261B",
     //fontWeight: "bold",
     fontFamily: "Gotham-Medium",
-    padding: 10,
+    padding: 5,
     //marginTop: 10,
-    //28width: "30%",
+    width: "50%",
     textAlign: "center",
   },
   containerText: {
@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
   slide: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#F78291",
+    //backgroundColor: "#F78291",
     alignItems: "center",
     //padding: 30,
   },
@@ -540,7 +540,7 @@ const styles = StyleSheet.create({
   slide16: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#F78291",
+    //backgroundColor: "#F78291",
     alignItems: "center",
     //padding: 30,
   },
@@ -568,11 +568,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignSelf: "center",
     top: "15%",
-    padding: 10,
+    height: "25%",
+    //backgroundColor:"blue"
+    //padding: 10,
   },
   logoImage: {
-    //width: 100,
-    //height: 100,
+    // width: 110,
+    // height: 120,
   },
 
   dropdown: {

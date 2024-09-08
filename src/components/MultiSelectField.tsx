@@ -77,7 +77,8 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
   return (
     <View style={styles.container}>
       <TouchableHighlight
-        // style={styles.inputContainer}
+        activeOpacity={0.8}
+        underlayColor="#FFFFF"
         onPress={handleModalShow}
       >
         <View style={styles.selectContainer}>
@@ -104,8 +105,8 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
           <View style={styles.modalContent}>
             <View style={styles.inputContainerSearch}>
               <TextInput
-                style={styles.inputTextStyle}
-                placeholder="Buscar..."
+                style={styles.inputTextStyleBuscar}
+                placeholder="Buscar"
                 keyboardType={keyboardType as any}
                 onChangeText={handleInputChange}
                 value={searchQuery}
@@ -204,6 +205,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     //justifyContent: "center",
     width: "80%",
+  },
+  inputTextStyleBuscar:{
+    color: "#2A261B",
+    fontFamily: "Gotham-Medium",
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    textAlign: "center",
+    backgroundColor: "white",
+    flex: 1
   },
   flatListStyle: {
     width: "80%",

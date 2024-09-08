@@ -544,10 +544,10 @@
 
   export const activityLevelSelect = [
     { label: "Poco o ningún ejercicio", id: "poco_ninguno" },
-    { label: "Ejercicio ligero (1-3 días a la semana)", id: "ligero" },
-    { label: "Ejercicio moderado (3-5 días a la semana)", id: "moderado" },
-    { label: "Ejercicio fuerte (6-7 días a la semana)", id: "fuerte" },
-    { label: "Ejercicio muy fuerte (dos veces al día, entrenamientos muy duros)", id: "muy_fuerte" },
+    { label: "Ejercicio ligero\n(1-3 días a la semana)", id: "ligero" },
+    { label: "Ejercicio moderado\n(3-5 días a la semana)", id: "moderado" },
+    { label: "Ejercicio fuerte\n(6-7 días a la semana)", id: "fuerte" },
+    { label: "Ejercicio muy fuerte\n(dos veces al día, entrenamientos muy duros)", id: "muy_fuerte" },
   ];
 
   export const dietOptionsSelect = [

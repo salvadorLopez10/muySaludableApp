@@ -64,6 +64,8 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
   return (
     <View style={styles.container}>
       <TouchableHighlight
+        activeOpacity={0.8}
+        underlayColor="#FFFFF"
         style={styles.inputContainer}
         onPress={handleModalShow}
       >
@@ -94,8 +96,8 @@ const SelectField = ({ data, keyboardType = "default", onItemSelected }:SelectFi
           <View style={styles.modalContent}>
             <View style={styles.inputContainerSearch}>
               <TextInput
-                style={styles.inputTextStyle}
-                placeholder="Buscar..."
+                style={styles.inputTextStyleBuscar}
+                placeholder="Buscar"
                 keyboardType={keyboardType as any}
                 onChangeText={handleInputChange}
                 value={searchQuery}
@@ -166,14 +168,20 @@ const styles = StyleSheet.create({
   },
   inputTextStyle: {
     color: "#2A261B",
-    //fontWeight: "bold",
     fontFamily: "Gotham-Medium",
     padding: 10,
-    //marginTop: 10,
     textAlign: "center",
     backgroundColor: "white",
-    //justifyContent: "center",
-    width: "80%",
+    width: "80%"
+  },
+  inputTextStyleBuscar:{
+    color: "#2A261B",
+    fontFamily: "Gotham-Medium",
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    textAlign: "center",
+    backgroundColor: "white",
+    flex: 1
   },
   flatListStyle: {
     width: "80%",
