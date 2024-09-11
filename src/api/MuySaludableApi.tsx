@@ -17,7 +17,7 @@ let MuySaludableApi: any;
 // Función para cargar la configuración desde el JSON remoto
 async function loadConfig() {
   try {
-    const response = await axios.get('https://muysaludable.com.mx/config_app.json');
+    const response = await axios.get('https://muysaludable.com.mx/config_app.json?timestamp=${new Date().getTime()}');
     console.log("OBTENIENDO API DINAMICAMENTE");
     console.log(JSON.stringify(response,null,2));
     const config = response.data;

@@ -9,7 +9,7 @@ export const PrivacyLegalScreen = () => {
         source={require("../../../assets/MealPlanBG.jpg")}
         style={styles.imageBackground}
       >
-        <ScrollView>
+        <ScrollView style={styles.containerScroll}>
           <View style={styles.containerText}>
             <Text style={styles.subtitleText}>
               Aviso de Privacidad

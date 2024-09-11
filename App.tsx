@@ -109,7 +109,7 @@ export default function App() {
       console.log("QUIZ NAVIGATOR");
       setNavigatorComponent(<QuizNavigator />);
     } else {
-      if (userInfo.nombre_plan == "Paquete Anual") {
+      if (userInfo.nombre_plan == "4. PLAN ANUAL") {
         console.log("TIENE PLAN ANUAL, PROCEDEMOS A VALIDAR SI YA PASARON 2 MESES, PARA QUE EN CASO DE QUE SEA ASÍ, SE PROCEDE A VALIDAR");
         const actualizaPlan = await validate2meses();
         console.log("RESPUESTA ACTUALIZA PLAN: " + actualizaPlan);
@@ -137,7 +137,7 @@ export default function App() {
   if( !fontsLoaded ){
     console.log("SIN FUENTES");
     return <View>
-      <Text>No se cargaron las fuentes</Text>
+      <Text></Text>
     </View>
   }
 

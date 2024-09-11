@@ -44,7 +44,7 @@ export const MentalHealthScreen = () => {
         source={require("../../../assets/SaludMentalBG.jpg")}
         style={styles.imageBackground}
       >
-        <ScrollView>
+        <ScrollView  style={styles.containerScroll}>
         
           <SaludMentalComponent string={ contentMental } />
         

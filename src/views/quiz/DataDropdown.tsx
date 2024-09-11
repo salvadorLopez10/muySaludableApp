@@ -551,10 +551,10 @@
   ];
 
   export const dietOptionsSelect = [
-    { label: "Todo tipo de alimentos", id: "Todo tipo de alimentos" },
-    { label: "Vegetariano", id: "Vegetariano" },
-    { label: "Vegano", id: "Vegano" },
-    { label: "Sin gluten", id: "Sin gluten" },
+    { label: "1. Todo tipo de alimentos", id: "Todo tipo de alimentos" },
+    { label: "2. Vegetariano", id: "Vegetariano" },
+    { label: "3. Vegano", id: "Vegano" },
+    { label: "4. Sin gluten", id: "Sin gluten" },
     // { label: "Intolerante a la lactosa", id: "Intolerante a la lactosa" },
   ];
 

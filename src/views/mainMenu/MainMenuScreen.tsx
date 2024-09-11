@@ -87,6 +87,7 @@ const MainMenuScreen = () => {
           }else{
             //Aún no se cumplen las 2 horas
             setShowMealPlanElements(false);
+            Alert.alert("Información", "Aún estamos trabajando en la creación de tu plan alimenticio.\nTe notificaremos cuando esté listo.\n¡Gracias por tu paciencia!");
           }
           
           hideLoading();
@@ -178,7 +179,7 @@ const MainMenuScreen = () => {
   }
 
   function LinkRecetario() {
-    if( userStatePlan?.nombre_plan == "Paquete Premium" || userStatePlan?.nombre_plan == "Paquete Anual" ){
+    if( userStatePlan?.nombre_plan == "3. PLAN PREMIUM" || userStatePlan?.nombre_plan == "4. PLAN ANUAL" ){
       return (
         <TouchableOpacity style={styles.btnLinkRecetario} onPress={clickLinkRecetario}>
           <Text style={styles.textBtnPDF}>DESCARGAR RECETARIO</Text>
@@ -201,15 +202,15 @@ const MainMenuScreen = () => {
         source={require("../../../assets/MealPlanBG.jpg")}
         style={styles.imageBackground}
       >
-        <View style={styles.dataTitleContainer}>
-              <View style={styles.datosInfoTitle}>
-                <Text style={styles.datosTitleText}>PLAN GENERADO</Text>
-                {/* <Text style={styles.datosTitleText}>{numberMonths}</Text> */}
-              </View>
-            </View>
 
         { showMealPlanElements ? (
           <>
+            <View style={styles.dataTitleContainer}>
+              {/* <View style={styles.datosInfoTitle}>
+                <Text style={styles.datosTitleText}>PLAN GENERADO</Text>
+                 <Text style={styles.datosTitleText}>{numberMonths}</Text> 
+              </View> */}
+            </View>
             <View style={styles.contentTitleContainer}>
               <View style={styles.contentInfoTitle}>
                 <Text style={styles.contentTitleText}>
@@ -244,13 +245,21 @@ const MainMenuScreen = () => {
             <PlanView objPlan={planObj} planContratado={userInfo?.nombre_plan} />
 
             {/* Solo disponible para Paquete Premium */}
-            <LinkRecetario />
+            <View style={styles.buttonContainer}>
+
+              <LinkRecetario />
               <TouchableOpacity
-                style={styles.btnPDF}
+                style={[
+                  styles.btnPDF,
+                  !(userStatePlan?.nombre_plan == "3. PLAN PREMIUM" || userStatePlan?.nombre_plan == "4. PLAN ANUAL") 
+                    ? styles.btnFullWidth 
+                    : null
+                ]}
                 onPress={() => handlePrintToFile(userStatePlan, planObj)}
               >
-                <Text style={styles.textBtnPDF}>EXPORTAR PLAN COMO PDF</Text>
+                <Text style={styles.textBtnPDF}>EXPORTAR PLAN EN PDF</Text>
               </TouchableOpacity>
+            </View>
         
           </>
 
@@ -259,10 +268,22 @@ const MainMenuScreen = () => {
             <View style={styles.containerSinPlan}>
               <Text style={styles.centeredTextSinPlan}>Seguimos trabajando para</Text>
               <Text style={styles.centeredTextSinPlan}>tener el plan ideal para ti.</Text>
-              <Text style={styles.centeredTextSinPlan}>{ "\n" }</Text>
-              <Text style={styles.centeredTextSinPlan}>Por favor vuelve a consultar</Text>
-              <Text style={styles.centeredTextSinPlan}>más tarde o verifica nuevamente</Text>
-              <Text style={styles.centeredTextSinPlan}>dando click en el siguiente botón</Text>
+              <View style={styles.logoContainer}>
+                <Image
+                  source={require("../../../assets/logoMuySaludableMR_resize.png")}
+                  style={styles.logoImage}
+                />
+              </View>
+              <Text style={styles.centeredTextContentNewLineSinPlan}>{ "\n" }</Text>
+              <Text style={styles.centeredTextContentSinPlan}>Por favor vuelve a consultar más tarde.</Text>
+              <Text style={styles.centeredTextContentSinPlan}>Recuerda esperar 2 horas una vez</Text>
+              <Text style={styles.centeredTextContentSinPlan}>realizada tu compra.</Text>
+
+              <Text style={styles.centeredTextContentNewLineSinPlan}>{ "\n" }</Text>
+              <Text style={styles.centeredTextContentSinPlan}>Pasando ese periodo podrás verificar</Text>
+              <Text style={styles.centeredTextContentSinPlan}>dando clic en el</Text>
+              <Text style={styles.centeredTextContentSinPlan}>siguiente botón.</Text>
+              
 
               <TouchableOpacity style={styles.btnVerify} onPress={verifyShowMealPlan}>
                 <Text style={styles.textVerify}>VERIFICAR NUEVAMENTE</Text>

@@ -35,7 +35,7 @@ const MainMenuStyles = StyleSheet.create({
   dataTitleContainer: {
     width: "80%",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: "5%",
     marginBottom: 10,
   },
   datosInfoBox: {
@@ -200,18 +200,27 @@ const MainMenuStyles = StyleSheet.create({
     fontFamily: "Gotham-Medium",
   },
   btnPDF: {
+    flex: 1,
     backgroundColor: "#326807",
-    padding: 10,
-    width: "80%",
+    paddingVertical:10,
+    borderRadius: 10,
     alignItems: "center",
-    borderRadius: 15,
-    marginBottom: "5%",
+    justifyContent: 'center',
+    // padding: 10,
+    // width: "80%",
+    // borderRadius: 15,
+    // marginBottom: "5%",
+    //padding: 10,
   },
   textBtnPDF: {
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: "Gotham-Ultra",
     marginVertical: 5,
     color: "#ffffff",
+    flexWrap: 'wrap', 
+  },
+  btnFullWidth: {
+    flex: 1,                          // Ocupa todo el ancho si el otro botón no está visible
   },
   spacer: {
     height: 8,
@@ -248,23 +257,59 @@ const MainMenuStyles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Distribuir el espacio entre los botones
+    alignItems: 'center',            // Alinear los botones verticalmente
+    width: '100%',
+    paddingHorizontal: 10,           // Espaciado lateral (ajústalo según sea necesario)
+    marginBottom: "3%",
+  },
   btnLinkRecetario: {
+    flex: 1,
     backgroundColor: "#2E2A21",
-    padding: 10,
-    width: "80%",
+    paddingVertical: 10,
+    //padding: 10,
+    //width: "80%",
+    //borderRadius: 15,
+    //marginBottom: "5%",
+    borderRadius: 10,
+    marginRight: 10,
     alignItems: "center",
-    borderRadius: 15,
-    marginBottom: "5%",
+    justifyContent: 'center',
   },
   containerSinPlan:{
     flex: 1,
-    justifyContent: 'center',
+    //justifyContent: 'center',
     alignItems: 'center',
+    marginTop: "6%",
+  },
+  logoContainer: {
+   // marginVertical: 20,
+    //alignSelf: "center",
+    //top: "10%",
+    marginTop: 10
+  },
+  logoImage: {
+    // width: 100,
+    //height: 100,
   },
   centeredTextSinPlan:{
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: "Gotham-Ultra",
-    //marginVertical: 5,
+    margin: 3,
+    color: "#2E2A21",
+  },
+  centeredTextContentSinPlan:{
+    fontSize: 16,
+    fontFamily: "Gotham-Ultra",
+    margin: 3,
+    color: "#2E2A21",
+  },
+  centeredTextContentNewLineSinPlan:{
+    fontSize: 16,
+    fontFamily: "Gotham-Ultra",
+    marginBottom: 0,
     color: "#2E2A21",
   },
   btnVerify: {

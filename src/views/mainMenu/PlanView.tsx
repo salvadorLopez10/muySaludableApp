@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Styles";
 import {
   View,
@@ -39,90 +39,81 @@ interface PlanViewProps {
 }
 
 const PlanView: React.FC<PlanViewProps> = ({ objPlan, planContratado }) => {
-  const renderAccordionItems = (): JSX.Element[] => {
-    const accordionItems: JSX.Element[] = [];
 
-    for (const key in objPlan) {
-      if (Object.hasOwnProperty.call(objPlan, key)) {
+  const [expandedParentIndex, setExpandedParentIndex] = useState<number | null>(null);
+  const [expandedChildIndex, setExpandedChildIndex] = useState<{ [key: string]: number | null }>({});
 
-        //Condición para mostrar únicamente 1 mes en caso de que el usuario tenga el plan clásico con duración de 1 mes
-        //continue - se refiere a saltar la iteración actual en caso de cumplir con la condición
-        if (planContratado === "Paquete Clásico" && key === "Mes2") continue;
-        
-        const subPlan = objPlan[key];
-        var titleAccordion = "";
-        if( key == "Mes1" ){
-          titleAccordion = "Mes 1";
-        }else if ( key == "Mes2" ){
-          titleAccordion = "Mes 2"
-        }else{
-          titleAccordion = "Detox";
-        }
-        const accordionItem = (
-          <AccordionItem key={key} title={titleAccordion}>
-            {renderSubPlan(subPlan)}
-          </AccordionItem>
-        );
-        accordionItems.push(accordionItem);
-      }
-    }
-
-    return accordionItems;
+  const handleParentAccordionToggle = (index: number) => {
+    setExpandedParentIndex(expandedParentIndex === index ? null : index);
   };
 
-  const renderSubPlan = (subPlan: SubPlan): JSX.Element[] => {
-    const subPlanItems: JSX.Element[] = [];
+  const handleChildAccordionToggle = (parentKey: string, index: number) => {
+    setExpandedChildIndex(prevState => ({
+      ...prevState,
+      [parentKey]: prevState[parentKey] === index ? null : index
+    }));
+  };
 
-    for (const key in subPlan) {
-      if (Object.hasOwnProperty.call(subPlan, key)) {
-        const meal = subPlan[key];
-
-        let displayKey = key;
-        if (key === "Colacion1") {
-          displayKey = "Colación 1";
-        } else if (key === "Colacion2") {
-          displayKey = "Colación 2";
+  const renderAccordionItems = (): JSX.Element[] => {
+    return Object.keys(objPlan)
+      .map((key, index) => {
+        if (planContratado === '1. PLAN CLÁSICO' && key === 'Mes2') {
+          return null; // Retorna null para no incluir el Mes 2
         }
-        const accordionItem = (
+  
+        const subPlan = objPlan[key];
+        const titleAccordion = key === 'Mes1' ? 'Mes 1' : key === 'Mes2' ? 'Mes 2' : 'Detox';
+  
+        return (
           <AccordionItem
             key={key}
-            title={displayKey}
-            colorContainer="rgba(250, 160, 41, 0.6)"
+            title={titleAccordion}
+            isExpanded={expandedParentIndex === index}
+            onPress={() => handleParentAccordionToggle(index)}
           >
-            {renderMeals(meal)}
+            {renderSubPlan(subPlan, key)}
           </AccordionItem>
         );
-        subPlanItems.push(accordionItem);
-      }
-    }
-
-    return subPlanItems;
+      })
+      .filter((item): item is JSX.Element => item !== null); // Filtra los elementos nulos usando una función de tipo de predicado
   };
 
-  const renderMeals = (meal: Meal): JSX.Element[] => {
-    const mealItems: JSX.Element[] = [];
-    let optionNumber = 1;
-    for (const key in meal) {
-      if (Object.hasOwnProperty.call(meal, key)) {
-        const mealOption = meal[key];
-        mealItems.push(
-          <View key={key} style={styles.containerTextOpcionTitle}>
-            <Text style={styles.textTitleNumberOpcion}>Opción {optionNumber}</Text>
-            <Text style={styles.textTitleOpcion}>{mealOption.nombre}</Text>
-            { mealOption.ingredientes.map((ingrediente, index) => (
-              <View key={index} style={styles.ingredientContainer}>
-                <Text style={styles.ingredientText}>{ingrediente.nombre} - {ingrediente.porcion}</Text>
-              </View>
-            ))}
-          </View>
-        );
-        optionNumber++;
-      }
-    }
+  const renderSubPlan = (subPlan: any, parentKey: string): JSX.Element[] => {
+    return Object.keys(subPlan).map((key, index) => {
+      const meal = subPlan[key];
+      let displayKey = key === "Colacion1" ? "Colación 1" : key === "Colacion2" ? "Colación 2" : key;
 
-    return mealItems;
+      return (
+        <AccordionItem
+          key={key}
+          title={displayKey}
+          colorContainer="rgba(250, 160, 41, 0.6)"
+          isExpanded={expandedChildIndex[parentKey] === index}
+          onPress={() => handleChildAccordionToggle(parentKey, index)}
+        >
+          {renderMeals(meal)}
+        </AccordionItem>
+      );
+    });
   };
 
+  const renderMeals = (meal: any): JSX.Element[] => {
+    return Object.keys(meal).map((key, index) => {
+      const mealOption = meal[key];
+      return (
+        <View key={index} style={styles.containerTextOpcionTitle}>
+          <Text style={styles.textTitleNumberOpcion}>Opción {index + 1}</Text>
+          <Text style={styles.textTitleOpcion}>{mealOption.nombre}</Text>
+          {mealOption.ingredientes.map((ingrediente: any, i: number) => (
+            <View key={i} style={styles.ingredientContainer}>
+              <Text style={styles.ingredientText}>{ingrediente.nombre} - {ingrediente.porcion}</Text>
+            </View>
+          ))}
+        </View>
+      );
+    });
+  };
+  
   return (
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"

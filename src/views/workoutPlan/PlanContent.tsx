@@ -21,6 +21,7 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
     const [status, setStatus] = useState<AVPlaybackStatus>();
     const [statusButton, setStatusButton] = useState(false);
 
+    const [modalType, setModalType] = useState<'none' | 'exercise' | 'video' | 'disabled'>('none');
     const [exerciseModalVisible, setExerciseModalVisible] = useState(false);
     const [currentLevel, setCurrentLevel] = useState<'PRINCIPIANTE' | 'INTERMEDIO' | 'AVANZADO'>('PRINCIPIANTE');
 
@@ -28,10 +29,18 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
     const [selectedVideoTitle, setSelectedVideoTitle] = useState<string>("");
     const [selectedVideoDescription, setSelectedVideoDescription] = useState<string>('');
 
+    const [disabledCardModalVisible, setDisabledCardModalVisible] = useState(false);
+
+
 
     const openExerciseModal = (levelRoutine: 'PRINCIPIANTE' | 'INTERMEDIO' | 'AVANZADO') => {
-      setExerciseModalVisible(true);
+      setModalType('exercise');
       setCurrentLevel(levelRoutine);
+    };
+
+    const closeModals = () => {
+      setModalType('none');
+      setSelectedVideoUri(null);
     };
 
     const closeExerciseModal = () => {
@@ -39,67 +48,26 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
       setSelectedVideoUri(null);
     };
 
-    const handleCardPress = (videoUri: string, title: string, description: string) => {
-      setSelectedVideoUri(videoUri);
-      setSelectedVideoTitle(title);
-      setSelectedVideoDescription(description);
+    const handleCardPress = (videoUri: string, title: string, description: string, disabled: boolean) => {
+      if (disabled) {
+        setSelectedVideoUri(null); // Asegúrate de que el modal de video esté oculto
+        setModalType('disabled'); // Muestra el nuevo modal
+      } else {
+        setSelectedVideoUri(videoUri);
+        setSelectedVideoTitle(title);
+        setSelectedVideoDescription(description);
+        setModalType('video'); // Muestra el modal de video
+      }
     };
 
     const handleVideoClose = () => {
-      setSelectedVideoUri(null);
+      setModalType('none');
     };
-
-
-    const renderContent = () => {
-        switch (planName) {
-            case "Paquete Clásico":
-                return (
-                <Text style={styles.text}>
-                    Esta sección no está disponible para{"\n"} PLAN BÁSICO
-                </Text>
-                );
-            case "Paquete Intermedio":
-                return <Text style={styles.text}>Tienes acceso a 1 rutina</Text>;
-            case "Paquete Premium":
-                return (
-                    <View>
-                        <View style={styles.containerTitle}>
-                            <Text style={styles.textTitle}>RUTINA 1</Text>
-                        </View>
-                        <View style={styles.videoContainer}>
-                            <Video
-                            ref={video}
-                            style={styles.video}
-                            source={{
-                                uri: "https://muysaludable.com.mx/VideoTest.mp4",
-                                //uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-                            }}
-                            posterSource={require("../../../assets/logoMuySaludable.png")}
-                            useNativeControls
-                            resizeMode={ResizeMode.CONTAIN}
-                            onPlaybackStatusUpdate={(status) =>
-                                setStatus(() => status)
-                            }
-                            />
-                            {/* <View style={styles.buttons}>
-                            <Button
-                                title={statusButton ? "Pause" : "Play"}
-                                onPress={() =>
-                                statusButton
-                                    ? video.current?.pauseAsync()
-                                    : video.current?.playAsync()
-                                }
-                            />
-                            </View> */}
-                        </View>
-                    </View>
-                );
-            default:
-                
-                return <Text style={styles.text}>Plan no reconocido</Text>;
-        }
+  
+    const handleDisabledCardModalClose = () => {
+      setModalType('none');
     };
-
+  
     //return <View>{renderContent()}</View>;
 
     return (
@@ -164,16 +132,17 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
 
         {/* Modal */}
         <ExerciseModal
-          visible={exerciseModalVisible && !selectedVideoUri}
+          // visible={exerciseModalVisible && !selectedVideoUri}
+          visible={modalType === 'exercise'}
           level={currentLevel}
           planName={planName}
-          onClose={closeExerciseModal}
+          onClose={closeModals}
           onCardPress={handleCardPress}
         />
         <Modal
           animationType="slide"
           transparent={true}
-          visible={selectedVideoUri !== null}
+          visible={modalType === 'video' && selectedVideoUri !== null}
           onRequestClose={handleVideoClose}
         >
           {selectedVideoUri && (
@@ -184,6 +153,48 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
               onClose={handleVideoClose}
             />
           )}
+        </Modal>
+
+        {/* Nuevo modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalType === 'disabled'}
+          onRequestClose={handleDisabledCardModalClose}
+        >
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalText}>
+                TU PLAN NO TIENE ACCESO A
+              </Text>
+              <Text style={styles.modalText}>
+                ÉSTA RUTINA DE ENTRENAMIENTO.
+              </Text>
+              <Text style={styles.modalText}>
+                SI QUIERES ACCEDER,
+              </Text>
+              <Text style={styles.modalText}>
+                PODRÁS CONTRATAR
+              </Text>
+              <Text style={styles.modalText}>
+                EL SIGUIENTE NIVEL.
+              </Text>
+
+              <Text style={styles.modalText}>
+                {""}
+              </Text>
+
+              <Text style={styles.modalText}>
+                CONTÁCTANOS VÍA WHATSAPP
+              </Text>
+              <Text style={styles.modalText}>
+                55 6528 2789
+              </Text>
+              <TouchableOpacity onPress={handleDisabledCardModalClose} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </Modal>
       </>
     );
@@ -319,7 +330,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   modalContainer: {
-    flex: 1,
+    //flex: 1,
+    height:"80%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -374,6 +386,29 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
+  },
+  modalText: {
+    fontSize: 14,
+    fontFamily: "Gotham-Ultra",
+    marginVertical: 5,
+    color: "#ffffff",
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#FF7F00',
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: "Gotham-Ultra"
   },
 });
 

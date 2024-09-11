@@ -16,10 +16,22 @@ interface ExerciseModalProps {
   //planName: "Paquete Clásico" | "Paquete Intermedio" | "Paquete Premium" | "Paquete Anual";
   planName: null | string | undefined;
   onClose: () => void;
-  onCardPress: (videoUri: string, title: string, description: string) => void;
+  //onCardPress: (videoUri: string, title: string, description: string) => void;
+  onCardPress: (videoUri: string, title: string, description: string, disabled: boolean) => void;
+
+}
+
+interface ExerciseInterface{
+  title: string;
+  description: string;
+  videoUri: string;
 }
 
 const ExerciseModal = ({ visible, level , planName, onClose, onCardPress }: ExerciseModalProps) => {
+
+  const [showDisabledModal, setShowDisabledModal] = useState(false);
+  const [disabledModalContent, setDisabledModalContent] = useState('');
+  const [modalVisible, setModalVisible] = useState(visible);
 
     const exercises = {
       PRINCIPIANTE: [
@@ -27,38 +39,46 @@ const ExerciseModal = ({ visible, level , planName, onClose, onCardPress }: Exer
           title: "CARDIOVASCULAR",
           description:"Mejora resistencia, quema calorías y salud del corazón. Ideal para aumentar energía.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"LUNES, MIÉRCOLES Y VIERNES",
           videoUri: "https://muysaludable.com.mx/PrincipianteCardio.mp4",
         },
         {
-          title: "FUERZA (TREN INFERIOR Y SUPERIOR)",
+          // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
+          title: "FUERZA",
           description:"Fortalece los principales grupos musculares. Ideal para desarrollar fuerza y tono.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"MARTES, JUEVES Y SÁBADO",
           videoUri: "https://muysaludable.com.mx/PrincipianteFuerza.mp4",
         },
         {
           title: "ABDOMEN",
           description:"Fortalece y tonifica el abdomen. Ideal para mejorar estabilidad del core y reducir grasa abdominal.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"LUNES, MIÉRCOLES Y VIERNES",
           videoUri: "https://muysaludable.com.mx/PrincipianteAbdomen.mp4",
         },
       ],
       INTERMEDIO: [
         {
-            title: "CARDIOVASCULAR",
+          title: "CARDIOVASCULAR",
           description:"Aumenta resistencia, quema de calorías y salud del corazón. Ideal para un reto mayor.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"LUNES, MIÉRCOLES Y VIERNES",
           videoUri: "https://muysaludable.com.mx/IntermedioCardio.mp4",
         },
         {
-          title: "FUERZA (TREN INFERIOR Y SUPERIOR)",
+          // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
+          title: "FUERZA",
           description:"Desarrolla fuerza y tono muscular. Ideal para aumentar la intensidad.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"MARTES, JUEVES Y SÁBADO",
           videoUri: "https://muysaludable.com.mx/IntermedioFuerza.mp4",
         },
         {
           title: "ABDOMEN",
           description:"Fortalece y tonifica el abdomen. Ideal para un mayor reto en el core.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"LUNES, MIÉRCOLES Y VIERNES",
           videoUri: "https://muysaludable.com.mx/IntermedioAbdomen.mp4",
         },
       ],
@@ -67,18 +87,22 @@ const ExerciseModal = ({ visible, level , planName, onClose, onCardPress }: Exer
           title: "CARDIOVASCULAR",
           description:"Maximiza resistencia, capacidad aeróbica y anaeróbica, y quema de calorías. Ideal para desafíos intensos.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"LUNES, MIÉRCOLES Y VIERNES",
           videoUri: "https://muysaludable.com.mx/AvanzadoCardio.mp4",
         },
         {
-          title: "FUERZA (TREN INFERIOR Y SUPERIOR)",
+          // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
+          title: "FUERZA",
           description:"Maximiza fuerza y tono muscular. Ideal para aumentar intensidad y complejidad.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"MARTES, JUEVES Y SÁBADO",
           videoUri: "https://muysaludable.com.mx/AvanzadoFuerza.mp4",
         },
         {
           title: "ABDOMEN",
           description:"Maximiza fuerza y definición del abdomen. Ideal para ejercicios desafiantes.",
           image: require("../../../assets/imagen_rutinas.jpg"),
+          dias:"LUNES, MIÉRCOLES Y VIERNES",
           videoUri: "https://muysaludable.com.mx/AvanzadoAbdomen.mp4",
         },
       ],
@@ -86,76 +110,105 @@ const ExerciseModal = ({ visible, level , planName, onClose, onCardPress }: Exer
 
 
     const isSectionDisabled = (title: string) => {
-      if (planName === "Paquete Clásico") {
+      if (planName === "1. PLAN CLÁSICO") {
         return true;
-      } else if (planName === "Paquete Intermedio" && title !== "ABDOMEN") {
+      } else if (planName === "2. PLAN INTERMEDIO" && title !== "ABDOMEN") {
         return true;
       }
       return false;
     };
 
+    // const onClickCard = ( disabled: boolean, exercise: ExerciseInterface  ) => {
+    //   if( disabled ){
+    //     //console.log("MUESTRA MODAL CON INFORMACIÓN");
+    //     setDisabledModalContent("VIDEO NO DISPONIBLE EN TU SUSCRIPCIÓN");
+    //     setShowDisabledModal(true);
+    //   }else{
+    //     onCardPress(
+    //       exercise.videoUri,
+    //       exercise.title,
+    //       exercise.description
+    //     )
+    //   }
+    // }
+
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Cerrar</Text>
-          </TouchableOpacity>
+    <>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={visible}
+        onRequestClose={onClose}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </TouchableOpacity>
 
-          <ScrollView style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.headerText}>{level}</Text>
-            </View>
-
-            {exercises[level].map((exercise, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.card,
-                  isSectionDisabled(exercise.title) && styles.disabledCard,
-                ]}
-              >
-                {/* {isSectionDisabled(exercise.title) && (
-                  <View style={styles.overlay} />
-                )} */}
-                <TouchableOpacity
-                  disabled={isSectionDisabled(exercise.title)}
-                  style={styles.touchableCard}
-                  onPress={() =>
-                    onCardPress(
-                      exercise.videoUri,
-                      exercise.title,
-                      exercise.description
-                    )
-                  }
-                >
-                  <Image source={exercise.image} style={styles.image} />
-                  {isSectionDisabled(exercise.title) && (
-                    <View style={styles.overlay}>
-                      <Text style={styles.overlayText}>
-                        VIDEO NO DISPONIBLE EN TU SUSCRIPCIÓN
-                      </Text>
-                    </View>
-                  )}
-
-                  <View style={styles.textContainer}>
-                    <Text style={styles.title}>{exercise.title}</Text>
-                    <Text style={styles.description}>
-                      {exercise.description}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+            <ScrollView style={styles.container}>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>{level}</Text>
               </View>
-            ))}
-          </ScrollView>
+
+              {exercises[level].map((exercise, index) => {
+              const disabled = isSectionDisabled(exercise.title);
+              return (
+                <View
+                  key={index}
+                  style={[
+                    styles.card,
+                    disabled && styles.disabledCard,
+                  ]}
+                >
+                  <TouchableOpacity
+                    disabled={false}
+                    style={styles.touchableCard}
+                    onPress={() => onCardPress(exercise.videoUri, exercise.title, exercise.description, disabled)}
+                  >
+                    <Text style={styles.fullWidthText}>{exercise.dias}</Text>
+                    <View style={styles.separatorLine} />
+                    <Image source={exercise.image} style={styles.image} />
+                    {disabled && (
+                      <View style={styles.overlay}>
+                        <Text style={styles.overlayText}>
+                          VIDEO NO DISPONIBLE EN TU SUSCRIPCIÓN
+                        </Text>
+                      </View>
+                    )}
+                    <View style={styles.textContainer}>
+                      <Text style={styles.title}>{exercise.title}</Text>
+                      <Text style={styles.description}>{exercise.description}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+            </ScrollView>
+          </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+
+      {/* Nuevo modal para mostrar el mensaje de video no disponible */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showDisabledModal}
+        onRequestClose={() => setShowDisabledModal(false)}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalMessage}>{disabledModalContent}</Text>
+            <TouchableOpacity
+              onPress={() => setShowDisabledModal(false)}
+              style={styles.closeButton}
+            >
+              <Text style={styles.closeButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 };
 
@@ -209,7 +262,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: "row",
-    padding: 15,
+    padding: 10,
     marginBottom: 20,
     backgroundColor: "#f0f0f0",
     borderRadius: 10,
@@ -237,6 +290,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     zIndex: 2,
+    flexWrap: "wrap",
+  },
+  fullWidthText: {
+    width: "100%", // Asegura que el texto ocupe todo el ancho del touchableCard
+    textAlign: "center", // Centra el texto horizontalmente
+    fontSize: 13,
+    marginBottom: 5, // Margen para separar el texto del resto del contenido
+    fontFamily: "Gotham-Ultra", // Opcional: elige el estilo de fuente que desees
+  },
+  separatorLine: {
+    width: "100%", // Abarca todo el ancho del touchableCard
+    height: 1, // Altura de la línea delgada
+    backgroundColor: "#ccc", // Color de la línea
+    marginBottom: 10, // Margen para separar la línea del resto del contenido
   },
   disabledCard: {
     shadowColor: "#000000",
@@ -252,8 +319,9 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    padding: 10,
+    padding: 5,
     justifyContent: "center",
+    alignItems: "center"
   },
   title: {
     fontSize: 16,
@@ -265,6 +333,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: "Gotham-Book",
     textAlign: "justify",
+  },
+  modalMessage: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 20,
   },
 });
 

@@ -8,6 +8,7 @@ import { MuySaludableApi } from '../../api/MuySaludableApi';
 import { ActivityIndicator } from 'react-native';
 import { NotificationPush } from '../../utils/NotificationPush';
 import * as Notifications from "expo-notifications";
+import useViewModelLogin from "../login/ViewModel";
 
 
 interface Props extends StackScreenProps<any, any> {}
@@ -23,6 +24,8 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
     console.log(route.params);
     const [loading, setLoading] = useState(false);
     const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
+
+    const { handleLogin } = useViewModelLogin();
 
     const { schedulePushNotification } = NotificationPush();
       const {
@@ -134,10 +137,12 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
 
                   scheduleNotification();
 
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: "LoginScreen" }],
-                  });
+                  handleLogin(responseUser.data.data.email, responseUser.data.data.password, loading, setLoading);
+
+                  // navigation.reset({
+                  //   index: 0,
+                  //   routes: [{ name: "LoginScreen" }],
+                  // });
 
                 }).catch((errorInsertPlanNutricional:any) => {
                   console.log("ERROR AL GUARDAR PLAN CON USUARIO");

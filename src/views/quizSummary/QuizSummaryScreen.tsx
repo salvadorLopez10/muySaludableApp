@@ -23,6 +23,7 @@ import { NotificationPush } from "../../utils/NotificationPush";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuthStore } from "../../store/auth/useAuthStore";
+import useViewModelLogin from "../login/ViewModel";
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -49,6 +50,8 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
   const [goal, setGoal] = useState("");
   const [loading, setLoading] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
+
+  const { handleLogin } = useViewModelLogin();
 
   const { schedulePushNotification } = NotificationPush();
   const {
@@ -179,10 +182,12 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
 
                   AsyncStorage.removeItem("mealPlan");
 
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: "LoginScreen" }],
-                  });
+                  handleLogin(responseUser.data.data.email, responseUser.data.data.password, loading, setLoading)
+
+                  // navigation.reset({
+                  //   index: 0,
+                  //   routes: [{ name: "LoginScreen" }],
+                  // });
 
                 }).catch((errorInsertPlanNutricional:any) => {
                   console.log("ERROR AL GUARDAR PLAN CON USUARIO");
@@ -403,7 +408,7 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
         >
           <View style={styles.logoContainer}>
             <Image
-              source={require("../../../assets/logoMuySaludable.png")}
+              source={require("../../../assets/logoMuySaludableMR_resize.png")}
               style={styles.logoImage}
             />
           </View>
@@ -493,7 +498,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 10,
     //padding: 5
   },
   textInputStyle: {
@@ -506,13 +510,13 @@ const styles = StyleSheet.create({
     fontFamily: "Gotham-Medium",
   },
   textInputStyleEdad: {
-    //backgroundColor: "white",
+    backgroundColor: "white",
     color: "#2A261B",
     //fontWeight: "bold",
     fontFamily: "Gotham-Medium",
-    padding: 10,
+    padding: 5,
     //marginTop: 10,
-    //28width: "30%",
+    width: "50%",
     textAlign: "center",
   },
   containerText: {

@@ -6,6 +6,10 @@ const FinancialHealthStyles = StyleSheet.create({
     backgroundColor: "white",
     //width: "100%"
   },
+  containerScroll:{
+    //flex: 1,
+    marginTop: '6%'
+  },
   imageBackground: {
     // width: "100%",
     // height: "100%",

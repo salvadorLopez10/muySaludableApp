@@ -60,7 +60,7 @@ export const UserProfileScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <Image
-          source={require("../../../assets/logoMuySaludable.png")}
+          source={require("../../../assets/logoMuySaludableMR_resize.png")}
           style={styles.logoImage}
         />
       </View>
@@ -98,7 +98,8 @@ export const UserProfileScreen = ({ navigation }: Props) => {
               <View style={styles.datosInfoBox}>
                 <Text style={styles.datosInfoText}>TU TASA METABÓLICA BASAL:</Text>
                 <Text style={styles.datosInfoText}>
-                  {Number(userProfile?.tmb).toFixed(2)} calorías
+                  {/* {Number(userProfile?.tmb).toFixed(2)} calorías */}
+                  { Math.round(Number(userProfile?.tmb)).toLocaleString("es-MX") } calorías
                 </Text>
               </View>
             </View>

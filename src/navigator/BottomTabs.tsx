@@ -29,10 +29,10 @@ export const BottomTabs = () => {
 
           switch (route.name) {
             case "LateralMenu":
-              iconName = focused ? require("../../assets/Plan_Tab_Active.jpg") : require("../../assets/Plan_Tab.jpeg");
+              iconName = focused ? require("../../assets/Plan_Tab_Active.png") : require("../../assets/Plan_Tab.png");
               break;
             case "MealPlanScreen":
-              iconName = focused ? require("../../assets/Plan_Tab_Active.jpg") : require("../../assets/Plan_Tab.jpeg");
+              iconName = focused ? require("../../assets/Plan_Tab_Active.png") : require("../../assets/Plan_Tab.png");
               break;
             case "WorkoutPlanScreen":
               iconName = focused ? require("../../assets/Salud_Fisica_Active.jpg") : require("../../assets/Salud_Fisica_Tab.png");

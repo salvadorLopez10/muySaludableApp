@@ -13,6 +13,10 @@ const PrivacyLegalStyles = StyleSheet.create({
     //justifyContent: "center",
     alignItems: "center",
   },
+  containerScroll:{
+    //flex: 1,
+    marginTop: '6%'
+  },
   containerText: {
     margin: "10%",
     alignContent: "stretch",

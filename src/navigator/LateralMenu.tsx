@@ -19,6 +19,11 @@ export const LateralMenu = () => {
   return (
     <Drawer.Navigator drawerContent={(props) => <InternalMenu {...props} />}>
       <Drawer.Screen
+        name="Main"
+        options={{ title: "Muy Saludable" }}
+        component={BottomTabs}
+      />
+      <Drawer.Screen
         name="UserProfileScreen"
         options={{ title: "Perfil del Usuario" }}
         component={UserProfileScreen}
@@ -32,11 +37,6 @@ export const LateralMenu = () => {
         name="PrivacyLegalScreen"
         options={{ title: "Privacidad y aviso legal" }}
         component={PrivacyLegalScreen}
-      />
-      <Drawer.Screen
-        name="Main"
-        options={{ title: "Muy Saludable" }}
-        component={BottomTabs}
       />
       {/* <Drawer.Screen
         name="StackNavigator"

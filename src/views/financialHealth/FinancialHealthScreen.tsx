@@ -43,7 +43,7 @@ export const FinancialHealthScreen = () => {
         source={require("../../../assets/SaludFinancieraBG.jpg")}
         style={styles.imageBackground}
       >
-        <ScrollView>
+        <ScrollView style={styles.containerScroll}>
         
           <SaludFinancieraComponent string={ contentFinancial } />
         

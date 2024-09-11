@@ -17,6 +17,8 @@ interface PropsModalSuccess {
 
 const ModalSuccess = ({ visible, password, confirmPassword, visibleIndicator, disableButton, handlePassword, handleConfirmPassword, onConfirmContinue }: PropsModalSuccess) => {
 
+  const [showPassword, setShowPassword] = useState(false); // Para el primer input
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Para el segundo input
 
   return (
     <Modal
@@ -47,22 +49,48 @@ const ModalSuccess = ({ visible, password, confirmPassword, visibleIndicator, di
           </View>
 
           <View style={styles.containerInputs}>
-            <TextInput
-              style={styles.textInputStyle}
-              placeholderTextColor="#d1cccc"
-              placeholder="Ingresa contraseña"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={handlePassword}
-            />
-            <TextInput
-              style={styles.textInputStyle}
-              placeholderTextColor="#d1cccc"
-              placeholder="Confirma contraseña"
-              secureTextEntry={true}
-              value={confirmPassword}
-              onChangeText={handleConfirmPassword}
-            />
+            {/* Input ingresar password */}
+              <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.textInputStyle}
+                    placeholderTextColor="#d1cccc"
+                    placeholder="Ingresa contraseña"
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={handlePassword}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.eyeIconContainer}
+                  >
+                    <Icon
+                      name={showPassword ? "eye-off-outline" : "eye-outline"}
+                      size={20}
+                      color="#7B7B7B"
+                    />
+                  </TouchableOpacity>
+              </View>
+              {/* Input confirmar password */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInputStyle}
+                  placeholderTextColor="#d1cccc"
+                  placeholder="Confirma contraseña"
+                  secureTextEntry={!showConfirmPassword}
+                  value={confirmPassword}
+                  onChangeText={handleConfirmPassword}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={styles.eyeIconContainer}
+                >
+                  <Icon
+                    name={showConfirmPassword ? "eye-off-outline" : "eye-outline"}
+                    size={20}
+                    color="#7B7B7B"
+                  />
+                </TouchableOpacity>
+            </View>
           </View>
           <TouchableOpacity onPress={onConfirmContinue} style={styles.confirmButton} disabled={disableButton}>
             <Text style={styles.closeButtonText}>Confirmar</Text>
@@ -121,7 +149,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-    width: 200,
+    width: 250,
     marginTop: 10,
   },
   closeButtonText: {
@@ -130,7 +158,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   containerInputs: {
-    width: 200,
+    width: 250,
+    marginBottom: 20,
   },
   textInputStyle: {
     color: "#2A261B",
@@ -143,6 +172,18 @@ const styles = StyleSheet.create({
     //width: "200%",
     textAlign: "center",
     fontFamily: "Gotham-Medium",
+    flex: 1, // Ocupa todo el espacio disponible
+  },
+  inputContainer: {
+    flexDirection: "row", // Permite colocar el ícono de ojo al lado del TextInput
+    alignItems: "center",
+    marginBottom: 10,
+    //width: '100%', // Asegurar que ocupe todo el ancho
+  },
+  eyeIconContainer: {
+    justifyContent: "center", // Centrar el icono verticalmente
+    alignItems: "center",
+    padding: 10,
   },
 });
 
