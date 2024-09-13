@@ -87,7 +87,10 @@ const MainMenuScreen = () => {
           }else{
             //Aún no se cumplen las 2 horas
             setShowMealPlanElements(false);
-            Alert.alert("Información", "Aún estamos trabajando en la creación de tu plan alimenticio.\nTe notificaremos cuando esté listo.\n¡Gracias por tu paciencia!");
+            //Solo mosrtras alerta cuando se dió click en el botón, es decir, no se debe de mostrar la alerta al inicio
+            if( fromVerify ){
+              Alert.alert("Información", "Aún estamos trabajando en la creación de tu plan alimenticio.\nTe notificaremos cuando esté listo.\n¡Gracias por tu paciencia!");
+            }
           }
           
           hideLoading();
@@ -266,15 +269,17 @@ const MainMenuScreen = () => {
           ): 
           (
             <View style={styles.containerSinPlan}>
-              <Text style={styles.centeredTextSinPlan}>Seguimos trabajando para</Text>
-              <Text style={styles.centeredTextSinPlan}>tener el plan ideal para ti.</Text>
+              <View style={styles.containerTitle}>
+                <Text style={styles.centeredTextSinPlan}>Seguimos trabajando para</Text>
+                <Text style={styles.centeredTextSinPlan}>tener el plan ideal para ti.</Text>
+              </View>
               <View style={styles.logoContainer}>
                 <Image
                   source={require("../../../assets/logoMuySaludableMR_resize.png")}
                   style={styles.logoImage}
                 />
               </View>
-              <Text style={styles.centeredTextContentNewLineSinPlan}>{ "\n" }</Text>
+              {/* <Text style={styles.centeredTextContentNewLineSinPlan}>{ "\n" }</Text> */}
               <Text style={styles.centeredTextContentSinPlan}>Por favor vuelve a consultar más tarde.</Text>
               <Text style={styles.centeredTextContentSinPlan}>Recuerda esperar 2 horas una vez</Text>
               <Text style={styles.centeredTextContentSinPlan}>realizada tu compra.</Text>

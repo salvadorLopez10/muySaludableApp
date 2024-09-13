@@ -7,7 +7,7 @@ import { MuySaludableApi } from "../../api/MuySaludableApi";
 
 export const MentalHealthScreen = () => {
 
-  const [contentMental, setContentMental] = useState("<title>SIN CONTENIDO</title>");
+  const [contentMental, setContentMental] = useState("<title>SALUD MENTAL</title>");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

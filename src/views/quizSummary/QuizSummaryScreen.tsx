@@ -173,16 +173,25 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
                   console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
                   console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
                   closeIndicator();
+
                   Alert.alert(
-                    "Información",
-                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+                    "Información", // Título de la alerta
+                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios", // Mensaje de la alerta
+                    [
+                      {
+                        text: "Confirmar",
+                        onPress: () => {
+
+                          scheduleNotification();
+
+                          AsyncStorage.removeItem("mealPlan");
+
+                          handleLogin(responseUser.data.data.email, responseUser.data.data.password, loading, setLoading);
+                        },
+                      },
+                    ],
+                    { cancelable: false } // Evita que la alerta se cierre sin el botón
                   );
-
-                  scheduleNotification();
-
-                  AsyncStorage.removeItem("mealPlan");
-
-                  handleLogin(responseUser.data.data.email, responseUser.data.data.password, loading, setLoading)
 
                   // navigation.reset({
                   //   index: 0,
@@ -209,20 +218,20 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
             
               });
 
-            closeIndicator();
-            Alert.alert(
-              "Información",
-              "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
-            );
+            // closeIndicator();
+            // Alert.alert(
+            //   "Información",
+            //   "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+            // );
             
-            scheduleNotification();
+            // scheduleNotification();
 
-            resetLocalInfo();
+            // resetLocalInfo();
 
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "LoginScreen" }],
-            });
+            // navigation.reset({
+            //   index: 0,
+            //   routes: [{ name: "LoginScreen" }],
+            // });
           })
           .catch((errorTMB:any) => {
             closeIndicator();

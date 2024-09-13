@@ -281,30 +281,43 @@ const MainMenuStyles = StyleSheet.create({
   containerSinPlan:{
     flex: 1,
     //justifyContent: 'center',
+    width: "90%",
     alignItems: 'center',
-    marginTop: "6%",
+    marginTop: "10%",
+    borderColor: "#faa029",
+    borderWidth: 2,
+    marginVertical: 13,
+    borderRadius: 15,
+    padding: 5
   },
   logoContainer: {
    // marginVertical: 20,
     //alignSelf: "center",
     //top: "10%",
-    marginTop: 10
+    marginTop: '5%',
+    marginBottom:'5%',
   },
   logoImage: {
     // width: 100,
     //height: 100,
   },
+  containerTitle:{
+    marginTop:"15%"
+  },
   centeredTextSinPlan:{
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: "Gotham-Ultra",
     margin: 3,
-    color: "#2E2A21",
+    color: "#faa029",
+    textAlign: "center",
   },
   centeredTextContentSinPlan:{
-    fontSize: 16,
+    //fontSize: 16,
     fontFamily: "Gotham-Ultra",
     margin: 3,
-    color: "#2E2A21",
+    color: "#326807",
+    fontSize: 15,
+    //padding:10
   },
   centeredTextContentNewLineSinPlan:{
     fontSize: 16,
@@ -314,13 +327,15 @@ const MainMenuStyles = StyleSheet.create({
   },
   btnVerify: {
     marginTop:15,
-    backgroundColor: "#326807",
+    backgroundColor: "#faa029",
     //backgroundColor: "#009144",
     padding: 10,
     //width: "90%",
     alignItems: "center", 
     borderRadius: 15,
     marginBottom: "5%",
+    //top: 5,
+    marginVertical: 13,
   },
   textVerify: {
     fontSize: 16,

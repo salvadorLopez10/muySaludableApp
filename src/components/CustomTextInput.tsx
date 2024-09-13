@@ -46,11 +46,13 @@ const styles = StyleSheet.create({
   formInput: {
     flexDirection: "row",
     marginTop: 10,
+    width: '95%'
   },
   formTextInput: {
     flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: "#AAAAAA",
     marginLeft: 15,
+    marginRight: 15
   },
 });

@@ -7,7 +7,7 @@ import { MuySaludableApi } from "../../api/MuySaludableApi";
 
 
 export const FinancialHealthScreen = () => {
-  const [contentFinancial, setContentFinancial] = useState("<title>SIN CONTENIDO</title>");
+  const [contentFinancial, setContentFinancial] = useState("<title>SALUD FINANCIERA</title>");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

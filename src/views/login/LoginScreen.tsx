@@ -19,8 +19,11 @@ import useViewModel from "./ViewModel";
 import styles from "./Styles";
 import { CustomTextInput } from "../../components/CustomTextInput";
 import ModalForgotPassword from "./ModalForgotPassword";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export const LoginScreen = () => {
+
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const { email, password, visibleModal, isConnected, onChange, handleLogin, handleForgotPassword } = useViewModel();
@@ -62,16 +65,29 @@ export const LoginScreen = () => {
           onChangeText={onChange}
           value={email}
         />
+        <View style={styles.inputContainer}>
 
-        <CustomTextInput
-          image={require("../../../assets/password.png")}
-          placeholder="Contraseña"
-          keyboardType="default"
-          property="password"
-          onChangeText={onChange}
-          value={password}
-          secureTextEntry={true}
-        />
+          <CustomTextInput
+            image={require("../../../assets/password.png")}
+            placeholder="Contraseña"
+            keyboardType="default"
+            property="password"
+            onChangeText={onChange}
+            value={password}
+            secureTextEntry={!showPassword}
+          />
+
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.eyeIconContainer}
+          >
+            <Icon
+              name={showPassword ? "eye-off-outline" : "eye-outline"}
+              size={20}
+              color="#7B7B7B"
+            />
+          </TouchableOpacity>
+        </View>
 
         <View style={{ marginTop: 30 }}>
           <RoundedButton

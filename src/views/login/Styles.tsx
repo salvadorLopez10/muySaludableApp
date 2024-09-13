@@ -101,6 +101,18 @@ const LoginStyles = StyleSheet.create({
     color: "#ffffff",
     fontFamily: "Gotham-Medium",
   },
+  inputContainer: {
+    flexDirection: "row", // Permite colocar el ícono de ojo al lado del TextInput
+    alignItems: "center",
+    //marginBottom: 10,
+    //width: '90%', // Asegurar que ocupe todo el ancho
+  },
+  eyeIconContainer: {
+    //justifyContent: "center", // Centrar el icono verticalmente
+    //alignItems: "center",
+    //padding: 10,
+    marginRight: 30
+  },
 });
 
 export default LoginStyles;

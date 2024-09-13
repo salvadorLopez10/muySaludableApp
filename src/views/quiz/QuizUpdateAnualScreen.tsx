@@ -10,6 +10,7 @@ import { ActivityIndicator } from "react-native";
 import { NotificationPush } from "../../utils/NotificationPush";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useViewModelLogin from "../login/ViewModel";
 
 interface Props extends StackScreenProps<any,any>{};
 
@@ -22,6 +23,7 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
   const [loading, setLoading] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
 
+  const { handleLogin } = useViewModelLogin();
 
   const { schedulePushNotification } = NotificationPush();
 
@@ -213,21 +215,41 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
                                         console.log("SE ACTUALIZA FECHA COMPRA");
                                         console.log(JSON.stringify( responseUpdateFechaCompra.data.data,null,2 ));
 
-                                        Alert.alert(
-                                            "Información",
-                                            "Agradecemos la actualización de tu información.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
-                                        );
+                                        // Alert.alert(
+                                        //     "Información",
+                                        //     "Agradecemos la actualización de tu información.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+                                        // );
 
+                                        // closeIndicator();
+
+                                        // scheduleNotification();
+
+                                        // clearDataUser();
+
+                                        // navigation.reset({
+                                        //     index: 0,
+                                        //     routes: [{ name: "LoginScreen" }],
+                                        // });
                                         closeIndicator();
 
-                                        scheduleNotification();
-
-                                        clearDataUser();
-
-                                        navigation.reset({
-                                            index: 0,
-                                            routes: [{ name: "LoginScreen" }],
-                                        });
+                                        Alert.alert(
+                                          "Información", // Título de la alerta
+                                          "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio actualizado para poder continuar tus beneficios",
+                                          [
+                                            {
+                                              text: "Confirmar",
+                                              onPress: () => {
+                      
+                                                scheduleNotification();
+                      
+                                                AsyncStorage.removeItem("mealPlan");
+                      
+                                                handleLogin(responseUpdateUsuario.data.data.email, responseUpdateUsuario.data.data.password, loading, setLoading);
+                                              },
+                                            },
+                                          ],
+                                          { cancelable: false } // Evita que la alerta se cierre sin el botón
+                                        );
 
                                       }).catch((errorUpdateActualizaFechaCompra:any) => {
                                             closeIndicator();
@@ -469,13 +491,13 @@ const styles = StyleSheet.create({
     fontFamily: "Gotham-Medium",
   },
   textInputStyleEdad: {
-    //backgroundColor: "white",
+    backgroundColor: "white",
     color: "#2A261B",
     //fontWeight: "bold",
     fontFamily: "Gotham-Medium",
-    padding: 10,
+    padding: 5,
     //marginTop: 10,
-    //28width: "30%",
+    width: "50%",
     textAlign: "center",
   },
   containerText: {

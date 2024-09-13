@@ -130,14 +130,24 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
                   console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
                   console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
                   closeIndicator();
+
                   Alert.alert(
-                    "Información",
-                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
+                    "Información", // Título de la alerta
+                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios", // Mensaje de la alerta
+                    [
+                      {
+                        text: "Confirmar",
+                        onPress: () => {
+                          console.log("click botón confirmar");
+
+                          scheduleNotification();
+
+                          handleLogin(responseUser.data.data.email, responseUser.data.data.password, loading, setLoading);
+                        },
+                      },
+                    ],
+                    { cancelable: false } // Evita que la alerta se cierre sin el botón
                   );
-
-                  scheduleNotification();
-
-                  handleLogin(responseUser.data.data.email, responseUser.data.data.password, loading, setLoading);
 
                   // navigation.reset({
                   //   index: 0,
@@ -289,7 +299,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         </View> */}
 
         <View style={styles.containerAnswer}>
-          <ScrollView>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
             <Text style={styles.textAnswer}>
               1. {route.params!.name as any}
             </Text>
@@ -366,7 +376,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     //width: "80%",
     alignItems: "center",
-    top: "10%",
+    top: "7%",
   },
   textTitle: {
     color: "#55851f",
@@ -376,11 +386,18 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   containerAnswer: {
-    //backgroundColor: "blue",
-    width: "90%",
-    height: "75%",
+    width: "85%",
+    height: "55%",
     alignItems: "center",
-    top: "3%",
+    //top: "3%",
+    //marginBottom: 50,
+    bottom: "5%"
+  },
+  scrollContent: {
+   // paddingBottom: 80, // Agrega espacio en la parte inferior del contenido
+  },
+  scrollContainer: {
+    bottom: "10%"
   },
   textAnswer: {
     //fontWeight: "bold",
@@ -388,11 +405,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     margin: 10,
     flexWrap: "wrap",
-    color: "#2E2A21",
+    color: "#326807",
   },
   containerButtons: {
     flexDirection: "row",
-    top: 40,
+    //paddingHorizontal: 10,           // Espaciado lateral (ajústalo según sea necesario)
+    //marginBottom: "1%",
+    top: "25%",
   },
   correctButton: {
     padding: 10,

@@ -54,7 +54,7 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
         {/* Logo */}
         <View style={styles.containerAvatar}>
           <Image
-            source={require("../../assets/logoMuySaludable.png")}
+            source={require("../../assets/logoMuySaludableMR.png")}
             style={styles.avatar}
           />
         </View>
@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   avatar: {
-    //width: 50,
-    //height: 100,
+    width: 100,
+    height: 103,
   },
   divider: {
     borderBottomWidth: 1,
