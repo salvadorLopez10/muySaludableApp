@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Styles";
-import { ImageBackground, Switch, TouchableOpacity,ActivityIndicator } from "react-native";
+import { ImageBackground, Switch, TouchableOpacity,ActivityIndicator, Linking } from "react-native";
 import { Alert, SafeAreaView, Text, View } from "react-native";
 import ModalChangePassword from "./ModalChangePassword";
 import { MuySaludableApi } from "../../api/MuySaludableApi";
@@ -16,6 +16,44 @@ export const ManageAccountScreen = () => {
   const handlOpenModalChangePassword = () => {
     setVisibleModal(!visibleModal)
   };
+
+  const handleOpenWA = () => {
+
+    let phoneNumber = '525565282789'; // Número de teléfono con el código internacional, por ejemplo: 521 para México.
+    let message = '¡Hola!, requiero asistencia para la App';
+
+    // Construir la URL para abrir en WhatsApp
+    //let url = `whatsapp://send?text=${encodeURIComponent(message)}&phone=${phoneNumber}`;
+    let url =`http://api.whatsapp.com/send?phone=${phoneNumber}`;
+
+    const phoneUrl = `tel:${phoneNumber}`;
+
+    // Verificar si WhatsApp está instalado
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          return Linking.openURL(url);
+        } else {
+          // Si WhatsApp no está disponible, abrir la app de teléfono
+          Linking.canOpenURL(phoneUrl)
+            .then((supported) => {
+              if (supported) {
+                Linking.openURL(phoneUrl); // Abre la app de teléfono
+              } else {
+                Alert.alert(
+                  'Error',
+                  'No se puede abrir la aplicación de teléfono.'
+                );
+              }
+            })
+            .catch((error) =>
+              console.error('Error al intentar abrir la app de teléfono', error)
+            );
+        }
+      })
+      .catch((error) => console.error('Error al abrir WhatsApp', error));
+
+  }
 
   function LoadingAnimation() {
     return (
@@ -129,6 +167,17 @@ export const ManageAccountScreen = () => {
               value={isEnabled}
             />
           </View>
+        </View>
+
+        <View style={styles.buttonDeleteContainer}>
+          <TouchableOpacity
+            style={styles.buttonSection}
+            onPress={handleOpenWA}
+          >
+            <Text style={{ color: "#faa029", fontFamily: "Gotham-Medium" }}>
+              Contáctanos
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.buttonDeleteContainer}>

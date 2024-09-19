@@ -275,7 +275,7 @@ const MainMenuScreen = () => {
               </View>
               <View style={styles.logoContainer}>
                 <Image
-                  source={require("../../../assets/logoMuySaludableMR_resize.png")}
+                  source={require("../../../assets/logoMuySaludableMR.png")}
                   style={styles.logoImage}
                 />
               </View>

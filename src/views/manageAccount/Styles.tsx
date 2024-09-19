@@ -16,8 +16,9 @@ const ManageAccountStyles = StyleSheet.create({
     marginBottom: "10%",
   },
   containerRow: {
-    padding: 5,
+    padding: 10,
     //width: "100%",
+    width: "80%",
     borderWidth: 1,
     borderColor: "rgba(250, 160, 41, 0.8)",
     backgroundColor: "rgba(255, 255, 255, 0.8)",

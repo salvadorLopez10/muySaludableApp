@@ -133,7 +133,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
 
                   Alert.alert(
                     "Información", // Título de la alerta
-                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios", // Mensaje de la alerta
+                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios.", // Mensaje de la alerta
                     [
                       {
                         text: "Confirmar",
