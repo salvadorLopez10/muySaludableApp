@@ -60,7 +60,7 @@ export const UserProfileScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <Image
-          source={require("../../../assets/logoMuySaludableMR_resize.png")}
+          source={require("../../../assets/logoMuySaludableMR.png")}
           style={styles.logoImage}
         />
       </View>
@@ -159,8 +159,8 @@ const styles = StyleSheet.create({
     //top: "10%",
   },
   logoImage: {
-    // width: 100,
-    //height: 100,
+    width: 100,
+    height: 103,
   },
   generalInfoContainer: {
     width: "100%",
