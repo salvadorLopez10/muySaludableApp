@@ -1,7 +1,7 @@
 import { createDrawerNavigator, DrawerContentComponentProps, DrawerContentScrollView } from "@react-navigation/drawer";
 import { UserProfileScreen } from '../views/userProfile/UserProfileScreen';
 import MainMenuScreen from "../views/mainMenu/MainMenuScreen";
-import { Image, Text } from "react-native";
+import { Image, Text, Linking, Alert } from "react-native";
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native";
@@ -48,6 +48,45 @@ export const LateralMenu = () => {
 }
 
 const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
+
+  const handleOpenWA = () => {
+
+    let phoneNumber = '525565282789'; // Número de teléfono con el código internacional, por ejemplo: 521 para México.
+    let message = '¡Hola!, requiero asistencia para la App';
+
+    // Construir la URL para abrir en WhatsApp
+    //let url = `whatsapp://send?text=${encodeURIComponent(message)}&phone=${phoneNumber}`;
+    let url =`http://api.whatsapp.com/send?phone=${phoneNumber}`;
+
+    const phoneUrl = `tel:${phoneNumber}`;
+
+    // Verificar si WhatsApp está instalado
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          return Linking.openURL(url);
+        } else {
+          // Si WhatsApp no está disponible, abrir la app de teléfono
+          Linking.canOpenURL(phoneUrl)
+            .then((supported) => {
+              if (supported) {
+                Linking.openURL(phoneUrl); // Abre la app de teléfono
+              } else {
+                Alert.alert(
+                  'Error',
+                  'No se puede abrir la aplicación de teléfono.'
+                );
+              }
+            })
+            .catch((error) =>
+              console.error('Error al intentar abrir la app de teléfono', error)
+            );
+        }
+      })
+      .catch((error) => console.error('Error al abrir WhatsApp', error));
+
+  }
+
   return (
     <View style={styles.container}>
       <DrawerContentScrollView style={styles.drawerScrollView}>
@@ -93,6 +132,16 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
               {/* <Icon name="cog-outline" size={25} color="black" /> */}
               <Image style={{ width: 30, height: 30 }} source={require("../../assets/Configuracion.png")} />
               <Text style={styles.menuTexto}>Administrar Cuenta</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuOptionContainer}
+            onPress={ handleOpenWA }
+          >
+            <View style={styles.menuOptionContent}>
+              <Image style={{ width: 30, height: 30 }} source={require("../../assets/contactanos_menu.jpeg")} />
+              <Text style={styles.menuTexto}>Contáctanos</Text>
             </View>
           </TouchableOpacity>
 
@@ -163,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   menuTexto: {
-    marginLeft: 20,
+    marginLeft: 10,
     fontSize: 16,
     //fontWeight: "bold",
     fontFamily: "Gotham-Medium"

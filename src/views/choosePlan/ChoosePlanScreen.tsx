@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
   ScrollView,
+  Dimensions
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { RoundedButton } from '../../components/RoundedButton';
@@ -18,6 +19,8 @@ import { MuySaludableApi } from '../../api/MuySaludableApi';
 import { useAuthStore } from '../../store/auth/useAuthStore';
 
 interface Props extends StackScreenProps<any,any>{};
+
+const { height } = Dimensions.get("window");
 
 interface Characteristic {
   id: number;
@@ -224,11 +227,11 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
   },
   imageBackground: {
     width: "100%",
-    height: "100%",
+    height: height,
     position: 'absolute',
   },
   tituloContainer: {
@@ -423,9 +426,9 @@ const styles = StyleSheet.create({
     flex: 1, // Ocupa el espacio restante debajo de título.
     marginTop: 20, // Ajustar según sea necesario.
     width: '100%', // Asegura que el ScrollView ocupe todo el ancho disponible.
-    height: '80%',
+    //height: '50%',
     paddingHorizontal: 20,
-    marginBottom: '25%',
+    marginBottom: '28%',
   },
   scrollViewContent: {
     justifyContent: "center",

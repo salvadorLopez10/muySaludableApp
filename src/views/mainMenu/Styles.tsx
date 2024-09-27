@@ -317,6 +317,7 @@ const MainMenuStyles = StyleSheet.create({
     margin: 3,
     color: "#326807",
     fontSize: 15,
+    textAlign:"center"
     //padding:10
   },
   centeredTextContentNewLineSinPlan:{

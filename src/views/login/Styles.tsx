@@ -14,7 +14,7 @@ const LoginStyles = StyleSheet.create({
   },
   form: {
     width: "100%",
-    height: "40%",
+    height: "44%",
     backgroundColor: "white",
     position: "absolute",
     bottom: 0,

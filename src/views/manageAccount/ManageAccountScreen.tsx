@@ -169,7 +169,7 @@ export const ManageAccountScreen = () => {
           </View>
         </View>
 
-        <View style={styles.buttonDeleteContainer}>
+        {/* <View style={styles.buttonDeleteContainer}>
           <TouchableOpacity
             style={styles.buttonSection}
             onPress={handleOpenWA}
@@ -178,7 +178,7 @@ export const ManageAccountScreen = () => {
               Contáctanos
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View style={styles.buttonDeleteContainer}>
           <TouchableOpacity

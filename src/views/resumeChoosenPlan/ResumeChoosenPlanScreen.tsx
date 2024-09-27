@@ -212,12 +212,14 @@ export const ResumeChoosenPlanScreen = () => {
       {/* Sección email*/}
       <TouchableOpacity style={styles.containerEmail} onPress={openModal} disabled={disabledBtnEmail}>
         <Text style={styles.labelEmail}>Ingresa tu correo electrónico</Text>
-        <TextInput
-          style={styles.inputEmail}
-          placeholder=""
-          value={email}
-          editable={false}
-        />
+          <TextInput
+            style={styles.inputEmail}
+            placeholder=""
+            value={email}
+            editable={false}
+            onTouchStart={openModal}          
+          />
+        
       </TouchableOpacity>
 
       {/* Ventana modal */}
@@ -387,6 +389,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 8,
     fontFamily: "Gotham-Medium",
+    textAlign: "center",
   },
   inputEmail: {
     height: "40%",

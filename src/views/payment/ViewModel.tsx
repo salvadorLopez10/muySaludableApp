@@ -532,7 +532,7 @@ const PaymentScreenViewModel = ({ emailProp, precioProp, planProp,idPlanProp, fe
 
       Alert.alert(
         "La contraseña se estableció correctamente",
-        "Por favor guarda tu contraseña, la necesitarás para acceder a tu información.\n\nA continuación serás dirigido para contestar un cuestionario, el cual nos ayudará a generar el plan adecuado para ti",
+        "Por favor guarda tu contraseña, la necesitarás para acceder a tu información.\n\nA continuación serás dirigido para contestar un cuestionario, el cual nos ayudará a generar el plan adecuado para ti.",
         [
           {
             text: "Continuar",

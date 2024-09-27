@@ -276,12 +276,17 @@ const styles = StyleSheet.create({
     flexDirection: "row", // Muestra los elementos en la misma fila
     alignItems: "center",
     //paddingVertical: 5,
+    width:"100%"
   },
   listItemText: {
     //marginLeft: 5,
     color: "#2A261B",
     fontWeight: "bold",
     fontFamily: "Gotham-Medium",
+    flexShrink: 1,        // Permite que el texto se ajuste al ancho disponible
+    flexWrap: "wrap",     // Hace que el texto se envuelva a una nueva línea si es necesario
+    //flexGrow: 1,          // Toma el espacio disponible
+    //width: 0, 
   },
   styleButtonConfirm: {
     padding: 10,
