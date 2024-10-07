@@ -21,7 +21,7 @@ const SaludMentalComponent: React.FC<Props> = ({ string }) => {
       components.push(
         <Text key={i} style={styles.titleText}>
           {parts[i + 1]}
-          {"\n"}
+          {/* {"\n"} */}
         </Text>
       );
       i++; // Incrementa el índice para evitar renderizar el contenido del título como un componente

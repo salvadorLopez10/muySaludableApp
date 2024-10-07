@@ -24,6 +24,8 @@ const FinancialHealthStyles = StyleSheet.create({
   textContent: {
     fontFamily: "Gotham-Book",
     textAlign: "justify",
+    marginTop: 5,
+    marginBottom: 5
   },
   subtitleText: {
     marginTop: "5%",
@@ -34,10 +36,12 @@ const FinancialHealthStyles = StyleSheet.create({
     fontSize: 24,
     fontFamily: "Gotham-Ultra",
     textAlign: "center",
+    marginBottom: 1
   },
   image: {
     width: 300,
     height: 300,
+    marginBottom: 20
   },
   indicatorWrapper: {
     flex: 1,
