@@ -225,7 +225,7 @@ const MainMenuScreen = () => {
                 </Text>
                 <Text style={styles.contentTitleCalories}>
                   {" "}
-                  { caloriesPlan } CALORÍAS
+                  { Math.round(Number(caloriesPlan)) } CALORÍAS
                 </Text>
               </View>
             </View>
