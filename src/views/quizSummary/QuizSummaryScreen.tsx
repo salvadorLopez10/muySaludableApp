@@ -376,7 +376,7 @@ const QuizSummaryScreen = ({ route, navigation }: Props) => {
     console.log("SE PROCEDE A CALENDARIZAR PUSH NOTIFICATION");
     await schedulePushNotification(
       "¡Tu plan alimenticio ya está listo!",
-      "Hemos generado tu plan alimenticio acorde a tus necesidades, por favor accede con tu usuario y contraseña para que lo puedas ver"
+      "Hemos generado tu plan alimenticio acorde a tus necesidades, por favor accede con tu usuario y contraseña para que lo puedas ver."
     );
   };
 
