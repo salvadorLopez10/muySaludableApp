@@ -82,7 +82,11 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
   const onNavigate = () =>{
     setModalVisible(false)
-    navigation.navigate("ResumeChoosenPlanScreen", {selectedPlan: selectedView});
+    //navigation.navigate("ResumeChoosenPlanScreen", {selectedPlan: selectedView});
+    Alert.alert(
+      'Información',
+      'Para conocer más detalles te invitamos a visitar nuestro sitio web:\nhttps://muysaludable.com.mx/planes'
+    );
   }
 
   const getPlanes = async() => {
@@ -149,14 +153,14 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
           >
             <Text style={styles.titlePlanText}>{element.nombre}</Text>
             <Text style={styles.contentPlanText}>{element.resumen}</Text>
-            <View style={styles.priceContainer}>
+            {/* <View style={styles.priceContainer}>
               <Text style={styles.priceText}>De </Text>
               <View style={styles.strikeThroughContainer}>
                 <Text style={styles.priceStrike}>${element.precio_regular}</Text>
                 <View style={styles.strikeThroughLine} />
               </View>
               <Text style={styles.priceText}> a ${element.precio}</Text>
-            </View>
+            </View> */}
             <View style={styles.containerClick}>
               <Text style={styles.textClic}>
                 DA CLIC

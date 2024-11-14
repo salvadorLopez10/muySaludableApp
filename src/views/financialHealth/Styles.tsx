@@ -20,6 +20,8 @@ const FinancialHealthStyles = StyleSheet.create({
   containerText: {
     margin: "10%",
     alignContent: "stretch",
+    justifyContent:"center",
+    alignItems:"center"
   },
   textContent: {
     fontFamily: "Gotham-Book",

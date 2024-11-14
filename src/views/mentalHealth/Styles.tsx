@@ -8,7 +8,7 @@ const MentalHealthStyles = StyleSheet.create({
   },
   containerScroll:{
     //flex: 1,
-    marginTop: '6%'
+    marginTop: '6%',
   },
   imageBackground: {
     // width: "100%",
@@ -20,6 +20,9 @@ const MentalHealthStyles = StyleSheet.create({
   containerText: {
     margin: "10%",
     alignContent: "stretch",
+    justifyContent:"center",
+    alignItems:"center"
+
   },
   textContent: {
     fontFamily: "Gotham-Book",
@@ -41,7 +44,8 @@ const MentalHealthStyles = StyleSheet.create({
   image: {
     width: 300,
     height: 300,
-    marginBottom: 20
+    marginBottom: 20,
+    
   },
   indicatorWrapper: {
     flex: 1,

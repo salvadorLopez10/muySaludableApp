@@ -39,7 +39,7 @@ const SaludMentalComponent: React.FC<Props> = ({ string }) => {
     // Si la parte actual es una imagen, renderiza un Image
     else if (part === "image") {
       components.push(
-        <Image key={i} source={{ uri: parts[i + 1] }} style={styles.image} />
+          <Image key={i} source={{ uri: parts[i + 1] }} style={styles.image} />
       );
       i++; // Incrementa el índice para evitar renderizar el contenido de la imagen como un componente
     }
