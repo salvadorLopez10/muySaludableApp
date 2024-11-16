@@ -202,6 +202,7 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
                   <View style={styles.containerBullet}>
                     {selectedView?.descripcion_detallada
                       .split("\n")
+                      .slice(0, -1)
                       .map((linea, index) => (
                         <View key={index} style={styles.itemContainer}>
                           <Text style={styles.bullet}>•</Text>
