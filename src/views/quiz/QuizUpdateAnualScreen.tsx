@@ -234,7 +234,7 @@ const QuizUpdateAnualScreen = ({route,navigation}: Props) => {
 
                                         Alert.alert(
                                           "Información", // Título de la alerta
-                                          "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio actualizado para poder continuar tus beneficios.",
+                                          "Agradecemos tus respuestas.\nEn un periodo de 1 hora tendrás listo tu plan alimenticio actualizado para poder continuar tus beneficios.",
                                           [
                                             {
                                               text: "Confirmar",

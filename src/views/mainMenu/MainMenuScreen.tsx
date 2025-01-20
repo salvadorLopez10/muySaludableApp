@@ -74,7 +74,7 @@ const MainMenuScreen = () => {
       
       const resp = await MuySaludableApi.get("/planNutricional/"+userInfo?.id)
         .then((response:any) => {
-          //Antes de establecer el plan en pantalla, validamos que se hayan cumplido las 2 horas de "espera" (tiempo en lo que el plan está listo)
+          //Antes de establecer el plan en pantalla, validamos que se hayan cumplido 1 hora de "espera" (tiempo en lo que el plan está listo)
           const showMealPlan = validateShowMealPlan(response.data.data.createdAt);
 
           if( showMealPlan ){ //Ya se cumplió el tiempo de espera para la creación del plan
@@ -124,15 +124,15 @@ const MainMenuScreen = () => {
     console.log("ENTRA VALIDACIÓN VISTA PLAN");
     console.log(dateCreated);
     const createdAtDate = new Date(dateCreated);
-    const createdAtPlus2Hours = new Date(createdAtDate.getTime() + 2 * 60 * 60 * 1000); // Sumar 2 horas en milisegundos
+    const createdAtPlus1Hour = new Date(createdAtDate.getTime() + 1 * 60 * 60 * 1000); // Sumar 1 hora en milisegundos
     // Obtener la fecha y hora actual
     const now = new Date();
     //const now = new Date(2024, 8, 5, 2, 58, 24);
 
     console.log("comparación:"),
-    console.log("Creación: " + dateCreated, " Más 2: "+createdAtPlus2Hours, " actual: "+ now)
+    console.log("Creación: " + dateCreated, " Más 1: "+createdAtPlus1Hour, " actual: "+ now)
 
-    if (now >= createdAtPlus2Hours) {
+    if (now >= createdAtPlus1Hour) {
       console.log("RETURN TRUE");
       return true;
     } else {
@@ -281,7 +281,7 @@ const MainMenuScreen = () => {
               </View>
               {/* <Text style={styles.centeredTextContentNewLineSinPlan}>{ "\n" }</Text> */}
               <Text style={styles.centeredTextContentSinPlan}>Por favor vuelve a consultar más tarde.</Text>
-              <Text style={styles.centeredTextContentSinPlan}>Recuerda esperar 2 horas una vez</Text>
+              <Text style={styles.centeredTextContentSinPlan}>Recuerda esperar 1 hora una vez</Text>
               <Text style={styles.centeredTextContentSinPlan}>realizada tu compra.</Text>
 
               <Text style={styles.centeredTextContentNewLineSinPlan}>{ "\n" }</Text>

@@ -118,7 +118,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
 
             //Calcular plan alimenticio y guardar en bd
             const body = convertDataUserToGeneratePlan(route.params,responseTMB.data.data);
-            const resp = MuySaludableApi.post("/usuarios/generatePlan",body)
+            const resp = MuySaludableApi.post("/usuarios/generatePlanNew",body)
               .then((responsePlanGenerado:any) => {
                 console.log("RESPONSE GENERACIÓN PLAN");
                 console.log(JSON.stringify(responsePlanGenerado,null,2));
@@ -133,7 +133,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
 
                   Alert.alert(
                     "Información", // Título de la alerta
-                    "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios.", // Mensaje de la alerta
+                    "Agradecemos tus respuestas.\nEn un periodo de 1 hora tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios.", // Mensaje de la alerta
                     [
                       {
                         text: "Confirmar",

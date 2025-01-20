@@ -71,21 +71,31 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
         [
           {
             text: "Renovar paquete",
-            onPress: () => console.log("RENOVAR PLAN"),
+            onPress: () => {
+              console.log("RENOVAR PLAN");
+              getPlanes();
+            }
           },
         ],
         { cancelable: false }
       );
     }
-    getPlanes();
+    //getPlanes();
   }, []);
 
   const onNavigate = () =>{
     setModalVisible(false)
     //navigation.navigate("ResumeChoosenPlanScreen", {selectedPlan: selectedView});
     Alert.alert(
-      'Información',
-      'Para conocer más detalles te invitamos a visitar nuestro sitio web:\nhttps://muysaludable.com.mx/planes'
+      "Información", // Título del Alert
+      "Para conocer más detalles te invitamos a visitar nuestro sitio web:\nhttps://muysaludable.com.mx/planes", // Mensaje del Alert
+      [
+        {
+          text: "Ok", // Texto del botón
+          onPress: () => navigation.navigate("LoginScreen")
+        },
+      ],
+      { cancelable: false } // Evita cerrar el Alert tocando fuera
     );
   }
 

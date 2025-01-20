@@ -37,7 +37,7 @@ export const NotificationPush = () => {
           body: body,
           data: { data: "goes here" },
         },
-        trigger: { seconds: 7210 }, //2 horas
+        trigger: { seconds: 3610 }, //1 hora
       });
     }
 

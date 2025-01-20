@@ -32,6 +32,7 @@ const MainMenuViewModel = (  ) => {
   }, []);
 
   const getUrlRecetario = async () => {
+    console.log("GET URL RECETARIO");
     await MuySaludableApi.get("/config/url_recetario")
       .then((response:any) => {
         console.log(JSON.stringify(response.data.data, null, 2));
@@ -401,25 +402,37 @@ const MainMenuViewModel = (  ) => {
   const clickLinkRecetario = async () =>{
     console.log("LINK A RECETARIO");
     setLoading(true);
-    const file_name = "Recetario_Muy_Saludable.pdf";
-    const result = await FileSystem.downloadAsync(
-      urlRecetario,
-      FileSystem.documentDirectory + file_name
-    ).then((response) => {
-        setLoading(false);
-        console.log("DESPUÉS DE RECETARIO");
-        console.log(JSON.stringify(response, null, 2));
-        if( response.status !== 200 ){
-          alert("Se ha producido un error al descargar recetario. Favor de intentarlo más tarde");
-        }else{
-          saveRecetario(response.uri);
-        }
+    //Obtenemos dinámicamente la url del recetario
+    await MuySaludableApi.get("/config/url_recetario")
+      .then((response:any) => {
+        console.log(JSON.stringify(response.data.data, null, 2));
+        //setUrlRecetario(response.data.data);
+        const urlRecetario = response.data.data;
+        const file_name = "Recetario_Muy_Saludable.pdf";
+        const result = FileSystem.downloadAsync(
+          urlRecetario,
+          FileSystem.documentDirectory + file_name
+        ).then((response) => {
+            setLoading(false);
+            console.log("DESPUÉS DE RECETARIO");
+            console.log(JSON.stringify(response, null, 2));
+            if( response.status !== 200 ){
+              alert("Se ha producido un error al descargar recetario. Favor de intentarlo más tarde");
+            }else{
+              saveRecetario(response.uri);
+            }
 
-      }).catch((error) => {
-        setLoading(false);
-        console.log(JSON.stringify(error,null,2));
-        alert("Se ha producido un error al descargar recetario, favor de intentar más tarde");
-      });    
+          }).catch((error) => {
+            setLoading(false);
+            console.log(JSON.stringify(error,null,2));
+            alert("Se ha producido un error al descargar recetario, favor de intentar más tarde");
+          });    
+
+      })
+      .catch((error:any) => {
+        console.log("Error al obtener url para descargar recetaario");
+        console.log(error);
+      });
 
   }
 

@@ -237,6 +237,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   datosInfoBox: {
+    justifyContent: "center",
     width: "90%",
     alignItems: "center",
     backgroundColor: "#faa029",
@@ -260,6 +261,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     color: "#ffff",
     fontFamily: "Gotham-Medium",
+    textAlign: "center"
   },
   footer: {
     width: "100%",

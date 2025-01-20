@@ -10,17 +10,32 @@ import { useAuthStore } from "../../store/auth/useAuthStore";
 
 interface Props extends StackScreenProps<any,any>{};
 
+// interface Alimentos {
+//   id: number;
+//   nombre: string;
+//   tipo_alimento: string;
+//   porcion: string;
+//   tipo_porcion: string;
+//   proteinas: number;
+//   carbohidratos: number;
+//   grasas: number;
+//   calorias: number;
+//   informacion_nutrimental: string;
+//   createdAt: string;
+//   updatedAt: string;
+// }
 interface Alimentos {
-  id: number;
+  id: number,
   nombre: string;
-  tipo_alimento: string;
-  porcion: string;
-  tipo_porcion: string;
+  grupo: string;
+  equivalente: string;
+  unidad_medida: string;
   proteinas: number;
-  carbohidratos: number;
-  grasas: number;
-  calorias: number;
-  informacion_nutrimental: string;
+  lipidos: number;
+  hco: number;
+  kcal: number;
+  tiempo_comida: string;
+  categoria: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -115,7 +130,7 @@ const QuizScreen = ({route,navigation}: Props) => {
 
   const getAlimentos = async () => {
     try {
-      const resp = await MuySaludableApi.get("/alimentos");
+      const resp = await MuySaludableApi.get("/nuevosAlimentos");
 
       //console.log( resp.data.alimentos )
       const foodList = transformarArreglo(resp.data.alimentos);
