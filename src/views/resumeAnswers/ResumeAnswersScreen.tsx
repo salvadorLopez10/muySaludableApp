@@ -9,6 +9,7 @@ import { ActivityIndicator } from 'react-native';
 import { NotificationPush } from '../../utils/NotificationPush';
 import * as Notifications from "expo-notifications";
 import useViewModelLogin from "../login/ViewModel";
+import LoadingAnimationPlan from '../mainMenu/LoadingAnimationPlan';
 
 
 interface Props extends StackScreenProps<any, any> {}
@@ -346,7 +347,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
           </TouchableOpacity>
         </View>
 
-        {loading && <LoadingAnimation />}
+        {loading && <LoadingAnimationPlan />}
       </ImageBackground>
     </View>
   );

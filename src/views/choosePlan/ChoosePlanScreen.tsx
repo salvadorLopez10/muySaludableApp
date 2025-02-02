@@ -80,7 +80,7 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
         { cancelable: false }
       );
     }
-    //getPlanes();
+    getPlanes();
   }, []);
 
   const onNavigate = () =>{
