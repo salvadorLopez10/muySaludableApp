@@ -10,6 +10,7 @@ import MainMenuScreen from "../views/mainMenu/MainMenuScreen";
 import { LoginScreen } from "../views/login/LoginScreen";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LateralMenu } from "./LateralMenu";
+import { NewUserScreen } from "../views/newUser/NewUserScreen";
 
 interface Plan {
   id: number;
@@ -29,7 +30,8 @@ export type RootStackParams = {
   PaymentScreen: { email: string, precio: string, plan: string, idPlan: number, fechaExpiracion: string },
   QuizScreen: undefined,
   ResumeAnswersScreen: undefined,
-  MainMenuScreen: undefined
+  MainMenuScreen: undefined,
+  NewUserScreen: undefined
 };
 
 const Stack = createStackNavigator<RootStackParams>();
@@ -81,6 +83,11 @@ export const StackNavigator = () => {
       <Stack.Screen
         name="MainMenuScreen"
         component={LateralMenu}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NewUserScreen"
+        component={NewUserScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

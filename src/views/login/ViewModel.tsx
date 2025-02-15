@@ -68,13 +68,22 @@ const LoginViewModel = () => {
             requestLogin
         ).then((responseLogin:any) => {
             setLoading(false);
-            console.log(JSON.stringify(responseLogin.data, null, 2));
+            //console.log("RESPONSELOGIN");
+            //console.log(JSON.stringify(responseLogin.data, null, 2));
             if (responseLogin.data.status == "Ok") {
-                AsyncStorage.setItem( "user", JSON.stringify(responseLogin.data.data) );
 
-                useAuthStore.setState({ status: "authenticated" });
-                useAuthStore.setState({ user: responseLogin.data.data });
-                
+                if( responseLogin.data.msg == "Sin suscripcion" ){
+                    //console.log("ENTRA SINSUCRIPCION");
+                    AsyncStorage.setItem( "user", JSON.stringify(responseLogin.data.data) );
+                    useAuthStore.setState({ status: "userWithoutSuscription" });
+                    useAuthStore.setState({ user: responseLogin.data.data });
+                    navigation.navigate('NewUserScreen');
+                }else{
+                    //console.log("ENTRA LOGIN CORRECTO");
+                    AsyncStorage.setItem( "user", JSON.stringify(responseLogin.data.data) );
+                    useAuthStore.setState({ status: "authenticated" });
+                    useAuthStore.setState({ user: responseLogin.data.data });
+                }
                 // navigation.reset({
                 //   index: 0,
                 //   routes: [{ name: "MainMenuScreen" }],

@@ -13,6 +13,7 @@ import UserProfileStackNavigator from './src/navigator/UserProfileStackNavigator
 import { QuizNavigator } from "./src/navigator/QuizNavigator";
 import { MuySaludableApi } from "./src/api/MuySaludableApi";
 import { UpdateAnualPlanNavigator } from "./src/navigator/UpdateAnualPlanNavigator";
+import { NewUserNavigator } from "./src/navigator/NewUserNavigator";
 
 
 Notifications.setNotificationHandler({
@@ -40,17 +41,38 @@ export default function App() {
   const userInfo = useAuthStore((state) => state.user);
 
   useEffect(() => {
-    getInfoUser();
+    const fetchUserInfo = async () => {
+      const user = await AsyncStorage.getItem("user");
+  
+      console.log("getInfoUser");
+      console.log(JSON.stringify(user, null, 1));
+  
+      if (user != null) {
+        const parsedUser = JSON.parse(user);
+        useAuthStore.setState({
+          status: "authenticated",
+          user: parsedUser, 
+        });
+      } else {
+        useAuthStore.setState({
+          status: "unauthenticated",
+          user: undefined,  // Cambiar a `null` en lugar de `undefined`
+        });
+      }
+    };
+  
+    fetchUserInfo();
   }, []);
 
   useEffect(() => {
-    console.log("EFFFECT RENDERNAVIGATOR");
-    renderNavigator();
-  }, [userInfo]);
+    if (userInfo !== null ) {
+      //console.log("EFFECT RENDERNAVIGATOR");
+      renderNavigator();
+    }
+  }, [userInfo, status]);
 
   const getInfoUser = async () => {
     const user = await AsyncStorage.getItem("user");
-
     if (user != null) {
       const parsedUser = JSON.parse(user);
       useAuthStore.setState({ status: "authenticated" });
@@ -98,14 +120,19 @@ export default function App() {
 
   const renderNavigator = async () => {
     console.log("RENDER NAVIGATOR");
-    //console.log(JSON.stringify(userInfo,null,2));
+
     if (!userInfo) {
       console.log("STACKNAVIGATOR"); //Stack para compra de plan (usuario nuevo)
       setNavigatorComponent(<StackNavigator />);
-    } else if (isExpiratedPlan(userInfo.fecha_expiracion)) {  //isExpiratedPlan("2024-05-11T05:59:00.000Z") -  isExpiratedPlan(userInfo.fecha_expiracion)
+    }else if( status == 'userWithoutSuscription' ){ //Es string ya que cuando se hace login con un usuario sin sucripción, el valor que se guarda en userInfo es el email del usuario
+      //Mostramos la pantalla de nuevo usuario sin suscripción
+      console.log("NewUserNavigator");
+      setNavigatorComponent(<NewUserNavigator/>);
+
+    }else if (isExpiratedPlan(userInfo.fecha_expiracion)) {  //isExpiratedPlan("2024-05-11T05:59:00.000Z") -  isExpiratedPlan(userInfo.fecha_expiracion)
       console.log("UserProfileStackNavigator"); //Stack para renovación de plan
       setNavigatorComponent(<UserProfileStackNavigator />);
-    } else if (userInfo.nombre == null) { //Stack para completar cuestionario (EL USUARIO NO COMPLETÓ EL CUESTIONARIO CORRECTAMENTE)
+    } else if (!userInfo.nombre && status !== 'unauthenticated') { //Stack para completar cuestionario (EL USUARIO NO COMPLETÓ EL CUESTIONARIO CORRECTAMENTE)
       console.log("QUIZ NAVIGATOR");
       setNavigatorComponent(<QuizNavigator />);
     } else {
@@ -132,7 +159,7 @@ export default function App() {
         setNavigatorComponent(<LateralMenu />);
       }
     }
-  };
+  }
 
   if( !fontsLoaded ){
     console.log("SIN FUENTES");

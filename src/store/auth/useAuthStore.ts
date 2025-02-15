@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { MuySaludableApi } from '../../api/MuySaludableApi';
 
-type AuthStatus = 'authenticated' | 'unauthenticated' | 'checking';
+type AuthStatus = 'authenticated' | 'unauthenticated' | 'checking' | 'userWithoutSuscription';
 
 interface User{
     id:               number;

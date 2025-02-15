@@ -65,6 +65,7 @@ const QuizScreen = ({route,navigation}: Props) => {
   const [stateMexico, setStateMexico] = useState("");
 
   const userInfo = useAuthStore((state) => state.user);
+  const status = useAuthStore((state) => state.status);
 
   const handleHeightSelect = (value: string) => {
     setHeight(value);
@@ -106,26 +107,29 @@ const QuizScreen = ({route,navigation}: Props) => {
     console.log("ROUTE PARAMS");
     console.log(JSON.stringify(route.params, null, 3));
     //Cuando los parámetros son undefined, quiere decir que la pantalla QUIZ se mostró al detectar que ya se creó el usuario pero no contestó cuestionario
-    if(userInfo?.nombre == undefined && route.params?.idUsuario == undefined){
+    if( status !== 'unauthenticated' ){
 
-      let idUsuario = (userInfo?.id != undefined) ? userInfo?.id.toString() : "";
-      setIdUser(idUsuario);
-      Alert.alert(
-        "Contestar cuestionario",
-        "Hemos detectado que aún no contestas el cuestionario.\nEs necesario contestarlo para generar el plan correcto de acuerdo a tus objetivos.\n¡Te invitamos a contestarlo!",
-        [
-          {
-            text: "Comenzar",
-            onPress: () => console.log("RENOVAR PLAN"),
-          },
-        ],
-        { cancelable: false }
-      );
-    }else{
-
-      setIdUser(route.params!.idUsuario);
+      if(userInfo?.nombre == undefined && route.params?.idUsuario == undefined){
+  
+        let idUsuario = (userInfo?.id != undefined) ? userInfo?.id.toString() : "";
+        setIdUser(idUsuario);
+        Alert.alert(
+          "Contestar cuestionario",
+          "Hemos detectado que aún no contestas el cuestionario.\nEs necesario contestarlo para generar el plan correcto de acuerdo a tus objetivos.\n¡Te invitamos a contestarlo!",
+          [
+            {
+              text: "Comenzar",
+              onPress: () => console.log("RENOVAR PLAN"),
+            },
+          ],
+          { cancelable: false }
+        );
+      }else{
+  
+        setIdUser(route.params!.idUsuario);
+      }
+      getAlimentos();
     }
-    getAlimentos();
   }, []);
 
   const getAlimentos = async () => {

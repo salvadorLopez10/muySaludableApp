@@ -17,6 +17,8 @@ import { MyColors } from '../../theme/AppTheme';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MuySaludableApi } from '../../api/MuySaludableApi';
 import { useAuthStore } from '../../store/auth/useAuthStore';
+import { TextInput } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Props extends StackScreenProps<any,any>{};
 
@@ -46,6 +48,12 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedView, setSelectedView] = useState<Planes | null>(null);
+    const [user, setUser] = useState("");
+    const [pwd, setPwd] = useState("");
+    const [textErrorEmail, setTextErrorEmail] = useState("");
+    const [textErrorPwd, setTextErrorPwd] = useState("");
+    const [showTextUser, setShowTextUser] = useState(false);
+    const [showTextPwd, setShowTextPwd] = useState(false);
     const [planes, setPlanes] = useState<Planes[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -54,6 +62,10 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
   const handleOpenModal = ( element: Planes ) => {
     setSelectedView(element);
+    setModalVisible(true);
+  }
+
+  const openModalUserPassword = () => {
     setModalVisible(true);
   }
 
@@ -73,14 +85,14 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
             text: "Renovar paquete",
             onPress: () => {
               console.log("RENOVAR PLAN");
-              getPlanes();
+              //getPlanes();
             }
           },
         ],
         { cancelable: false }
       );
     }
-    getPlanes();
+    //getPlanes();
   }, []);
 
   const onNavigate = () =>{
@@ -97,6 +109,120 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
       ],
       { cancelable: false } // Evita cerrar el Alert tocando fuera
     );
+  }
+
+  const createAccount = async () =>{
+
+    setShowTextUser(false);
+    setShowTextPwd(false);
+    if( user.trim() == "" ){
+      setShowTextUser(true);
+      setTextErrorEmail("El email es requerido");
+      return;
+    }else {
+      const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if (!user.match(validRegex)) {
+        setShowTextUser(true);
+        setTextErrorEmail("Email no válido");
+        return;
+      }
+    }
+
+    if( pwd.trim() == "" ){
+      setShowTextPwd(true);
+      setTextErrorPwd("La contraseña es requerida");
+      return;
+    }else{
+      if( pwd.trim().length < 8 ){
+        setShowTextPwd(true);
+        setTextErrorPwd("Al menos 8 caracteres");
+        return;
+      }
+    }
+
+    const requestNewUser = {
+      "email": user,
+      "password": pwd
+    }
+    setLoading(true);
+    //Mandamos la creación de la cuenta y enviamos el correo electrónico
+    await MuySaludableApi.post(
+      "/usuarios",
+      requestNewUser
+    ).then((responseUser:any) => {
+      console.log("SE CREÓ USUARIO");
+      console.log(JSON.stringify(responseUser,null,1));
+      if( responseUser.data.status == "Duplicate" ){
+        setLoading(false);
+        Alert.alert("Ya existe una cuenta con el email proporcionado, favor de verificar");
+        setUser("");
+        setPwd("");
+      }else{
+        //Aquí ya se creó usuario
+        //Enviamos correo
+        const requestEmail = {
+          email: user
+        };
+        MuySaludableApi.post(
+          "/sendEmail/sendWelcomeEmailOnlyUser",
+          requestEmail
+        ).then((responseEmail:any) =>{
+          console.log("El email se envió correctamente");
+          
+          const requestLogin = {
+            email: responseUser.data.data.email, 
+            password: responseUser.data.data.password, 
+          };
+          //Simulamos el login
+          MuySaludableApi.post(
+            "/usuarios/login",
+            requestLogin
+          ).then( (responseLoginSimulado:any) => {
+            console.log("LOGIN SIMULADO");
+            console.log(JSON.stringify(responseLoginSimulado,null,1));
+            setLoading(false);
+            if( responseLoginSimulado.data.status == "Ok" ) {
+              //Al establecer valores en authStore, entra el App.tsx y ahí se valida cual pantalla de muestra
+              //AsyncStorage.setItem( "user", JSON.stringify(responseLoginSimulado.data.data) );
+              //useAuthStore.setState({ status: "userWithoutSuscription" });
+
+              AsyncStorage.setItem("user", JSON.stringify(responseLoginSimulado.data.data)).then(() => {
+                useAuthStore.setState({ status: "userWithoutSuscription" });
+              });
+            }
+          }).catch( (errorLogin:any) =>{
+            console.log("LOGIN SIMULADO INCORRECTO");
+            console.log(JSON.stringify(errorLogin,null,1));
+            setLoading(false);
+          });
+
+
+
+          //Establecemos información en AsyncStorage para guardar info del usuario creado y simular el login
+          //AsyncStorage.setItem( "user", JSON.stringify(responseUser.data.data) );
+
+          //useAuthStore.setState({ status: "authenticated" });
+          //useAuthStore.setState({ user: responseUser.data.data });
+          setLoading(false);
+          setModalVisible(false);
+          //Aquí ya se envió el email, procedemos a mostrar la página de bienvenida
+          navigation.navigate("NewUserScreen");
+        }).catch( (error:any) =>{
+          console.log("NO SE ENVIÓ CORREO");
+          console.log(JSON.stringify(error,null,1));
+          setLoading(false);
+        })
+      }
+
+    }).catch((error:any) => {
+      console.log("NO SE CREÓ USUARIO");
+      console.log(JSON.stringify(error,null,1));
+      setLoading(true);
+                     
+    });
+
+
+    
   }
 
   const getPlanes = async() => {
@@ -147,15 +273,51 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
       />
       {/* Título */}
       <View style={styles.tituloContainer}>
-        <Text style={styles.tituloText}>ELIGE ALGUNO DE</Text>
-        <Text style={styles.tituloText}>LOS 4 PLANES</Text>
-        <Text style={styles.contentTitulo}>Y vive una vida más</Text>
-        <Text style={styles.contentTitulo}>saludable</Text>
+        <Text style={styles.tituloText}>LLEGÓ EL MOMENTO</Text>
+        <Text style={styles.tituloText}>DE MANTENERTE</Text>
+        <Text style={styles.tituloTextOrange}>MUY SALUDABLE</Text>
+      </View>
+
+      <View style={styles.contentContainer}>
+
+      
+        <View style={styles.contentContainer}>
+          <Text style={styles.contentTitulo}>Mejora tu alimentación,</Text>
+          <Text style={styles.contentTitulo}>fortalece tu cuerpo,</Text>
+          <Text style={styles.contentTitulo}>equilibra tu mente y potencia</Text>
+          <Text style={styles.contentTitulo}>tu bienestar financiero.</Text>
+        </View>
+
+        <View style={styles.contentContainer}>
+          <Text style={styles.contentTitulo}>Empieza hoy tu camino</Text>
+          <Text style={styles.contentTitulo}>hacia una vida más saludable.</Text>
+        </View>
+
+        {/* <View style={styles.contentContainer}>
+          <Text style={styles.tituloText}>¡Regístrate!</Text>
+        </View> */}
+
+        <TouchableOpacity 
+          style={styles.containerClick}
+          onPress={() => openModalUserPassword()}
+          >
+          <Text style={styles.textClic}>
+            ¡Comienza ya!
+          </Text>
+        </TouchableOpacity>
+
+        <View style={styles.logoContainer}>
+          <Image
+            source={require("../../../assets/logoMuySaludableMR.png")}
+            style={styles.logoImage}
+          />
+        </View>
       </View>
 
       {/* Menú selección de planes */}
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
-      {planes.map((element) => (
+      {/* <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}> */}
+
+      {/* {planes.map((element) => (
           <TouchableOpacity
             key={element.id}
             onPress={() => handleOpenModal(element)}
@@ -163,22 +325,23 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
           >
             <Text style={styles.titlePlanText}>{element.nombre}</Text>
             <Text style={styles.contentPlanText}>{element.resumen}</Text>
-            {/* <View style={styles.priceContainer}>
+             <View style={styles.priceContainer}>
               <Text style={styles.priceText}>De </Text>
               <View style={styles.strikeThroughContainer}>
                 <Text style={styles.priceStrike}>${element.precio_regular}</Text>
                 <View style={styles.strikeThroughLine} />
               </View>
               <Text style={styles.priceText}> a ${element.precio}</Text>
-            </View> */}
+            </View> 
             <View style={styles.containerClick}>
               <Text style={styles.textClic}>
                 DA CLIC
               </Text>
             </View>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+        ))} */}
+        
+      {/* </ScrollView> */}
       
       {/* Modal */}
       <Modal
@@ -198,15 +361,52 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
               {/* Sección de Título */}
               <View style={styles.modalSection}>
-                <Text style={styles.title}>Resumen del plan</Text>
+                <Text style={styles.texto}>Ingresa tu email</Text>
+                <Text style={styles.texto}>para crear una cuenta</Text>
+                <Text style={styles.texto}>y descubre como</Text>
+                <Text style={styles.texto}>transformar tu vida</Text>
               </View>
+              <View style={styles.containerTextInput}>
+                <TextInput
+                  style={styles.textInputStyle}
+                  //placeholderTextColor="#55851F"
+                  //autoCapitalize={"characters"}
+                  placeholder="Email"
+                  value={user}
+                  onChangeText={(value) => setUser(value)}
+                />
+                
+              </View>
+              {
+                (showTextUser) && <Text style={styles.textError}>{ textErrorEmail }</Text> 
+                //El email es requerido
+              }
+
+              <View style={styles.containerTextInput}>
+                <TextInput
+                  style={styles.textInputStyle}
+                  //placeholderTextColor="#55851F"
+                  //autoCapitalize={"characters"}
+                  placeholder="Contraseña"
+                  secureTextEntry={true}
+                  value={pwd}
+                  onChangeText={(value) => setPwd(value)}
+                />
+              </View>
+              {
+                (showTextPwd) && <Text style={styles.textError}>{ textErrorPwd }</Text>
+                //La contraseña es requerida
+              }
+
 
               {/* Sección de Subtítulo */}
+{/*               
               <View style={styles.modalSection}>
                 <Text style={styles.subtitle}>{selectedView?.nombre}</Text>
-              </View>
+              </View> */}
 
               {/* Sección de características */}
+{/* 
               <View style={styles.modalSection}>
                 <View style={styles.characteristicItem}>
                   <View style={styles.containerBullet}>
@@ -222,16 +422,19 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
                   </View>
                 </View>
               </View>
+               */}
               {/* Botón para seleccionar */}
               <View style={styles.modalSection}>
                 <RoundedButton
-                  text="Seleccionar"
+                  text="Crear cuenta"
                   // onPress={() => navigation.navigate("ResumeChoosenPlanScreen",{ selectedPlan: selectedView })}
-                  onPress={onNavigate}
+                  // onPress={onNavigate}
+                  onPress={ createAccount }
                 />
               </View>
             </View>
           </View>
+          {loading && <LoadingAnimation />}
         </Modal>
 
       {loading && <LoadingAnimation />}
@@ -253,7 +456,7 @@ const styles = StyleSheet.create({
     //position: "absolute",
     alignSelf: "center",
     //top: "5%",
-    marginTop: 20,
+    marginTop: 40,
   },
   tituloText: {
     color: "#326807",
@@ -262,10 +465,23 @@ const styles = StyleSheet.create({
     //fontWeight: "bold",
     fontFamily: "Gotham-Ultra",
   },
+  tituloTextOrange: {
+    color: "#faa029",
+    alignSelf: "center",
+    fontSize: 24,
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Ultra",
+  },
+  contentContainer: {
+    //position: "absolute",
+    alignSelf: "center",
+    //top: "5%",
+    marginTop: 30,
+  },
   contentTitulo: {
     color: "#326807",
     top: 10,
-    fontSize: 18,
+    fontSize: 20,
     textAlign: "center",
     //fontWeight: "bold",
     fontFamily: "Gotham-Book",
@@ -355,17 +571,28 @@ const styles = StyleSheet.create({
     width: '50%',
     //top: 5,
     backgroundColor: "#faa029",
-    marginVertical: 13,
+    marginVertical: 30,
     alignItems: "center",
+    alignSelf:"center"
     
   },
   textClic: {
     color: "#ffffff",
-    fontSize: 11,
+    fontSize: 18,
     fontFamily: "Gotham-Medium",
     textAlign: "center",
     //top: 10,
     //marginBottom: 7,
+  },
+  logoContainer: {
+    //position: "absolute",
+    alignSelf: "center",
+    alignItems: "center",
+    //top: "35%",
+  },
+  logoImage: {
+    width: 100,
+    height: 103,
   },
   modalContainer: {
     flex: 1,
@@ -386,13 +613,38 @@ const styles = StyleSheet.create({
     right: 10,
   },
   modalSection: {
-    marginBottom: 10,
+    margin: 10,
+    alignItems:"center"
   },
   title: {
     color: "#55851F",
     fontSize: 24,
     //fontWeight: "bold",
     fontFamily: "Gotham-Ultra",
+  },
+  containerTextInput: {
+    margin: 10,
+    borderRadius: 15,
+    width: "80%",
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
+    //paddingHorizontal: 10,
+    //padding: 5
+  },
+  textInputStyle: {
+    color: "#55851F",
+    // fontWeight: "bold",
+    padding: 10,
+    //marginTop: 10,
+    width: "80%",
+    textAlign: "center",
+    fontFamily: "Gotham-Medium",
+  },
+  textError: {
+    color: "red",
+    fontSize: 12,
+    fontFamily: "Gotham-Medium",
   },
   subtitle: {
     color: "#55851F",

@@ -114,7 +114,7 @@ export const LoginScreen = () => {
             disabled={!isConnected}
             onPress={() => navigation.navigate("ChoosePlanScreen")}
           >
-            <Text style={styles.formRegisterText}>Regístrate</Text>
+            <Text style={styles.formRegisterText}>¡Comienza ya!</Text>
           </TouchableOpacity>
         </View>
       </View>
