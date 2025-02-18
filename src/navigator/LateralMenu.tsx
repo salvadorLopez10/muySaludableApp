@@ -152,7 +152,7 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
             <View style={styles.menuOptionContent}>
               {/* <Icon name="newspaper-outline" size={25} color="black" /> */}
               <Image style={{ width: 30, height: 30 }} source={require("../../assets/Aviso_Privacidad.png")} />
-              <Text style={styles.menuTexto}>Privacidad y aviso legal</Text>
+              <Text style={styles.menuTexto}>Política de privacidad</Text>
             </View>
           </TouchableOpacity>
         </View>

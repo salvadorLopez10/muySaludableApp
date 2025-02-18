@@ -117,6 +117,10 @@ export const LoginScreen = () => {
             <Text style={styles.formRegisterText}>¡Comienza ya!</Text>
           </TouchableOpacity>
         </View>
+        {/* Sección para indicar el nombre de la empresa */}
+        <View style={styles.brandMark}>
+        <Text style={styles.textBrandMark}>Muy Saludable es un producto de ZENITRAMDOM SA DE CV</Text>
+        </View>
       </View>
 
       <ModalForgotPassword

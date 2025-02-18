@@ -12,16 +12,13 @@ export const PrivacyLegalScreen = () => {
         <ScrollView style={styles.containerScroll}>
           <View style={styles.containerText}>
             <Text style={styles.subtitleText}>
-              Aviso de Privacidad
+              Política de Privacidad
               {"\n"}
             </Text>
             <Text style={styles.textContent}>
-              Muy Saludable se compromete a proteger la privacidad de los
-              usuarios de nuestra aplicación móvil. Este aviso de privacidad
-              describe cómo recopilamos, utilizamos y protegemos la información
-              personal que los usuarios proporcionan al utilizar nuestra
-              Aplicación.
+              <Text style={styles.subtitleText}>Muy Saludable</Text>, operada por <Text style={styles.subtitleText}>ZENITRAMDOM SA DE CV</Text>, se compromete a proteger la privacidad de los usuarios de nuestra aplicación móvil. Este aviso de privacidad describe cómo recopilamos, utilizamos y protegemos la información personal que los usuarios proporcionan al utilizar nuestra aplicación.
             </Text>
+            
             <Text style={styles.subtitleText}>
               Información que recopilamos:
             </Text>
@@ -98,13 +95,24 @@ export const PrivacyLegalScreen = () => {
               en la Aplicación.
             </Text>
 
-            <Text style={styles.subtitleText}>Contacto:</Text>
+            <Text style={styles.subtitleText}>Responsable del Tratamiento de Datos</Text>
             <Text style={styles.textContent}>
-              Si tienes alguna pregunta sobre este aviso de privacidad o sobre
-              nuestras prácticas de privacidad, no dudes en contactarnos a
-              través de{" "}
-              <Text style={styles.subtitleText}>danna@muysaludable.com</Text>
+              <Text style={styles.subtitleText}>Muy Saludable</Text> es operada y administrada por <Text style={styles.subtitleText}>ZENITRAMDOM SA DE CV</Text>,
+                una empresa legalmente constituida con domicilio en |domicilio|. Para cualquier consulta sobre esta política de privacidad, puedes contactarnos a través de:
+                {"\n"}
+                {"\n"}
+                
+                <Text style={styles.subtitleText}>Correo electrónico:</Text> daniel@muysaludable.com.mx 
+                {"\n"}
+                <Text style={styles.subtitleText}>Dirección:</Text> Av privada de tules 230, No 48, Bosques del Alba, CP: 54753, Cuautitlán Izcalli, Edo Méx
             </Text>
+
+            <Text style={styles.textContent}>
+            {"\n"}
+            {"\n"}
+              Para más detalles sobre cómo recopilamos, utilizamos y protegemos tu información personal, consulta nuestra Política de Privacidad completa en la dirección: <Text style={styles.subtitleText}>https://muysaludable.com.mx/politica-privacidad.htm</Text>
+            </Text>
+            
           </View>
         </ScrollView>
       </ImageBackground>

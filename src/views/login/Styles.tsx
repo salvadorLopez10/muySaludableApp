@@ -66,6 +66,16 @@ const LoginStyles = StyleSheet.create({
     borderBottomColor: "orange",
     marginLeft: 10,
   },
+  brandMark:{
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10
+  },
+  textBrandMark:{
+    fontStyle: "italic",
+    color: "#d3cfcf",
+    fontSize: 11
+  },
   logoContainer: {
     position: "absolute",
     alignSelf: "center",

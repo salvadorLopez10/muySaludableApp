@@ -19,6 +19,8 @@ import { MuySaludableApi } from '../../api/MuySaludableApi';
 import { useAuthStore } from '../../store/auth/useAuthStore';
 import { TextInput } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from "@react-navigation/native";
+
 
 interface Props extends StackScreenProps<any,any>{};
 
@@ -48,6 +50,7 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedView, setSelectedView] = useState<Planes | null>(null);
+    const [showRenew, setShowRenew] = useState(false);
     const [user, setUser] = useState("");
     const [pwd, setPwd] = useState("");
     const [textErrorEmail, setTextErrorEmail] = useState("");
@@ -73,16 +76,42 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     setModalVisible(false);
   }
 
+  const handleRenewNow = async() => {
+
+    if( userInfo?.email ){
+      const requestEmail = {
+        email: userInfo.email
+      };
+
+      setLoading(true);
+      await MuySaludableApi.post(
+        "/sendEmail/sendEmailRenew",
+        requestEmail
+      ).then(( responseEmailEnviado: any ) => {
+        setLoading(false);
+        Alert.alert("Información", "Hemos enviado información para renovación a tu correo "+ userInfo.email);
+
+      }).catch((errorReenvioCorreo:any) =>{
+        setLoading(false);
+        Alert.alert("Error", "El email no se ha podido enviar " +  JSON.stringify(errorReenvioCorreo,null,1));
+
+      });
+    }else{
+      Alert.alert('Información',"El email no se ha podido enviar");
+    }
+  }
+
   useEffect(() => {
     //Cuando se tiene información en userInfo quiere decir que la pantalla se muestra a partir de una renovación
     //Cuando está vacío, la pantalla se está mostrando por primera vez
     if( userInfo ){
+      setShowRenew(true);
       Alert.alert(
         "Actualizar plan alimenticio",
-        "El paquete contratado ha vencido.\n¡Te invitamos a renovarlo!",
+        "El plan contratado ha vencido.\n¡Te invitamos a renovarlo!",
         [
           {
-            text: "Renovar paquete",
+            text: "Más información",
             onPress: () => {
               console.log("RENOVAR PLAN");
               //getPlanes();
@@ -248,7 +277,6 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
   }
 
-
   const generarId = () => {
     const random = Math.random().toString(36).substring(2);
     const fecha = Date.now().toString(36);
@@ -265,54 +293,123 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     );
   }
 
+  const handleLogout = async () => {
+
+    await AsyncStorage.multiRemove(["user", "mealPlan"]);
+
+    useAuthStore.setState({
+      status: "unauthenticated",
+      user: undefined,
+    });
+      
+      navigation.dispatch(
+          CommonActions.reset({
+              index: 0,
+              routes: [{ name: "LoginScreen" }],
+          })
+      );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
         source={require("../../../assets/background_carrete_frutas.jpg")}
         style={styles.imageBackground}
       />
-      {/* Título */}
-      <View style={styles.tituloContainer}>
-        <Text style={styles.tituloText}>LLEGÓ EL MOMENTO</Text>
-        <Text style={styles.tituloText}>DE MANTENERTE</Text>
-        <Text style={styles.tituloTextOrange}>MUY SALUDABLE</Text>
+
+      {
+        !showRenew ? 
+        <View>
+          {/* Título */}
+          <View style={styles.tituloContainer}>
+            <Text style={styles.tituloText}>LLEGÓ EL MOMENTO</Text>
+            <Text style={styles.tituloText}>DE MANTENERTE</Text>
+            <Text style={styles.tituloTextOrange}>MUY SALUDABLE</Text>
+          </View>
+
+          <View style={styles.contentContainer}>
+
+          
+            <View style={styles.contentContainer}>
+              <Text style={styles.contentTitulo}>Mejora tu alimentación,</Text>
+              <Text style={styles.contentTitulo}>fortalece tu cuerpo,</Text>
+              <Text style={styles.contentTitulo}>equilibra tu mente y potencía</Text>
+              <Text style={styles.contentTitulo}>tu bienestar financiero.</Text>
+            </View>
+
+            <View style={styles.contentContainer}>
+              <Text style={styles.contentTitulo}>Empieza hoy tu camino</Text>
+              <Text style={styles.contentTitulo}>hacia una vida más saludable.</Text>
+            </View>
+
+            {/* <View style={styles.contentContainer}>
+              <Text style={styles.tituloText}>¡Regístrate!</Text>
+            </View> */}
+
+            <TouchableOpacity 
+              style={styles.containerClick}
+              onPress={() => openModalUserPassword()}
+              >
+              <Text style={styles.textClic}>
+                ¡Comienza ya!
+              </Text>
+            </TouchableOpacity>
+
+            <View style={styles.logoContainer}>
+              <Image
+                source={require("../../../assets/logoMuySaludableMR.png")}
+                style={styles.logoImage}
+              />
+            </View>
+          </View>
+        </View>
+        : 
+        <View>
+          <View style={styles.logoutContainer}>
+            <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
+          {/* Título */}
+          <View style={styles.tituloContainer}>
+            <Text style={styles.tituloText}>TU PLAN HA EXPIRADO</Text>
+            <Text style={styles.tituloText}>ES MOMENTO DE</Text>
+            <Text style={styles.tituloTextOrange}>RENOVARLO</Text>
+          </View>
+
+          <View style={styles.contentContainerRenew}>
+          <View style={styles.contentContainerRenew}>
+            <Text style={styles.contentTitulo}>Recupera tu alimentación</Text>
+            <Text style={styles.contentTitulo}>balanceada, tu bienestar</Text>
+            <Text style={styles.contentTitulo}>físico, mental y financiero.</Text>
+            
+          </View>
+
+          <View style={styles.contentContainerRenew}>
+            <Text style={styles.contentTitulo}>Renueva hoy y continúa</Text>
+            <Text style={styles.contentTitulo}>tu camino hacia una vida</Text>
+            <Text style={styles.contentTituloRenew}>Muy Saludable</Text>
+          </View>
+
+          <TouchableOpacity 
+            style={styles.containerClick}
+            onPress={() => handleRenewNow()}
+            >
+            <Text style={styles.textClic}>
+              ¡Renovar ahora!
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("../../../assets/logoMuySaludableMR.png")}
+              style={styles.logoImage}
+            />
+          </View>
       </View>
 
-      <View style={styles.contentContainer}>
-
-      
-        <View style={styles.contentContainer}>
-          <Text style={styles.contentTitulo}>Mejora tu alimentación,</Text>
-          <Text style={styles.contentTitulo}>fortalece tu cuerpo,</Text>
-          <Text style={styles.contentTitulo}>equilibra tu mente y potencia</Text>
-          <Text style={styles.contentTitulo}>tu bienestar financiero.</Text>
         </View>
-
-        <View style={styles.contentContainer}>
-          <Text style={styles.contentTitulo}>Empieza hoy tu camino</Text>
-          <Text style={styles.contentTitulo}>hacia una vida más saludable.</Text>
-        </View>
-
-        {/* <View style={styles.contentContainer}>
-          <Text style={styles.tituloText}>¡Regístrate!</Text>
-        </View> */}
-
-        <TouchableOpacity 
-          style={styles.containerClick}
-          onPress={() => openModalUserPassword()}
-          >
-          <Text style={styles.textClic}>
-            ¡Comienza ya!
-          </Text>
-        </TouchableOpacity>
-
-        <View style={styles.logoContainer}>
-          <Image
-            source={require("../../../assets/logoMuySaludableMR.png")}
-            style={styles.logoImage}
-          />
-        </View>
-      </View>
+      }
 
       {/* Menú selección de planes */}
       {/* <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}> */}
@@ -456,7 +553,7 @@ const styles = StyleSheet.create({
     //position: "absolute",
     alignSelf: "center",
     //top: "5%",
-    marginTop: 40,
+    marginTop: '20%',
   },
   tituloText: {
     color: "#326807",
@@ -478,8 +575,22 @@ const styles = StyleSheet.create({
     //top: "5%",
     marginTop: 30,
   },
+  contentContainerRenew: {
+    //position: "absolute",
+    alignSelf: "center",
+    //top: "5%",
+    marginTop: 20,
+  },
   contentTitulo: {
     color: "#326807",
+    top: 10,
+    fontSize: 20,
+    textAlign: "center",
+    //fontWeight: "bold",
+    fontFamily: "Gotham-Book",
+  },
+  contentTituloRenew: {
+    color: "#faa029",
     top: 10,
     fontSize: 20,
     textAlign: "center",
@@ -593,6 +704,25 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 100,
     height: 103,
+  },
+  logoutContainer: {
+    position: "absolute",
+    //marginTop: '50%',
+    //top: 10,
+    right: 10,
+    marginTop:20
+  },
+  logoutButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth:1,
+    borderColor: "#faa029",
+  },
+  logoutText: {
+    color: "#faa029",
+    fontSize: 16,
+    fontFamily: "Gotham-Medium",
   },
   modalContainer: {
     flex: 1,
