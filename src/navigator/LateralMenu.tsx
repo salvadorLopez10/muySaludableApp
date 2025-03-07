@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { StackNavigator } from "./StackNavigator";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthStore } from "../store/auth/useAuthStore";
+import { SourcesReferencesScreen } from "../views/sourcesReferences/SourcesReferencesScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -37,6 +38,11 @@ export const LateralMenu = () => {
         name="PrivacyLegalScreen"
         options={{ title: "Privacidad y aviso legal" }}
         component={PrivacyLegalScreen}
+      />
+      <Drawer.Screen
+        name="SourcesReferencesScreen"
+        options={{ title: "Fuentes y Referencias" }}
+        component={SourcesReferencesScreen}
       />
       {/* <Drawer.Screen
         name="StackNavigator"
@@ -132,6 +138,17 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
               {/* <Icon name="cog-outline" size={25} color="black" /> */}
               <Image style={{ width: 30, height: 30 }} source={require("../../assets/Configuracion.png")} />
               <Text style={styles.menuTexto}>Administrar Cuenta</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuOptionContainer}
+            onPress={() => navigation.navigate("SourcesReferencesScreen")}
+          >
+            <View style={styles.menuOptionContent}>
+              {/* <Icon name="cog-outline" size={25} color="black" /> */}
+              <Image style={{ width: 30, height: 30 }} source={require("../../assets/Aviso_Privacidad.png")} />
+              <Text style={styles.menuTexto}>Fuentes y Referencias</Text>
             </View>
           </TouchableOpacity>
 
