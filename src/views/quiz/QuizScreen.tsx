@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Text, Button, StyleSheet, TextInput, Image, TouchableOpacity, ImageBackground, Alert } from 'react-native';
 import Swiper from "react-native-swiper";
@@ -66,6 +68,23 @@ const QuizScreen = ({route,navigation}: Props) => {
 
   const userInfo = useAuthStore((state) => state.user);
   const status = useAuthStore((state) => state.status);
+
+  const handleLogout = async () => {
+
+    await AsyncStorage.multiRemove(["user", "mealPlan"]);
+
+    useAuthStore.setState({
+      status: "unauthenticated",
+      user: undefined,
+    });
+      
+      navigation.dispatch(
+          CommonActions.reset({
+              index: 0,
+              routes: [{ name: "LoginScreen" }],
+          })
+      );
+  }
 
   const handleHeightSelect = (value: string) => {
     setHeight(value);
@@ -258,6 +277,14 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           source={require("../../../assets/background_manzana.jpg")}
           style={styles.slide}
         >
+          {/* Botón de Cerrar Sesión */}
+          <View style={styles.logoutContainer}>
+            <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Cerrar sesión</Text>
+            </TouchableOpacity>
+          </View>
+
+
           <View style={styles.logoContainer}>
             <Image
               source={require("../../../assets/logoMuySaludableMR.png")}
@@ -551,6 +578,25 @@ const styles = StyleSheet.create({
     //backgroundColor: "#F78291",
     alignItems: "center",
     //padding: 30,
+  },
+  logoutContainer: {
+    position: "absolute",
+    //marginTop: '50%',
+    top: "9%",
+    right: "9%",
+    //marginTop:45
+  },
+  logoutButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth:1,
+    borderColor: "#faa029",
+  },
+  logoutText: {
+    color: "#faa029",
+    fontSize: 16,
+    fontFamily: "Gotham-Medium",
   },
   imageBackground: {
     width: "100%",
