@@ -46,70 +46,50 @@ const LoginViewModel = () => {
         setValues({ ...values, [property]: value });
     };
 
-    const handleLogin = async (email: string, password: string, loading: boolean, setLoading: (val:boolean) => void) => {
-
-        if( email.trim().length == 0 ){
+    // LoginViewModel.tsx
+    const handleLogin = async (email: string, password: string, loading: boolean, setLoading: (val: boolean) => void) => {
+        if (email.trim().length === 0) {
             Alert.alert("Error", "Por favor ingresa email");
             return;
         }
-
-        if (password.length == 0) {
-        Alert.alert("Error", "Por favor ingresa contraseña");
-        return;
+    
+        if (password.length === 0) {
+            Alert.alert("Error", "Por favor ingresa contraseña");
+            return;
         }
-
+    
         setLoading(true);
-        
-        const requestLogin = {
-            email, password
-        };
-        const responseEmailExists = await  MuySaludableApi.post(
-            "/usuarios/login",
-            requestLogin
-        ).then((responseLogin:any) => {
+    
+        const requestLogin = { email, password };
+    
+        try {
+            const responseLogin = await MuySaludableApi.post("/usuarios/login", requestLogin);
             setLoading(false);
-            //console.log("RESPONSELOGIN");
-            //console.log(JSON.stringify(responseLogin.data, null, 2));
-            if (responseLogin.data.status == "Ok") {
-
-                if( responseLogin.data.msg == "Sin suscripcion" ){
-                    //console.log("ENTRA SINSUCRIPCION");
-                    AsyncStorage.setItem( "user", JSON.stringify(responseLogin.data.data) );
-                    useAuthStore.setState({ status: "userWithoutSuscription" });
-                    useAuthStore.setState({ user: responseLogin.data.data });
-                    navigation.navigate('NewUserScreen');
-                }else{
-                    //console.log("ENTRA LOGIN CORRECTO");
-                    AsyncStorage.setItem( "user", JSON.stringify(responseLogin.data.data) );
-                    useAuthStore.setState({ status: "authenticated" });
-                    useAuthStore.setState({ user: responseLogin.data.data });
+        
+            if (responseLogin.data.status === "Ok") {
+                if (responseLogin.data.msg === "Sin suscripcion") {
+                    await AsyncStorage.setItem("user", JSON.stringify(responseLogin.data.data));
+                    useAuthStore.setState({ status: "userWithoutSuscription", user: responseLogin.data.data });
+                    navigation.navigate('NewUserScreen'); // Navega directamente a la pantalla de nuevo usuario
+                } else {
+                    await AsyncStorage.setItem("user", JSON.stringify(responseLogin.data.data));
+                    useAuthStore.setState({ status: "authenticated", user: responseLogin.data.data });
+        
+                // Verifica si el usuario debe ver el QuizNavigator
+                if (!responseLogin.data.data.nombre) {
+                    navigation.navigate('QuizScreen'); // Navega directamente a la pantalla de Quiz
+                } else {
+                    navigation.navigate('MainMenuScreen'); // Navega al menú principal
                 }
-                // navigation.reset({
-                //   index: 0,
-                //   routes: [{ name: "MainMenuScreen" }],
-                // });
-                
-            } else if (responseLogin.data.status == "Error") {
-
-                //La credenciales son incorrectas
+                }
+            } else if (responseLogin.data.status === "Error") {
                 Alert.alert("Error", responseLogin.data.msg);
             }
-        }).catch((error:any) => {
+        } catch (error) {
             setLoading(false);
-            Alert.alert(
-                "Error",
-                "Ocurrió un error en el login, por favor vuelve a intentarlo"
-            );
-            if (error.response && error.response.data) {
-                if (!error.response.data.success) {
-                console.log("Mensaje de error: ", error.response.data.message);
-                }
-            } else {
-                console.log("Error en la transacción SIN DATA:", error.message);
-            }
-        });
-        
-        
+            Alert.alert("Error", "Ocurrió un error en el login, por favor vuelve a intentarlo");
+            console.error("Error en la transacción:", error);
+        }
     };
 
     const handleForgotPassword = () => {
