@@ -65,6 +65,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    console.log("Estado actualizado - status:", status, "userInfo:", userInfo);
     if (userInfo !== null ) {
       //console.log("EFFECT RENDERNAVIGATOR");
       renderNavigator();
