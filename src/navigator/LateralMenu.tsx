@@ -182,8 +182,9 @@ const InternalMenu = ({navigation}: DrawerContentComponentProps) => {
           await AsyncStorage.removeItem("user");
           await AsyncStorage.removeItem("mealPlan");
 
-          useAuthStore.setState({ status: "unauthenticated" });
-          useAuthStore.setState({ user: undefined });
+          // Actualiza ambos valores en el estado
+          await useAuthStore.setState({ status: "unauthenticated", user: undefined });
+
         }}
       >
         <Icon name="exit-outline" size={25} color="black" />
