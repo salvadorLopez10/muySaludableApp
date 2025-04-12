@@ -8,6 +8,11 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { RoundedButton } from "../../components/RoundedButton";
 import {
@@ -39,96 +44,112 @@ export const LoginScreen = () => {
       );
     }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Image
-        source={require("../../../assets/loginBack.jpeg")}
-        style={styles.imageBackground}
-      />
-
-      <View style={styles.logoContainer}>
-        <Image
-          source={require("../../../assets/logoMuySaludableMR.png")}
-          style={styles.logoImage}
-        />
-        <Text style={styles.logoText}>Muy Saludable</Text>
-      </View>
-
-      <View style={styles.form}>
-        <Text style={styles.formText}>INGRESAR</Text>
-
-        <CustomTextInput
-          image={require("../../../assets/email.png")}
-          placeholder="Correo electrónico"
-          keyboardType="email-address"
-          property="email"
-          onChangeText={onChange}
-          value={email}
-        />
-        <View style={styles.inputContainer}>
-
-          <CustomTextInput
-            image={require("../../../assets/password.png")}
-            placeholder="Contraseña"
-            keyboardType="default"
-            property="password"
-            onChangeText={onChange}
-            value={password}
-            secureTextEntry={!showPassword}
-          />
-
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            style={styles.eyeIconContainer}
+    return (
+      <SafeAreaView style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0} // Ajustable según tu diseño
           >
-            <Icon
-              name={showPassword ? "eye-off-outline" : "eye-outline"}
-              size={20}
-              color="#7B7B7B"
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ marginTop: 30 }}>
-          <RoundedButton
-            text="ENTRAR"
-            disabled={!isConnected}
-            onPress={() => handleLogin(email, password, loading, setLoading)}
-          />
-        </View>
-
-        <View style={styles.formForgotPassword}>
-          <TouchableOpacity
-            disabled={!isConnected}
-            onPress={handleForgotPassword}
-          >
-            <Text style={styles.formForgotPasswordText}>
-              ¿Olvidaste tu contraseña?
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.formRegister}>
-          <Text>¿Aún no tienes cuenta?</Text>
-
-          <TouchableOpacity
-            disabled={!isConnected}
-            onPress={() => navigation.navigate("ChoosePlanScreen")}
-          >
-            <Text style={styles.formRegisterText}>¡Comienza ya!</Text>
-          </TouchableOpacity>
-        </View>
-        {/* Sección para indicar el nombre de la empresa */}
-        <View style={styles.brandMark}>
-        <Text style={styles.textBrandMark}>Muy Saludable es un producto de ZENITRAMDOM SA DE CV</Text>
-        </View>
-      </View>
-
-      <ModalForgotPassword
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              keyboardShouldPersistTaps="handled"
+            >
+              <Image
+                source={require("../../../assets/loginBack.jpeg")}
+                style={styles.imageBackground}
+              />
+    
+              <View style={styles.logoContainer}>
+                <Image
+                  source={require("../../../assets/logoMuySaludableMR.png")}
+                  style={styles.logoImage}
+                />
+                <Text style={styles.logoText}>Muy Saludable</Text>
+              </View>
+    
+              <View style={styles.form}>
+                <Text style={styles.formText}>INGRESAR</Text>
+    
+                <CustomTextInput
+                  image={require("../../../assets/email.png")}
+                  placeholder="Correo electrónico"
+                  keyboardType="email-address"
+                  property="email"
+                  onChangeText={onChange}
+                  value={email}
+                />
+    
+                <View style={styles.inputContainer}>
+                  <CustomTextInput
+                    image={require("../../../assets/password.png")}
+                    placeholder="Contraseña"
+                    keyboardType="default"
+                    property="password"
+                    onChangeText={onChange}
+                    value={password}
+                    secureTextEntry={!showPassword}
+                  />
+    
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.eyeIconContainer}
+                  >
+                    <Icon
+                      name={showPassword ? "eye-off-outline" : "eye-outline"}
+                      size={20}
+                      color="#7B7B7B"
+                    />
+                  </TouchableOpacity>
+                </View>
+    
+                <View style={{ marginTop: 30 }}>
+                  <RoundedButton
+                    text="ENTRAR"
+                    disabled={!isConnected}
+                    onPress={() => handleLogin(email, password, loading, setLoading)}
+                  />
+                </View>
+    
+                <View style={styles.formForgotPassword}>
+                  <TouchableOpacity
+                    disabled={!isConnected}
+                    onPress={handleForgotPassword}
+                  >
+                    <Text style={styles.formForgotPasswordText}>
+                      ¿Olvidaste tu contraseña?
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+    
+                <View style={styles.formRegister}>
+                  <Text>¿Aún no tienes cuenta?</Text>
+                  <TouchableOpacity
+                    disabled={!isConnected}
+                    onPress={() => navigation.navigate("ChoosePlanScreen")}
+                  >
+                    <Text style={styles.formRegisterText}>¡Comienza ya!</Text>
+                  </TouchableOpacity>
+                </View>
+    
+                <View style={styles.brandMark}>
+                  <Text style={styles.textBrandMark}>
+                    Muy Saludable es un producto de ZENITRAMDOM SA DE CV
+                  </Text>
+                </View>
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+    
+        <ModalForgotPassword
           visible={visibleModal}
           onCloseModal={handleForgotPassword}
         />
-
-      {loading && <LoadingAnimation />}
-    </SafeAreaView>
-  );
+    
+        {loading && <LoadingAnimation />}
+      </SafeAreaView>
+    );
+    
 };
