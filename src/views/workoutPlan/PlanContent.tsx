@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { View, Text, Button, StyleSheet, SafeAreaView, TouchableOpacity, Image, Modal } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, Button, StyleSheet, SafeAreaView, TouchableOpacity, Image, Modal, Dimensions } from "react-native";
 import {
   Video,
   ResizeMode,
@@ -9,6 +9,9 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import ExerciseModal from "./ExerciseModal";
 import VideoContent from "./VideoContent";
+import Carousel from "react-native-snap-carousel";
+import { CarouselField } from "../../components/CarouselField";
+import { MuySaludableApi } from "../../api/MuySaludableApi";
 
 interface PlanInfoProps {
   planName: null | string | undefined;
@@ -30,6 +33,9 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
     const [selectedVideoDescription, setSelectedVideoDescription] = useState<string>('');
 
     const [disabledCardModalVisible, setDisabledCardModalVisible] = useState(false);
+
+    const [carouselData, setCarouselData] = useState([]);
+    const [loadingCarousel, setLoadingCarousel] = useState(true);
 
 
 
@@ -69,6 +75,25 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
     };
   
     //return <View>{renderContent()}</View>;
+
+    useEffect(() => {
+      const fetchCarousel = async () => {
+        try {
+          const response = await MuySaludableApi.get('/carousel/filter_tipo/Rutinas');          
+          const data = response.data.records;
+          console.log("Imágenes del carrusel:", data);
+          setCarouselData(data);
+        } catch (error) {
+          console.error('Error al obtener imágenes del carrusel:', error);
+        } finally {
+          setLoadingCarousel(false);
+        }
+      };
+  
+      fetchCarousel();
+      
+    }, [])
+    
 
     return (
       <>
@@ -123,11 +148,14 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
           </View>
         </TouchableOpacity>
 
-        <View style={styles.imageRoutines}>
-          <Image
+        <View style={styles.carouselContainer}>
+          {/* <Image
             source={require("../../../assets/imagen_rutinas.jpg")}
             style={{ width: 200, height: 200 }}
-          />
+          />   */}
+
+          <CarouselField images={ carouselData } />
+          
         </View>
 
         {/* Modal */}
@@ -237,7 +265,7 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
     marginTop: 20,
-    marginBottom: 10,
+    //marginBottom: 10,
   },
   contentTitleContainer: {
     width: "90%",
@@ -324,11 +352,17 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     //marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   imageRoutines: {
     marginTop: 10,
   },
+
+  carouselContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+
   modalContainer: {
     //flex: 1,
     height:"80%",

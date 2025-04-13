@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Styles";
 import {
   View,
@@ -9,6 +9,8 @@ import {
   ImageBackground,
 } from "react-native";
 import AccordionItem from "./AccordionItem";
+import { CarouselField } from "../../components/CarouselField";
+import { MuySaludableApi } from "../../api/MuySaludableApi";
 
 
 interface Ingredient {
@@ -42,6 +44,9 @@ const PlanView: React.FC<PlanViewProps> = ({ objPlan, planContratado }) => {
 
   const [expandedParentIndex, setExpandedParentIndex] = useState<number | null>(null);
   const [expandedChildIndex, setExpandedChildIndex] = useState<{ [key: string]: number | null }>({});
+
+  const [carouselData, setCarouselData] = useState([]);
+  const [loadingCarousel, setLoadingCarousel] = useState(true);
 
   const handleParentAccordionToggle = (index: number) => {
     setExpandedParentIndex(expandedParentIndex === index ? null : index);
@@ -113,6 +118,24 @@ const PlanView: React.FC<PlanViewProps> = ({ objPlan, planContratado }) => {
       );
     });
   };
+
+  useEffect(() => {
+    const fetchCarousel = async () => {
+      try {
+        const response = await MuySaludableApi.get('/carousel/filter_tipo/Plan');          
+        const data = response.data.records;
+        console.log("Imágenes del carrusel:", data);
+        setCarouselData(data);
+      } catch (error) {
+        console.error('Error al obtener imágenes del carrusel:', error);
+      } finally {
+        setLoadingCarousel(false);
+      }
+    };
+
+    fetchCarousel();
+    
+  }, [])
   
   return (
         <ScrollView
@@ -120,6 +143,11 @@ const PlanView: React.FC<PlanViewProps> = ({ objPlan, planContratado }) => {
           style={styles.containerScroll}
         >
           {renderAccordionItems()}
+
+        <View style={styles.carouselContainer}>
+          <CarouselField images={ carouselData } />
+        </View>
+
         </ScrollView>
   );
 };

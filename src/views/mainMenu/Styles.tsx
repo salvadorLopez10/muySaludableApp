@@ -9,7 +9,6 @@ const MainMenuStyles = StyleSheet.create({
   containerScroll: {
     flex: 1,
     width: "80%",
-    backgroundColor: "",
     //marginLeft: '5%',
     //marginRight: "5%"
   },
@@ -256,6 +255,10 @@ const MainMenuStyles = StyleSheet.create({
     color: "#fff", // Color del texto similar a los enlaces
     fontWeight: "bold",
     textAlign: "center",
+  },
+  carouselContainer: {
+    marginTop: 1,
+    alignItems: "center",
   },
   buttonContainer: {
     flexDirection: 'row',
