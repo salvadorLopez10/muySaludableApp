@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,17 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import { MuySaludableApi } from "../../api/MuySaludableApi";
+
+
+interface ExerciseInterface{
+  titulo: string;
+  descripcion: string;
+  video_url: string;
+  nivel: string;
+  dias: string;
+  image_url: string;
+}
 
 interface ExerciseModalProps {
   visible: boolean;
@@ -18,96 +29,98 @@ interface ExerciseModalProps {
   onClose: () => void;
   //onCardPress: (videoUri: string, title: string, description: string) => void;
   onCardPress: (videoUri: string, title: string, description: string, disabled: boolean) => void;
+  allRutinas: ExerciseInterface[]; 
 
 }
 
-interface ExerciseInterface{
-  title: string;
-  description: string;
-  videoUri: string;
-}
 
-const ExerciseModal = ({ visible, level , planName, onClose, onCardPress }: ExerciseModalProps) => {
+
+const ExerciseModal = ({ visible, level , planName, onClose, onCardPress, allRutinas }: ExerciseModalProps) => {
 
   const [showDisabledModal, setShowDisabledModal] = useState(false);
   const [disabledModalContent, setDisabledModalContent] = useState('');
   const [modalVisible, setModalVisible] = useState(visible);
 
-    const exercises = {
-      PRINCIPIANTE: [
-        {
-          title: "CARDIOVASCULAR",
-          description:"Mejora resistencia, quema calorías y salud del corazón. Ideal para aumentar energía.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"LUNES, MIÉRCOLES Y VIERNES",
-          videoUri: "https://muysaludable.com.mx/PrincipianteCardio.mp4",
-        },
-        {
-          // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
-          title: "FUERZA",
-          description:"Fortalece los principales grupos musculares. Ideal para desarrollar fuerza y tono.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"MARTES, JUEVES Y SÁBADO",
-          videoUri: "https://muysaludable.com.mx/PrincipianteFuerza.mp4",
-        },
-        {
-          title: "ABDOMEN",
-          description:"Fortalece y tonifica el abdomen. Ideal para mejorar estabilidad del core y reducir grasa abdominal.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"LUNES, MIÉRCOLES Y VIERNES",
-          videoUri: "https://muysaludable.com.mx/PrincipianteAbdomen.mp4",
-        },
-      ],
-      INTERMEDIO: [
-        {
-          title: "CARDIOVASCULAR",
-          description:"Aumenta resistencia, quema de calorías y salud del corazón. Ideal para un reto mayor.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"LUNES, MIÉRCOLES Y VIERNES",
-          videoUri: "https://muysaludable.com.mx/IntermedioCardio.mp4",
-        },
-        {
-          // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
-          title: "FUERZA",
-          description:"Desarrolla fuerza y tono muscular. Ideal para aumentar la intensidad.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"MARTES, JUEVES Y SÁBADO",
-          videoUri: "https://muysaludable.com.mx/IntermedioFuerza.mp4",
-        },
-        {
-          title: "ABDOMEN",
-          description:"Fortalece y tonifica el abdomen. Ideal para un mayor reto en el core.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"LUNES, MIÉRCOLES Y VIERNES",
-          videoUri: "https://muysaludable.com.mx/IntermedioAbdomen.mp4",
-        },
-      ],
-      AVANZADO: [
-        {
-          title: "CARDIOVASCULAR",
-          description:"Maximiza resistencia, capacidad aeróbica y anaeróbica, y quema de calorías. Ideal para desafíos intensos.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"LUNES, MIÉRCOLES Y VIERNES",
-          videoUri: "https://muysaludable.com.mx/AvanzadoCardio.mp4",
-        },
-        {
-          // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
-          title: "FUERZA",
-          description:"Maximiza fuerza y tono muscular. Ideal para aumentar intensidad y complejidad.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"MARTES, JUEVES Y SÁBADO",
-          videoUri: "https://muysaludable.com.mx/AvanzadoFuerza.mp4",
-        },
-        {
-          title: "ABDOMEN",
-          description:"Maximiza fuerza y definición del abdomen. Ideal para ejercicios desafiantes.",
-          image: require("../../../assets/imagen_rutinas.jpg"),
-          dias:"LUNES, MIÉRCOLES Y VIERNES",
-          videoUri: "https://muysaludable.com.mx/AvanzadoAbdomen.mp4",
-        },
-      ],
-    };
+  const [rutinas, setRutinas] = useState<ExerciseInterface[]>([]);
+  const [loading, setLoading] = useState(true);
+  
 
+    // const exercises = {
+    //   PRINCIPIANTE: [
+    //     {
+    //       title: "CARDIOVASCULAR",
+    //       description:"Mejora resistencia, quema calorías y salud del corazón. Ideal para aumentar energía.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"LUNES, MIÉRCOLES Y VIERNES",
+    //       videoUri: "https://muysaludable.com.mx/PrincipianteCardio.mp4",
+    //     },
+    //     {
+    //       // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
+    //       title: "FUERZA",
+    //       description:"Fortalece los principales grupos musculares. Ideal para desarrollar fuerza y tono.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"MARTES, JUEVES Y SÁBADO",
+    //       videoUri: "https://muysaludable.com.mx/PrincipianteFuerza.mp4",
+    //     },
+    //     {
+    //       title: "ABDOMEN",
+    //       description:"Fortalece y tonifica el abdomen. Ideal para mejorar estabilidad del core y reducir grasa abdominal.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"LUNES, MIÉRCOLES Y VIERNES",
+    //       videoUri: "https://muysaludable.com.mx/PrincipianteAbdomen.mp4",
+    //     },
+    //   ],
+    //   INTERMEDIO: [
+    //     {
+    //       title: "CARDIOVASCULAR",
+    //       description:"Aumenta resistencia, quema de calorías y salud del corazón. Ideal para un reto mayor.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"LUNES, MIÉRCOLES Y VIERNES",
+    //       videoUri: "https://muysaludable.com.mx/IntermedioCardio.mp4",
+    //     },
+    //     {
+    //       // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
+    //       title: "FUERZA",
+    //       description:"Desarrolla fuerza y tono muscular. Ideal para aumentar la intensidad.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"MARTES, JUEVES Y SÁBADO",
+    //       videoUri: "https://muysaludable.com.mx/IntermedioFuerza.mp4",
+    //     },
+    //     {
+    //       title: "ABDOMEN",
+    //       description:"Fortalece y tonifica el abdomen. Ideal para un mayor reto en el core.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"LUNES, MIÉRCOLES Y VIERNES",
+    //       videoUri: "https://muysaludable.com.mx/IntermedioAbdomen.mp4",
+    //     },
+    //   ],
+    //   AVANZADO: [
+    //     {
+    //       title: "CARDIOVASCULAR",
+    //       description:"Maximiza resistencia, capacidad aeróbica y anaeróbica, y quema de calorías. Ideal para desafíos intensos.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"LUNES, MIÉRCOLES Y VIERNES",
+    //       videoUri: "https://muysaludable.com.mx/AvanzadoCardio.mp4",
+    //     },
+    //     {
+    //       // title: "FUERZA\n(TREN INFERIOR Y SUPERIOR)",
+    //       title: "FUERZA",
+    //       description:"Maximiza fuerza y tono muscular. Ideal para aumentar intensidad y complejidad.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"MARTES, JUEVES Y SÁBADO",
+    //       videoUri: "https://muysaludable.com.mx/AvanzadoFuerza.mp4",
+    //     },
+    //     {
+    //       title: "ABDOMEN",
+    //       description:"Maximiza fuerza y definición del abdomen. Ideal para ejercicios desafiantes.",
+    //       image: require("../../../assets/imagen_rutinas.jpg"),
+    //       dias:"LUNES, MIÉRCOLES Y VIERNES",
+    //       videoUri: "https://muysaludable.com.mx/AvanzadoAbdomen.mp4",
+    //     },
+    //   ],
+    // };
+
+    const filteredRutinas = allRutinas.filter(rutina => rutina.nivel === level);
 
     const isSectionDisabled = (title: string) => {
       if (planName === "1. PLAN CLÁSICO") {
@@ -117,20 +130,6 @@ const ExerciseModal = ({ visible, level , planName, onClose, onCardPress }: Exer
       }
       return false;
     };
-
-    // const onClickCard = ( disabled: boolean, exercise: ExerciseInterface  ) => {
-    //   if( disabled ){
-    //     //console.log("MUESTRA MODAL CON INFORMACIÓN");
-    //     setDisabledModalContent("VIDEO NO DISPONIBLE EN TU SUSCRIPCIÓN");
-    //     setShowDisabledModal(true);
-    //   }else{
-    //     onCardPress(
-    //       exercise.videoUri,
-    //       exercise.title,
-    //       exercise.description
-    //     )
-    //   }
-    // }
 
   return (
     <>
@@ -151,39 +150,44 @@ const ExerciseModal = ({ visible, level , planName, onClose, onCardPress }: Exer
                 <Text style={styles.headerText}>{level}</Text>
               </View>
 
-              {exercises[level].map((exercise, index) => {
-              const disabled = isSectionDisabled(exercise.title);
-              return (
-                <View
-                  key={index}
-                  style={[
-                    styles.card,
-                    disabled && styles.disabledCard,
-                  ]}
-                >
-                  <TouchableOpacity
-                    disabled={false}
-                    style={styles.touchableCard}
-                    onPress={() => onCardPress(exercise.videoUri, exercise.title, exercise.description, disabled)}
+              { filteredRutinas.map((rutina, index) => {
+                const disabled = isSectionDisabled(rutina.titulo);
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      styles.card,
+                      disabled && styles.disabledCard,
+                    ]}
                   >
-                    <Text style={styles.fullWidthText}>{exercise.dias}</Text>
-                    <View style={styles.separatorLine} />
-                    <Image source={exercise.image} style={styles.image} />
-                    {disabled && (
-                      <View style={styles.overlay}>
-                        <Text style={styles.overlayText}>
-                          VIDEO NO DISPONIBLE EN TU SUSCRIPCIÓN
-                        </Text>
+                    <TouchableOpacity
+                      disabled={false}
+                      style={styles.touchableCard}
+                      onPress={() => onCardPress(rutina.video_url, rutina.titulo, rutina.descripcion, disabled)}
+                    >
+                      <Text style={styles.fullWidthText}>{rutina.dias}</Text>
+                      <View style={styles.separatorLine} />
+                      <Image 
+                        //source={{ uri: rutina.image_url }}
+                        source={require("../../../assets/imagen_rutinas.jpg")}
+                        defaultSource={require("../../../assets/imagen_rutinas.jpg")}
+                        style={styles.image} />
+                      {disabled && (
+                        <View style={styles.overlay}>
+                          <Text style={styles.overlayText}>
+                            VIDEO NO DISPONIBLE EN TU SUSCRIPCIÓN
+                          </Text>
+                        </View>
+                      )}
+                      <View style={styles.textContainer}>
+                        <Text style={styles.title}>{rutina.titulo}</Text>
+                        <Text style={styles.description}>{rutina.descripcion}</Text>
                       </View>
-                    )}
-                    <View style={styles.textContainer}>
-                      <Text style={styles.title}>{exercise.title}</Text>
-                      <Text style={styles.description}>{exercise.description}</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
+                    </TouchableOpacity>
+                  </View>
+                );
+                })
+              }
             </ScrollView>
           </View>
         </View>

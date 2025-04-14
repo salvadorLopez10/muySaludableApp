@@ -18,6 +18,15 @@ interface PlanInfoProps {
   //planName: "Paquete Clásico" | "Paquete Intermedio" | "Paquete Premium" | "Paquete Anual" | undefined;
 }
 
+interface ExerciseInterface{
+  titulo: string;
+  descripcion: string;
+  video_url: string;
+  nivel: string;
+  dias: string;
+  image_url: string;
+}
+
 const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
 
     const video = useRef<Video>(null);
@@ -36,6 +45,26 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
 
     const [carouselData, setCarouselData] = useState([]);
     const [loadingCarousel, setLoadingCarousel] = useState(true);
+    const [allRutinas, setAllRutinas] = useState<ExerciseInterface[]>([]);
+    
+    // Cargar datos iniciales
+    useEffect(() => {
+      const fetchInitialData = async () => {
+        try {
+          // Cargar imágenes del carrusel
+          const carouselResponse = await MuySaludableApi.get('/carousel/filter_tipo/Rutinas');
+          setCarouselData(carouselResponse.data.records);
+          
+          // Cargar TODAS las rutinas una sola vez
+          const rutinasResponse = await MuySaludableApi.get('/rutinas');
+          setAllRutinas(rutinasResponse.data.recordsRutinas || []);
+        } catch (error) {
+          console.error('Error al cargar datos iniciales:', error);
+        }
+      };
+
+      fetchInitialData();
+    }, []);
 
 
 
@@ -75,25 +104,6 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
     };
   
     //return <View>{renderContent()}</View>;
-
-    useEffect(() => {
-      const fetchCarousel = async () => {
-        try {
-          const response = await MuySaludableApi.get('/carousel/filter_tipo/Rutinas');          
-          const data = response.data.records;
-          console.log("Imágenes del carrusel:", data);
-          setCarouselData(data);
-        } catch (error) {
-          console.error('Error al obtener imágenes del carrusel:', error);
-        } finally {
-          setLoadingCarousel(false);
-        }
-      };
-  
-      fetchCarousel();
-      
-    }, [])
-    
 
     return (
       <>
@@ -166,6 +176,7 @@ const PlanContent: React.FC<PlanInfoProps> = ({ planName }) => {
           planName={planName}
           onClose={closeModals}
           onCardPress={handleCardPress}
+          allRutinas={allRutinas}
         />
         <Modal
           animationType="slide"
