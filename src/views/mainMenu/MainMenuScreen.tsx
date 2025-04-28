@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PlanView from './PlanView';
 import { MuySaludableApi } from "../../api/MuySaludableApi";
 import { useAuthStore } from "../../store/auth/useAuthStore";
+import FloatingButton from "../../components/FloatingButton";
 
 export interface UserProps {
   id: number;
@@ -32,6 +33,16 @@ export interface UserProps {
   tmb: null | string;
 }
 
+export interface Recomendacion{
+  id: number;
+  objetivo: string;
+  titulo: string;
+  descripcion: string;
+  image_url: string;
+  orden: number;
+  visible: boolean;
+}
+
 const MainMenuScreen = () => {
 
   const [userStatePlan, setUserStatePlan] = useState<UserProps>();
@@ -39,6 +50,7 @@ const MainMenuScreen = () => {
   const [caloriesPlan, setCaloriesPlan] = useState("");
   const [planObj, setPlanObj] = useState({});
   const [showMealPlanElements, setShowMealPlanElements] = useState(false);
+  const [recomendaciones, setRecomendaciones] = useState<Recomendacion[]>([]);
   //const [monthsArray, setMonthsArray] = useState([]);
 
   const monthsArray: Number[] = [];
@@ -60,6 +72,7 @@ const MainMenuScreen = () => {
     getInfoUserPlan();
     getMealPlan(false);
     calculateCaloriesForPlan();
+    getRecomendaciones();
   }, []);
 
   const getMealPlan = async ( fromVerify: boolean ) => {
@@ -144,6 +157,19 @@ const MainMenuScreen = () => {
   const calculateCaloriesForPlan = () => {
     const calorias = ajustarCaloriasPorObjetivo(Number(userInfo?.tmb), userInfo?.objetivo);
     setCaloriesPlan(calorias.toFixed(2).toString());
+  }
+
+  const getRecomendaciones = async () => {
+    const resp = await MuySaludableApi.get("/recomendaciones")
+      .then((response: any) => {
+        console.log("RECOMENDACIONES");
+        console.log(JSON.stringify(response.data.recomendaciones, null, 2));
+        setRecomendaciones(response.data.recomendaciones);
+      })
+      .catch((error:any) => {
+        console.log("Error al obtener recomendaciones");
+        console.log(JSON.stringify(error, null, 2));
+      });
   }
 
   const ajustarCaloriasPorObjetivo = (tmb: number, objetivo: string | null | undefined): number => {
@@ -303,6 +329,16 @@ const MainMenuScreen = () => {
         
         
       </ImageBackground>
+
+      {
+        showMealPlanElements && 
+        <FloatingButton
+          iconName="add"
+          backgroundColor="#28a745"
+          recommendaciones={recomendaciones}
+        />
+      }
+      
       {loading && <LoadingAnimation />}
     </SafeAreaView>
   );
