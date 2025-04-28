@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View,Text,TextInput,Modal,TouchableHighlight,TouchableOpacity,FlatList,StyleSheet } from "react-native";
+import { View,Text,TextInput,Modal,TouchableHighlight,TouchableOpacity,FlatList,StyleSheet, SectionList } from "react-native";
 import { CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-interface Item {
+export interface Item {
   id: string;
   label: string;
+  grupo: string;
 }
 
 interface SelectFieldProps {
@@ -21,9 +22,9 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
   const [touchedItem, setTouchedItem] = useState<string | null>(null);
 
 
-  const filteredData = data.filter((item) =>
-    item.label.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // const filteredData = data.filter((item) =>
+  //   item.label.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   const handleInputChange = (text: string) => {
     setSearchQuery(text);
@@ -69,10 +70,27 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
     setModalVisible(false);
   };
 
-//   useEffect(() => {
-//     // Restablece selectedItems al mostrar el modal
-//     setSelectedItems([]);
-//   }, [modalVisible]);
+  // Agrupar los alimentos por grupo
+  const groupedData = () => {
+    const filteredData = data.filter((item) =>
+      item.label.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const groups: { [key: string]: Item[] } = {};
+
+    filteredData.forEach((item) => {
+      const grupo = item.grupo || "Otros"; // Si no tiene grupo, ponerlo en 'Otros'
+      if (!groups[grupo]) {
+        groups[grupo] = [];
+      }
+      groups[grupo].push(item);
+    });
+
+    return Object.keys(groups).map((grupo) => ({
+      title: grupo,
+      data: groups[grupo],
+    }));
+  };
 
   return (
     <View style={styles.container}>
@@ -118,7 +136,7 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
               )}
             </View>
 
-            <FlatList
+            {/* <FlatList
               data={filteredData}
               style={styles.flatListStyle}
               keyExtractor={(item) => item.id}
@@ -145,6 +163,29 @@ const MultiSelectField = ({ data, keyboardType = "default", onItemSelected }: Se
                 </TouchableHighlight>
               )}
               ItemSeparatorComponent={() => <View style={styles.separator} />}
+            /> */}
+              <SectionList
+              sections={groupedData()}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => handleItemSelect(item)}
+                  onPressIn={() => handleTouch(item.label)}
+                >
+                  <View style={styles.itemContainer}>
+                    <CheckBox
+                      checked={selectedItems.some((selectedItem) => selectedItem.id === item.id)}
+                      onPress={() => handleItemSelect(item)}
+                      containerStyle={styles.checkbox}
+                      checkedColor="#55851F"
+                    />
+                    <Text style={styles.itemLabel}>{item.label}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              renderSectionHeader={({ section: { title } }) => (
+                <Text style={styles.sectionHeader}>{title}</Text>
+              )}
             />
 
             <TouchableOpacity
@@ -214,6 +255,28 @@ const styles = StyleSheet.create({
     textAlign: "center",
     backgroundColor: "white",
     flex: 1
+  },
+  itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  checkbox: {
+    padding: 0,
+    margin: 0,
+  },
+  itemLabel: {
+    fontSize: 16,
+  },
+  sectionHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    //backgroundColor: "#eee",
+    color: "#fff",
+    backgroundColor: "#a6c483",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    
   },
   flatListStyle: {
     width: "80%",

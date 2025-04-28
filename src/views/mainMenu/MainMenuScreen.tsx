@@ -147,15 +147,19 @@ const MainMenuScreen = () => {
   }
 
   const ajustarCaloriasPorObjetivo = (tmb: number, objetivo: string | null | undefined): number => {
+
+    console.log("EL OBJETIVO: " + objetivo);
     switch (objetivo) {
-        case 'Bajar de peso':
-            return tmb * 0.8; // Reducir en 20%
-        case 'Mantenimiento':
-            return tmb; // Mismo que la TMB
-        case 'Ganar masa muscular':
-            return tmb * 1.2; // Incrementar en 20%
-        default:
-            throw new Error('Objetivo no válido');
+      case 'Bajar grasa y comer saludable':
+        return Number(tmb) - 500; // Déficit estándar
+      case 'Low Carb y definición muscular':
+        return Number(tmb) - 300; // Déficit más leve
+      case 'Mantenimiento':
+        return Number(tmb); // Sin ajuste
+      case 'Subir masa muscular':
+        return Number(tmb) + 500; // Superávit calórico
+      default:
+        throw new Error('Objetivo no válido');
     }
 }
 

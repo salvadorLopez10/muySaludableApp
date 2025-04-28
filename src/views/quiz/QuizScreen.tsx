@@ -4,11 +4,12 @@ import { CommonActions } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { View, Text, Button, StyleSheet, TextInput, Image, TouchableOpacity, ImageBackground, Alert } from 'react-native';
 import Swiper from "react-native-swiper";
-import { heightOptions, weightOptions, hoursSleep, yesNoOptions, numberFoodsOptions, sourceContactOptions, heightOptionsSelect, weightOptionsSelect, sexOptionsSelect, activityLevelSelect, dietOptionsSelect, goalOptionsSelect, statesMexicoOptionsSelect } from './DataDropdown';
+import { heightOptions, weightOptions, hoursSleep, yesNoOptions, numberFoodsOptions, sourceContactOptions, heightOptionsSelect, weightOptionsSelect, sexOptionsSelect, activityLevelSelect, dietOptionsSelect, goalOptionsSelect, statesMexicoOptionsSelect, socialMediaOptions, foodPreferenceOptionsSelect } from './DataDropdown';
 import SelectField from "../../components/SelectField";
 import { MuySaludableApi } from "../../api/MuySaludableApi";
-import MultiSelectField from "../../components/MultiSelectField";
+import MultiSelectField, { Item } from "../../components/MultiSelectField";
 import { useAuthStore } from "../../store/auth/useAuthStore";
+import DateOfBirthPicker from "../../components/DateOfBirthPicker";
 
 interface Props extends StackScreenProps<any,any>{};
 
@@ -46,6 +47,7 @@ interface Alimentos {
 interface Food {
   label: string;
   id: string;
+  grupo: string;
 }
 
 const QuizScreen = ({route,navigation}: Props) => {
@@ -53,6 +55,7 @@ const QuizScreen = ({route,navigation}: Props) => {
   //console.log(route.params);
   const [idUser, setIdUser] = useState("");
   const [name, setName] = useState("");
+  const [dateBirth, setDateBirth] = useState("");
   const [age, setAge] = useState("");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
@@ -60,10 +63,12 @@ const QuizScreen = ({route,navigation}: Props) => {
   const [gender, setGender] = useState("");
   const [physicalActivity, setPhysicalActivity] = useState("");
   const [dietType, setDietType] = useState("");
+  const [foodPreference, setFoodPreference] = useState("");
   const [foodAvoid, setFoodAvoid] = useState("");
   const [foodAvoidList, setFoodAvoidList] = useState<Food[]>([]);//Lista completa
   const [foodAvoidListFiltered, setFoodAvoidListFiltered] = useState<Food[]>([]);//Lista completa
   const [goal, setGoal] = useState("");
+  const [socialMedia, setSocialMedia] = useState("");
   const [stateMexico, setStateMexico] = useState("");
 
   const userInfo = useAuthStore((state) => state.user);
@@ -101,6 +106,10 @@ const QuizScreen = ({route,navigation}: Props) => {
   const handleDietTypeSelect = (value: string) => {
     setDietType(value);
   };
+
+  const handleFoodPreferenceSelect = (value: string) => {
+    setFoodPreference(value);
+  };
   
   const handleFoodAvoidSelect = (value: string) => {
     setFoodAvoid(value);
@@ -108,6 +117,9 @@ const QuizScreen = ({route,navigation}: Props) => {
 
   const handleGoalSelect = (value: string) => {
     setGoal(value);
+  };
+  const handleSocialMediaSelect = (value: string) => {
+    setSocialMedia(value);
   };
 
   const handleStateMexicoSelect = (value: string) => {
@@ -117,6 +129,16 @@ const QuizScreen = ({route,navigation}: Props) => {
   const handleFoidAvoidListFiltered = ( array: Food[] ) => {
     setFoodAvoidListFiltered(array);
   }
+
+  const handleDateSelected = (date: Date) => {
+    const today = new Date();
+    let calculatedAge = today.getFullYear() - date.getFullYear();
+    const m = today.getMonth() - date.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < date.getDate())) {
+      calculatedAge--;
+    }
+    setAge(calculatedAge.toString());
+  };
 
   useEffect(() => {
     console.log("entra effect");
@@ -164,21 +186,14 @@ const QuizScreen = ({route,navigation}: Props) => {
     }
   };
 
-function transformarArreglo( original: Alimentos[]): Food[] {
-  // return original.map((alimento) => ({
-  //   label: alimento.nombre,
-  //   id: alimento.nombre,
-  // }));
-  const foodList: Food[] = original.map((alimento) => ({
-    label: alimento.nombre,
-    id: alimento.nombre,
-  }));
+  const transformarArreglo = (alimentos: any[]): Item[] => {
+    return alimentos.map((alimento) => ({
+      id: alimento.id.toString(),
+      label: alimento.nombre.trim(),
+      grupo: alimento.grupo?.trim() || "Sin Grupo", // Si no viene grupo, ponemos 'Sin Grupo'
+    }));
+  };
 
-  // Agregar el elemento adicional
-  //foodList.unshift({ label: "Sin alergia", id: "Sin alergia" });
-
-  return foodList;
-}
   const [respuestas, setRespuestas] = useState(Array(10).fill(""));
 
   const handleRespuestaChange = (index:number, respuesta:string) => {
@@ -195,6 +210,10 @@ function transformarArreglo( original: Alimentos[]): Food[] {
 
     if(name.trim()== ""){
       textFieldsEmpty += "Nombre\n";
+    }
+
+    if(dateBirth.trim() == ""){
+      textFieldsEmpty += "Fecha de nacimiento\n";
     }
 
     if (age.trim() == "") {
@@ -219,9 +238,8 @@ function transformarArreglo( original: Alimentos[]): Food[] {
     if (dietType.trim() == "") {
       textFieldsEmpty += "Tipo de dieta\n";
     }
-    // if (foodAvoidListFiltered.length == 0) {
-    //   textFieldsEmpty += "Alimentos que no consumas\n";
-    // }
+
+
     if (goal.trim() == "") {
       textFieldsEmpty += "Objetivo\n";
     }
@@ -238,7 +256,7 @@ function transformarArreglo( original: Alimentos[]): Food[] {
       return;
     }
     
-    navigation.navigate("ResumeAnswersScreen",{ idUser, name, age, height, weight, gender, physicalActivity, dietType, foodAvoidListFiltered, goal, stateMexico });
+    navigation.navigate("ResumeAnswersScreen",{ idUser, name, dateBirth, age, height, weight, gender, physicalActivity, dietType, foodAvoidListFiltered, goal, socialMedia, stateMexico });
   };
 
   const validateFieldEmpty = ( nameField: string, value: string ) => {
@@ -331,17 +349,25 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           source={require("../../../assets/fondoSlides.jpg")}
           style={styles.slide}
         >
-          <Text style={styles.text}>Ingresa tu edad</Text>
+          <Text style={styles.text}>Selecciona tu fecha de nacimiento</Text>
           <View style={styles.containerTextInput}>
-            <TextInput
+            {/* <TextInput
               style={styles.textInputStyleEdad}
               keyboardType="numeric"
               placeholderTextColor="#d1cccc"
               placeholder="Edad"
               value={age}
               onChangeText={(value) => setAge(value)}
+            /> */}
+
+            <DateOfBirthPicker
+                onDateSelected={(calculatedAge, selectedDate) => {
+                  setAge(calculatedAge.toString());
+                  setDateBirth(selectedDate);
+                }}
             />
           </View>
+          
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
             <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
               Siguiente
@@ -442,6 +468,52 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           source={require("../../../assets/fondoSlides.jpg")}
           style={styles.slide}
         >
+          <Text style={styles.text}>¿Tienes alimentos de preferencia</Text>
+          <Text style={styles.text}>que te gustaría tomar en cuenta</Text>
+          <Text style={styles.text}>para armar tu plan?</Text>
+          <Text style={styles.text}>(puedes omitir esta pregunta)</Text>
+
+          {/* <MultiSelectField
+            data={foodAvoidList}
+            onItemSelected={handleFoidAvoidListFiltered}
+          /> */}
+          <SelectField
+            data={foodPreferenceOptionsSelect}
+            onItemSelected={handleFoodPreferenceSelect}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
+          </TouchableOpacity>
+        </ImageBackground>
+        
+        {
+          foodPreference === "Me gustaría elegir" && (
+            <ImageBackground
+              source={require("../../../assets/fondoSlides.jpg")}
+              style={styles.slide}
+            >
+              <Text style={styles.text}>Selecciona los alimentos</Text>
+              <Text style={styles.text}>de tu preferencia</Text>
+
+              <MultiSelectField
+                data={foodAvoidList}
+                onItemSelected={handleFoidAvoidListFiltered}
+              />
+              <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+                <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+                  Siguiente
+                </Text>
+              </TouchableOpacity>
+            </ImageBackground>
+          )
+        }
+        
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide}
+        >
           <Text style={styles.text}>Selecciona los alimentos a los que</Text>
           <Text style={styles.text}>seas alérgico o no consumas</Text>
           <Text style={styles.text}>(puedes omitir este paso)</Text>
@@ -465,6 +537,23 @@ function transformarArreglo( original: Alimentos[]): Food[] {
           <SelectField
             data={goalOptionsSelect}
             onItemSelected={handleGoalSelect}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
+          </TouchableOpacity>
+        </ImageBackground>
+
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide}
+        >
+          <Text style={styles.text}>¿Cómo te enteraste de</Text>
+          <Text style={styles.text}>nuestros servicios?</Text>
+          <SelectField
+            data={socialMediaOptions}
+            onItemSelected={handleSocialMediaSelect}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
             <Text style={{ color: "#2A261B", fontWeight: "bold" }}>

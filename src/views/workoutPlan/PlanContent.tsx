@@ -370,7 +370,9 @@ const styles = StyleSheet.create({
   },
 
   carouselContainer: {
-    marginTop: 20,
+    //marginTop: 20,
+    //alignItems: "center",
+    marginTop: 1,
     alignItems: "center",
   },
 

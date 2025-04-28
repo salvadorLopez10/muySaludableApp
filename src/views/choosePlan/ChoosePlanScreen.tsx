@@ -59,6 +59,8 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     const [showTextPwd, setShowTextPwd] = useState(false);
     const [planes, setPlanes] = useState<Planes[]>([]);
     const [loading, setLoading] = useState(false);
+    const [telefono, setTelefono] = useState("");
+    const [showTooltip, setShowTooltip] = useState(false);
 
     const userInfo = useAuthStore((state) => state.user);
 
@@ -124,6 +126,19 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
     //getPlanes();
   }, []);
 
+  const formatPhoneNumber = (value: string) => {
+    // Elimina todo lo que no sea número
+    const cleaned = value.replace(/\D/g, '');
+  
+    // Corta a máximo 10 dígitos
+    const limited = cleaned.substring(0, 10);
+  
+    // Inserta guiones cada 2 dígitos
+    const formatted = limited.match(/.{1,2}/g)?.join('-') || '';
+  
+    return formatted;
+  };
+
   const onNavigate = () =>{
     setModalVisible(false)
     //navigation.navigate("ResumeChoosenPlanScreen", {selectedPlan: selectedView});
@@ -171,7 +186,9 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
     const requestNewUser = {
       "email": user,
-      "password": pwd
+      "password": pwd,
+      ...(telefono ? { telefono: telefono.replace(/-/g, '') } : {}) // Agrega el teléfono solo si no está vacío
+
     }
     setLoading(true);
     //Mandamos la creación de la cuenta y enviamos el correo electrónico
@@ -458,7 +475,7 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
 
               {/* Sección de Título */}
               <View style={styles.modalSection}>
-                <Text style={styles.texto}>Ingresa tu email</Text>
+                <Text style={styles.texto}>Ingresa la siguiente información</Text>
                 <Text style={styles.texto}>para crear una cuenta</Text>
                 <Text style={styles.texto}>y descubre como</Text>
                 <Text style={styles.texto}>transformar tu vida</Text>
@@ -478,6 +495,29 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
                 (showTextUser) && <Text style={styles.textError}>{ textErrorEmail }</Text> 
                 //El email es requerido
               }
+              <View style={styles.containerTextInput}>
+
+                <TextInput
+                  style={styles.textInputStyle}
+                  placeholder="Teléfono"
+                  value={telefono}
+                  keyboardType="phone-pad"
+                  onChangeText={(value) => setTelefono(formatPhoneNumber(value))}
+                />
+                
+                <TouchableOpacity onPress={() => setShowTooltip(!showTooltip)} style={styles.tooltipIcon}>
+                  <Icon name="info-circle" size={18} color="#55851F" />
+                </TouchableOpacity>
+
+                {showTooltip && (
+                  <View style={styles.tooltipContainer}>
+                    <Text style={styles.tooltipText}>
+                      Al agregar tu teléfono podremos enviarte ofertas especiales y consejos útiles para cuidar tu salud.
+                    </Text>
+                  </View>
+                )}
+              </View>
+              
 
               <View style={styles.containerTextInput}>
                 <TextInput
@@ -770,6 +810,31 @@ const styles = StyleSheet.create({
     width: "80%",
     textAlign: "center",
     fontFamily: "Gotham-Medium",
+  },
+  tooltipIcon: {
+    position: 'absolute',
+    right: 10,
+    top: '35%', // Centrado verticalmente en el TextInput
+    zIndex: 2, // Asegura que el ícono esté por encima del tooltip
+  },
+  tooltipContainer: {
+    position: 'absolute',
+    top: -50, // Aparece arriba del input, puedes ajustar el valor
+    right: 0,
+    backgroundColor: '#fff',
+    padding: 8,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    maxWidth: 220,
+    zIndex: 1, // Tooltip debajo del icono
+  },
+  tooltipText: {
+    fontSize: 12,
+    color: '#55851F',
   },
   textError: {
     color: "red",

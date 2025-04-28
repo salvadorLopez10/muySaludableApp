@@ -558,6 +558,11 @@
     // { label: "Intolerante a la lactosa", id: "Intolerante a la lactosa" },
   ];
 
+  export const foodPreferenceOptionsSelect = [
+    { label: "1. Consumo todos los alimentos", id: "Consumo todos los alimentos" },
+    { label: "2. Me gustaría elegir", id: "Me gustaría elegir" },
+  ];
+
   export const hoursSleep = [
     { label: "1 a 3 horas", value: "1-3" },
     { label: "4 a 6 horas", value: "4-6" },
@@ -583,9 +588,19 @@
   ];
 
   export const goalOptionsSelect = [
-    { label: "Bajar de peso", id: "Bajar de peso" },
+    { label: "Bajar grasa y comer saludable", id: "Bajar grasa y comer saludable" },
+    { label: "Low Carb y definición muscular", id: "Low Carb y definición muscular" },
     { label: "Mantenimiento", id: "Mantenimiento" },
-    { label: "Ganar masa muscular", id: "Ganar masa muscular" },
+    { label: "Subir masa muscular", id: "Subir masa muscular" },
+  ];
+  
+  export const socialMediaOptions = [
+    { label: "Instagram", id: "Instagram" },
+    { label: "Facebook", id: "Facebook" },
+    { label: "TikTok", id: "TikTok" },
+    { label: "Página Web", id: "Página Web" },
+    { label: "Referido", id: "Referido" },
+    { label: "Empresa", id: "Empresa" },
   ];
 
   export const statesMexicoOptionsSelect = [

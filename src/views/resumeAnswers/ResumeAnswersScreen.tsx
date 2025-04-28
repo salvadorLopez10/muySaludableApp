@@ -86,6 +86,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
       
       const bodyUpdateUser = {
         nombre: route.params!.name,
+        fecha_nacimiento: route.params!.dateBirth,
         edad: route.params!.age,
         altura: route.params!.height,
         peso: route.params!.weight,
@@ -94,6 +95,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         tipo_dieta: route.params!.dietType,
         alimentos_evitar: alimentos_evitar,
         objetivo: route.params!.goal,
+        social_media: route.params!.socialMedia,
         estado_mexico: route.params!.stateMexico,
         notification_token: (expoPushToken) ? expoPushToken : ""
       };
@@ -304,7 +306,8 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
             <Text style={styles.textAnswer}>
               1. {route.params!.name as any}
             </Text>
-            <Text style={styles.textAnswer}>2. {route.params!.age} años</Text>
+            {/* <Text style={styles.textAnswer}>2. {route.params!.age} años</Text> */}
+            <Text style={styles.textAnswer}>2. {`${route.params!.dateBirth} - (${route.params!.age} años)`}</Text>
             <Text style={styles.textAnswer}>
               3. {route.params!.height / 100} m
             </Text>
@@ -323,8 +326,9 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
                     .join(", ")}
             </Text>
             <Text style={styles.textAnswer}>9. {route.params!.goal}</Text>
+            <Text style={styles.textAnswer}>10. {route.params!.socialMedia}</Text>
             <Text style={styles.textAnswer}>
-              10. {route.params!.stateMexico}
+              11. {route.params!.stateMexico}
             </Text>
           </ScrollView>
         </View>
