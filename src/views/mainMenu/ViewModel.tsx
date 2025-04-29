@@ -15,6 +15,7 @@ import * as FileSystem from 'expo-file-system';
 
 import { shareAsync } from "expo-sharing";
 import { UserProps } from "./MainMenuScreen";
+import { base64FondoFrase, base64FondoPlan, base64Portada } from "./imagebase64";
 
 
 const MainMenuViewModel = (  ) => {
@@ -88,7 +89,8 @@ const MainMenuViewModel = (  ) => {
           display: flex;
           justify-content: center;
           align-items: center;
-          background-image: url('https://muysaludable.com.mx/img-pdf/imagenPDF_Portada.jpeg');
+          //background-image: url('https://muysaludable.com.mx/img-pdf/imagenPDF_Portada.jpeg');
+          background-image: url(${base64Portada});
           background-size: cover;
           background-position: center;
         }
@@ -140,7 +142,8 @@ const MainMenuViewModel = (  ) => {
           width: 100%;
           height: 100%;
           position: relative;
-          background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg');
+          //background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg');
+          background-image: url('${base64FondoPlan}');
           background-size: cover;
           margin: 0;
           padding: 0;
@@ -169,7 +172,8 @@ const MainMenuViewModel = (  ) => {
           padding: 0;
           width: 100%;
           height: 100%;
-          background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg'); /* URL de la imagen de fondo */
+          //background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg');
+          background-image: url('${base64FondoPlan}');
           background-size: cover;
           display: flex;
           flex-direction: row;
@@ -211,7 +215,8 @@ const MainMenuViewModel = (  ) => {
           width: 100%;
           height: 100%;
           position: relative;
-          background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg');
+          //background-image: url('https://muysaludable.com.mx/img-pdf/imagenFondoPDFPlan.jpeg');
+          background-image: url('${base64FondoPlan}');
           background-size: cover;
           margin: 0;
           padding: 0;
@@ -241,7 +246,8 @@ const MainMenuViewModel = (  ) => {
           width: 100%;
           height: 100%;
           position: relative;
-          background-image: url('https://muysaludable.com.mx/img-pdf/imgFondoPDF.jpeg');
+          //background-image: url('https://muysaludable.com.mx/img-pdf/imgFondoPDF.jpeg');
+          background-image: url('${base64FondoFrase}');
           background-size: cover;
           margin: 0;
           padding: 0;
