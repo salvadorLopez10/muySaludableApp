@@ -77,134 +77,92 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
       updateInfoUser();
     };
 
-    const updateInfoUser = async() =>{
-      
-      var alimentos_evitar = "";
-      if (route.params!.foodAvoidListFiltered.length > 0) {
-        alimentos_evitar = route.params!.foodAvoidListFiltered.map((item:foodListItem) => item.id).join(", ");
-      }
-      
-      const bodyUpdateUser = {
-        nombre: route.params!.name,
-        fecha_nacimiento: route.params!.dateBirth,
-        edad: route.params!.age,
-        altura: route.params!.height,
-        peso: route.params!.weight,
-        sexo: route.params!.gender,
-        actividad_fisica: route.params!.physicalActivity,
-        tipo_dieta: route.params!.dietType,
-        alimentos_evitar: alimentos_evitar,
-        objetivo: route.params!.goal,
-        social_media: route.params!.socialMedia,
-        estado_mexico: route.params!.stateMexico,
-        notification_token: (expoPushToken) ? expoPushToken : ""
-      };
-      console.log("URL ACTUALIZAR PASSWORD");
-      console.log(JSON.stringify(bodyUpdateUser,null,2));
-      console.log(`/usuarios/${route.params!.idUser}`);
-      showIndicator();
-      //disableButton();
-      const actualizaPassword = await MuySaludableApi.put(
-        `/usuarios/${route.params!.idUser}`,
-        bodyUpdateUser
-      )
-        .then((responseUser:any) => {
-
-           console.log("RESPUESTA USER CUESTIONARIO");
-           console.log(JSON.stringify(responseUser, null, 2));
-
-          const calculaTMB = MuySaludableApi.get(
-            `/usuarios/calculateTMB/${route.params!.idUser}`
-          ).then( (responseTMB:any) => {
-            console.log("RESPUESTA USER TMB");
-            console.log(JSON.stringify(responseTMB, null, 2));
-
-            //Calcular plan alimenticio y guardar en bd
-            const body = convertDataUserToGeneratePlan(route.params,responseTMB.data.data);
-            const resp = MuySaludableApi.post("/usuarios/generatePlanNew",body)
-              .then((responsePlanGenerado:any) => {
-                console.log("RESPONSE GENERACIÓN PLAN");
-                console.log(JSON.stringify(responsePlanGenerado,null,2));
-                //Una vez obtenido el plan, procedemos a guardarlo en la bd
-                const bodyPlanAlimenticio = buildBodyToPlanNutricional(route.params,responsePlanGenerado.data.data);
-
-                MuySaludableApi.post("/planNutricional", bodyPlanAlimenticio)
-                .then(( responsePlanNutricionalSaved:any ) => {
-                  console.log("RESPONSE PLAN GUARDADO CON EL USUARIO");
-                  console.log(JSON.stringify(responsePlanNutricionalSaved,null,1));
-                  closeIndicator();
-
-                  Alert.alert(
-                    "Información", // Título de la alerta
-                    "Agradecemos tus respuestas.\nEn un periodo de 1 hora tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios.", // Mensaje de la alerta
-                    [
-                      {
-                        text: "Confirmar",
-                        onPress: () => {
-                          console.log("click botón confirmar");
-
-                          scheduleNotification();
-
-                          handleLogin(responseUser.data.data.email, responseUser.data.data.password, loading, setLoading);
-                        },
-                      },
-                    ],
-                    { cancelable: false } // Evita que la alerta se cierre sin el botón
-                  );
-
-                  // navigation.reset({
-                  //   index: 0,
-                  //   routes: [{ name: "LoginScreen" }],
-                  // });
-
-                }).catch((errorInsertPlanNutricional:any) => {
-                  console.log("ERROR AL GUARDAR PLAN CON USUARIO");
-                  console.log(JSON.stringify(errorInsertPlanNutricional,null,1));
-                  closeIndicator();
-                });
-               
-              })
-              .catch((error:any) => {
-                console.log("Error al obtener plan");
-                console.log(JSON.stringify(error, null, 2));
-                closeIndicator();
-            
-              });
-
-            // closeIndicator();
-            // //enableButton();
-            // Alert.alert(
-            //   "Información",
-            //   "Agradecemos tus respuestas.\nEn un periodo de 2 horas tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios"
-            // );
-
-            // scheduleNotification();
-
-            // navigation.reset({
-            //   index: 0,
-            //   routes: [{ name: "LoginScreen" }],
-            // });
-
-          }).catch((errorTMB:any) => {
-
-            closeIndicator();
-            //enableButton();
-            console.log(
-              "Mensaje de error al calcular TMB: ",
-              errorTMB.response.data.message
-            );
-          } );
-          
-        })
-        .catch((errorUser:any) => {
+    const updateInfoUser = async () => {
+      try {
+        var alimentos_evitar = "";
+        if (route.params!.foodAvoidListFiltered.length > 0) {
+          alimentos_evitar = route.params!.foodAvoidListFiltered.map((item: foodListItem) => item.label).join(", ");
+        }
+    
+        var alimentos_preferencia = "";
+        if (route.params!.foodPreferenceListFiltered.length > 0) {
+          alimentos_preferencia = route.params!.foodPreferenceListFiltered.map((item: foodListItem) => item.label).join(", ");
+        }
+        
+        const bodyUpdateUser = {
+          nombre: route.params!.name,
+          fecha_nacimiento: route.params!.dateBirth,
+          edad: route.params!.age,
+          altura: route.params!.height,
+          peso: route.params!.weight,
+          sexo: route.params!.gender,
+          actividad_fisica: route.params!.physicalActivity,
+          tipo_dieta: route.params!.dietType,
+          alimentos_preferencia,
+          alimentos_evitar,
+          objetivo: route.params!.goal,
+          social_media: route.params!.socialMedia,
+          estado_mexico: route.params!.stateMexico,
+          notification_token: expoPushToken || "",
+        };
+    
+        console.log("BODY ACTUALIZAR USUARIO:", JSON.stringify(bodyUpdateUser, null, 2));
+        console.log("ENDPOINT:", `/usuarios/${route.params!.idUser}`);
+    
+        showIndicator();
+    
+        // Actualizamos usuario
+        const responseUser = await MuySaludableApi.put(`/usuarios/${route.params!.idUser}`, bodyUpdateUser);
+        console.log("Usuario actualizado correctamente:", responseUser.data);
+    
+        // Empezamos la generación del plan en background (no esperamos)
+        generatePlanInBackground(route.params!.idUser, route.params);
+    
+        // Esperamos 3 segundos para cerrar el indicador y continuar
+        setTimeout(() => {
           closeIndicator();
-          //enableButton();
-          console.log(
-            "Mensaje de error en actualización: ",
-            errorUser.response.data.message
+          Alert.alert(
+            "Información",
+            "Agradecemos tus respuestas.\nEn un periodo de 1 hora tendrás listo tu plan alimenticio para poder aprovechar de sus beneficios.",
+            [
+              {
+                text: "Confirmar",
+                onPress: () => {
+                  console.log("click botón confirmar");
+                  scheduleNotification();
+                  handleLogin(responseUser.data.data.email, responseUser.data.data.password, loading, setLoading);
+                },
+              },
+            ],
+            { cancelable: false }
           );
-        });
-    }
+        }, 3000); // 3 segundos
+    
+      } catch (error: any) {
+        closeIndicator();
+        console.log("Error en actualización de usuario:", error.response?.data?.message || error.message);
+      }
+    };
+
+    const generatePlanInBackground = async (userId: string, params: any) => {
+      try {
+        const responseTMB = await MuySaludableApi.get(`/usuarios/calculateTMB/${userId}`);
+        console.log("TMB calculado: ", responseTMB.data);
+    
+        const bodyGeneratePlan = convertDataUserToGeneratePlan(params, responseTMB.data.data);
+        const responsePlanGenerado = await MuySaludableApi.post("/usuarios/generatePlanNew", bodyGeneratePlan);
+        console.log("Plan generado: ", responsePlanGenerado.data);
+    
+        const bodyPlanAlimenticio = buildBodyToPlanNutricional(params, responsePlanGenerado.data.data);
+        const responsePlanSaved = await MuySaludableApi.post("/planNutricional", bodyPlanAlimenticio);
+        console.log("Plan nutricional guardado:", responsePlanSaved.data);
+    
+      } catch (error: any) {
+        console.log("Error generando o guardando plan en background:", error.response?.data?.message || error.message);
+        Alert.alert("Error generando o guardando plan en background:", error.response?.data?.message || error.message);
+      }
+    };
+    
 
     const convertDataUserToGeneratePlan = ( objDataUser:any, tmb: string ) => {
       var dietType = "";
@@ -226,16 +184,21 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
       interface Item {
         id: string;
         label: string;
+        grupo: string;
       };
 
       const arrayOfFoodAvoid: Item[] = objDataUser.foodAvoidListFiltered;
       const arrayOfIdsFoods: string[] = arrayOfFoodAvoid.map((item: Item) => item.id);
+      
+      const arrayOfFoodPreferenceAvoid: Item[] = objDataUser.foodPreferenceListFiltered;
+      const arrayOfIdsPreferenceFoods: string[] = arrayOfFoodPreferenceAvoid.map((item: Item) => item.id);
 
       const resultBody = {
         "tipo_dieta": dietType,
         "objetivo": objDataUser.goal,
         "tmb":tmb,
-        "alimentos_evitar": arrayOfIdsFoods
+        "alimentos_evitar": arrayOfIdsFoods,
+        "alimentos_preferencia": arrayOfIdsPreferenceFoods
       };
       
       console.log("BODY GENERA PLAN");
@@ -317,6 +280,17 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
             <Text style={styles.textAnswer}>7. {route.params!.dietType}</Text>
             <Text style={styles.textAnswer}>
               8.{" "}
+              {route.params!.foodPreferenceListFiltered.length == 0
+                ? "Sin preferencia y/o consume cualquier alimento"
+                : route
+                    .params!.foodPreferenceListFiltered.map(
+                      (alimento: foodListItem) => alimento.label
+                    )
+                    .join(", ")}
+              
+            </Text>
+            <Text style={styles.textAnswer}>
+              9.{" "}
               {route.params!.foodAvoidListFiltered.length == 0
                 ? "Sin alergia y/o consume cualquier alimento"
                 : route
@@ -325,11 +299,9 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
                     )
                     .join(", ")}
             </Text>
-            <Text style={styles.textAnswer}>9. {route.params!.goal}</Text>
-            <Text style={styles.textAnswer}>10. {route.params!.socialMedia}</Text>
-            <Text style={styles.textAnswer}>
-              11. {route.params!.stateMexico}
-            </Text>
+            <Text style={styles.textAnswer}>10. {route.params!.goal}</Text>
+            <Text style={styles.textAnswer}>11. {route.params!.socialMedia}</Text>
+            <Text style={styles.textAnswer}>12. {route.params!.stateMexico}</Text>
           </ScrollView>
         </View>
 

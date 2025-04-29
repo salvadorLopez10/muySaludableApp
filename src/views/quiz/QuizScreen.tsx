@@ -66,7 +66,9 @@ const QuizScreen = ({route,navigation}: Props) => {
   const [foodPreference, setFoodPreference] = useState("");
   const [foodAvoid, setFoodAvoid] = useState("");
   const [foodAvoidList, setFoodAvoidList] = useState<Food[]>([]);//Lista completa
-  const [foodAvoidListFiltered, setFoodAvoidListFiltered] = useState<Food[]>([]);//Lista completa
+  const [foodAvoidListFiltered, setFoodAvoidListFiltered] = useState<Food[]>([]);
+  const [foodPreferenceList, setFoodPreferenceList] = useState<Food[]>([]);
+  const [foodPreferenceListFiltered, setFoodPreferenceListFiltered] = useState<Food[]>([]);
   const [goal, setGoal] = useState("");
   const [socialMedia, setSocialMedia] = useState("");
   const [stateMexico, setStateMexico] = useState("");
@@ -126,8 +128,12 @@ const QuizScreen = ({route,navigation}: Props) => {
     setStateMexico(value);
   };
 
-  const handleFoidAvoidListFiltered = ( array: Food[] ) => {
+  const handleFoodAvoidListFiltered = ( array: Food[] ) => {
     setFoodAvoidListFiltered(array);
+  }
+  
+  const handleFoodPreferenceListFiltered = ( array: Food[] ) => {
+    setFoodPreferenceListFiltered(array);
   }
 
   const handleDateSelected = (date: Date) => {
@@ -181,6 +187,7 @@ const QuizScreen = ({route,navigation}: Props) => {
       const foodList = transformarArreglo(resp.data.alimentos);
       //console.log(foodList);
       setFoodAvoidList(foodList);
+      setFoodPreferenceList(foodList);
     } catch (error) {
       console.log(error);
     }
@@ -205,6 +212,10 @@ const QuizScreen = ({route,navigation}: Props) => {
   
 
   const handleSubmit = () => {
+
+    console.log("ALIMENTOS PREFERENCIA");
+    console.log(JSON.stringify(foodPreferenceListFiltered, null, 2));
+    console.log(JSON.stringify(foodAvoidListFiltered, null, 2));
 
     let textFieldsEmpty = "";
 
@@ -256,7 +267,7 @@ const QuizScreen = ({route,navigation}: Props) => {
       return;
     }
     
-    navigation.navigate("ResumeAnswersScreen",{ idUser, name, dateBirth, age, height, weight, gender, physicalActivity, dietType, foodAvoidListFiltered, goal, socialMedia, stateMexico });
+    navigation.navigate("ResumeAnswersScreen",{ idUser, name, dateBirth, age, height, weight, gender, physicalActivity, dietType, foodAvoidListFiltered, foodPreferenceListFiltered, goal, socialMedia, stateMexico });
   };
 
   const validateFieldEmpty = ( nameField: string, value: string ) => {
@@ -498,8 +509,8 @@ const QuizScreen = ({route,navigation}: Props) => {
               <Text style={styles.text}>de tu preferencia</Text>
 
               <MultiSelectField
-                data={foodAvoidList}
-                onItemSelected={handleFoidAvoidListFiltered}
+                data={foodPreferenceList}
+                onItemSelected={handleFoodPreferenceListFiltered}
               />
               <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
                 <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
@@ -520,7 +531,7 @@ const QuizScreen = ({route,navigation}: Props) => {
 
           <MultiSelectField
             data={foodAvoidList}
-            onItemSelected={handleFoidAvoidListFiltered}
+            onItemSelected={handleFoodAvoidListFiltered}
           />
           <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
             <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
@@ -628,7 +639,7 @@ const styles = StyleSheet.create({
     color: "#2A261B",
     //fontWeight: "bold",
     fontFamily: "Gotham-Medium",
-    padding: 5,
+    padding: 10,
     //marginTop: 10,
     width: "50%",
     textAlign: "center",
