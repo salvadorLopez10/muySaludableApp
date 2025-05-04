@@ -138,17 +138,16 @@ const PlanView: React.FC<PlanViewProps> = ({ objPlan, planContratado }) => {
   }, [])
   
   return (
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.containerScroll}
-        >
-          {renderAccordionItems()}
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      style={styles.containerScroll}
+    >
+      {renderAccordionItems()}
 
-        <View style={styles.carouselContainer}>
-          <CarouselField images={ carouselData } />
-        </View>
-
-        </ScrollView>
+      <View style={styles.carouselContainer}>
+        <CarouselField images={ carouselData } />
+      </View>
+    </ScrollView>
   );
 };
 

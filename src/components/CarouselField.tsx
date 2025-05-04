@@ -1,6 +1,7 @@
 import React from 'react'
-import { Image, Dimensions, StyleSheet, View } from 'react-native';
-import Carousel from 'react-native-snap-carousel'
+import { Image, Dimensions, StyleSheet, View, Text } from 'react-native';
+//import Carousel from 'react-native-snap-carousel'
+import Swiper from "react-native-swiper";
 
 const { width: screenWidth } = Dimensions.get('window');
 const itemSize = screenWidth * 0.55;
@@ -18,8 +19,11 @@ export const CarouselField: React.FC<CarouselFieldProps> = ({ images }) => {
     //const images = carouselImages;
       
     return (
-        <View style={{ alignItems: 'center', marginVertical: 10, marginTop:10 }}>
-            <Carousel
+        // <View style={{ alignItems: 'center', marginVertical: 10, marginTop:10 }}>
+        <View style={styles.swiperContainer}>
+
+
+            {/* <Carousel
                 data={images}
                 renderItem={({ item }) => (
                     <Image source={{ uri: item.image_url }} style={styles.carouselImage} resizeMode="cover" />
@@ -31,30 +35,79 @@ export const CarouselField: React.FC<CarouselFieldProps> = ({ images }) => {
                 autoplay={true}
                 autoplayInterval={3000}
                 removeClippedSubviews={false}
-            />
+            /> */}
+
+          <Swiper
+            autoplay={false}
+            loop={true}
+            showsPagination={true}
+            showsButtons={true}
+            //autoplayTimeout={3}
+            style={styles.swiper}
+            paginationStyle={styles.pagination}
+            dotStyle={styles.dot}
+            activeDotStyle={styles.activeDot}
+            nextButton={<Text style={styles.buttonText}>›</Text>}
+            prevButton={<Text style={styles.buttonText}>‹</Text>}
+          >
+              {images.map((item) => (
+                  <View key={item.id} style={styles.slide}>
+                      <Image
+                          source={{ uri: item.image_url }}
+                          style={styles.image}
+                          resizeMode="cover"
+                      />
+                  </View>
+              ))}
+          </Swiper>
         </View>
   )
 }
-
+ 
 const styles = StyleSheet.create({
-    /*
-    carouselImage: {
-        width: screenWidth * 0.55,
-        height: screenWidth * 0.55,
-        borderRadius: 10,
-       // marginVertical: 20,
-    }
-       */
-    carouselItem: {
-        width: itemSize,
-        height: itemSize,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      carouselImage: {
-        width: itemSize,
-        height: itemSize,
-        borderRadius: 10,
-      },
+  swiperContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    height: itemSize,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  swiper: {
+    height: itemSize,
+    //margin: 30,
+  },
+  slide: {
+    //width: itemSize+100,
+    height: itemSize,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: itemSize + 100,
+    height: itemSize,
+    borderRadius: 10,
+  },
+  pagination: {
+    //bottom: -20, // puedes ajustar si se superpone
+  },
+  dot: {
+    backgroundColor: 'rgba(250, 160, 41, 0.3)',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    margin: 3,
+  },
+  activeDot: {
+    backgroundColor: '#FAA029',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    margin: 3,
+  },
+  buttonText: {
+    color: 'rgba(250, 160, 41, 1)',
+    fontSize: 50,
+    fontWeight: 'bold',
+  },
 
 });

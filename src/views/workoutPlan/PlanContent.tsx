@@ -372,8 +372,9 @@ const styles = StyleSheet.create({
   carouselContainer: {
     //marginTop: 20,
     //alignItems: "center",
-    marginTop: 1,
+    marginTop: 10,
     alignItems: "center",
+    width: "80%",
   },
 
   modalContainer: {

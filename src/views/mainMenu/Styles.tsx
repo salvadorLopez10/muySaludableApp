@@ -257,7 +257,7 @@ const MainMenuStyles = StyleSheet.create({
     textAlign: "center",
   },
   carouselContainer: {
-    marginTop: 1,
+    marginTop: 10,
     alignItems: "center",
   },
   buttonContainer: {
