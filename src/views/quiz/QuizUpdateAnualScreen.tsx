@@ -495,7 +495,7 @@ const styles = StyleSheet.create({
     color: "#2A261B",
     //fontWeight: "bold",
     fontFamily: "Gotham-Medium",
-    padding: 5,
+    padding: 10,
     //marginTop: 10,
     width: "50%",
     textAlign: "center",
