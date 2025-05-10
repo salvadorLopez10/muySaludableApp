@@ -88,7 +88,7 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
         if (route.params!.foodPreferenceListFiltered.length > 0) {
           alimentos_preferencia = route.params!.foodPreferenceListFiltered.map((item: foodListItem) => item.label).join(", ");
         }
-        
+
         const bodyUpdateUser = {
           nombre: route.params!.name,
           fecha_nacimiento: route.params!.dateBirth,
@@ -278,8 +278,19 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
             <Text style={styles.textAnswer}>5. {route.params!.gender}</Text>
             <Text style={styles.textAnswer}>6. {labelLevelActivity}</Text>
             <Text style={styles.textAnswer}>7. {route.params!.dietType}</Text>
+            
             <Text style={styles.textAnswer}>
               8.{" "}
+              {route.params!.foodAvoidListFiltered.length == 0
+                ? "Sin alergia y/o consume cualquier alimento"
+                : route
+                    .params!.foodAvoidListFiltered.map(
+                      (alimento: foodListItem) => alimento.label
+                    )
+                    .join(", ")}
+            </Text>
+            <Text style={styles.textAnswer}>
+              9.{" "}
               {route.params!.foodPreferenceListFiltered.length == 0
                 ? "Sin preferencia y/o consume cualquier alimento"
                 : route
@@ -288,16 +299,6 @@ const ResumeAnswersScreen = ({route,navigation}:Props) => {
                     )
                     .join(", ")}
               
-            </Text>
-            <Text style={styles.textAnswer}>
-              9.{" "}
-              {route.params!.foodAvoidListFiltered.length == 0
-                ? "Sin alergia y/o consume cualquier alimento"
-                : route
-                    .params!.foodAvoidListFiltered.map(
-                      (alimento: foodListItem) => alimento.label
-                    )
-                    .join(", ")}
             </Text>
             <Text style={styles.textAnswer}>10. {route.params!.goal}</Text>
             <Text style={styles.textAnswer}>11. {route.params!.socialMedia}</Text>

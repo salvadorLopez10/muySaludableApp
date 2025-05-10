@@ -470,7 +470,7 @@ export const ChoosePlanScreen = ( {navigation}: Props ) => {
                 style={styles.closeIcon}
                 onPress={handleCloseModal}
               >
-                <Icon name="times" size={20} color="black" />
+                <Icon name="times" size={20} color="#55851F" />
               </TouchableOpacity>
 
               {/* Sección de Título */}
@@ -820,7 +820,7 @@ const styles = StyleSheet.create({
   tooltipContainer: {
     position: 'absolute',
     top: -50, // Aparece arriba del input, puedes ajustar el valor
-    right: 0,
+    //right: '3%',
     backgroundColor: '#fff',
     padding: 8,
     borderRadius: 8,

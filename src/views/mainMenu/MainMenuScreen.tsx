@@ -334,7 +334,7 @@ const MainMenuScreen = () => {
         showMealPlanElements && 
         <FloatingButton
           iconName="add"
-          backgroundColor="#28a745"
+          backgroundColor="#326807"
           recommendaciones={recomendaciones}
         />
       }

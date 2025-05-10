@@ -56,6 +56,15 @@ const FloatingButton: React.FC<FloatingButtonModalProps> = ({
                   <Text style={styles.subtitle}>Recomendaciones</Text>
                 </View>
 
+                {
+                  recommendaciones.length === 0 && (
+                    <View style={styles.modalSectionNoRecomendaciones}>
+                      <Text style={styles.texto}>No hay recomendaciones</Text>
+                      <Text style={styles.texto}>disponibles.</Text>
+                    </View>
+                  )
+                }
+
                 {recommendaciones.map((recomendacion, index) => (
                   
                   <View key={index} >
@@ -67,13 +76,17 @@ const FloatingButton: React.FC<FloatingButtonModalProps> = ({
                       <Text style={styles.bullet}>•</Text>
                       <Text style={styles.texto}>{recomendacion.descripcion}</Text>
                     </View>
+                    {
+                      recomendacion.image_url && (
+                        <View style={styles.modalSection}>
+                          <Image
+                            source={ {uri: recomendacion.image_url} }
+                            style={styles.image}
+                          />
+                        </View>
 
-                    <View style={styles.modalSection}>
-                      <Image
-                        source={ {uri: recomendacion.image_url} }
-                        style={styles.image}
-                      />
-                    </View>
+                      )
+                    }
                   </View>
                 ))}
 
@@ -131,7 +144,12 @@ const styles = StyleSheet.create({
   },
   modalSection: {
     margin: 10,
-    alignItems:"center"
+    alignItems:"center",
+  },
+  modalSectionNoRecomendaciones: {
+    margin: 10,
+    top: 30,
+    alignItems:"center",
   },
   subtitle: {
     color: "#55851F",

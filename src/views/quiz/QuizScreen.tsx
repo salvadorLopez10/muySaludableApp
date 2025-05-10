@@ -479,6 +479,25 @@ const QuizScreen = ({route,navigation}: Props) => {
           source={require("../../../assets/fondoSlides.jpg")}
           style={styles.slide}
         >
+          <Text style={styles.text}>Selecciona los alimentos a los que</Text>
+          <Text style={styles.text}>seas alérgico o no consumas</Text>
+          <Text style={styles.text}>(puedes omitir este paso)</Text>
+
+          <MultiSelectField
+            data={foodAvoidList}
+            onItemSelected={handleFoodAvoidListFiltered}
+          />
+          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
+            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
+              Siguiente
+            </Text>
+          </TouchableOpacity>
+        </ImageBackground>
+
+        <ImageBackground
+          source={require("../../../assets/fondoSlides.jpg")}
+          style={styles.slide}
+        >
           <Text style={styles.text}>¿Tienes alimentos de preferencia</Text>
           <Text style={styles.text}>que te gustaría tomar en cuenta</Text>
           <Text style={styles.text}>para armar tu plan?</Text>
@@ -521,24 +540,7 @@ const QuizScreen = ({route,navigation}: Props) => {
           )
         }
         
-        <ImageBackground
-          source={require("../../../assets/fondoSlides.jpg")}
-          style={styles.slide}
-        >
-          <Text style={styles.text}>Selecciona los alimentos a los que</Text>
-          <Text style={styles.text}>seas alérgico o no consumas</Text>
-          <Text style={styles.text}>(puedes omitir este paso)</Text>
-
-          <MultiSelectField
-            data={foodAvoidList}
-            onItemSelected={handleFoodAvoidListFiltered}
-          />
-          <TouchableOpacity onPress={goNext} style={styles.styleNextButton}>
-            <Text style={{ color: "#2A261B", fontWeight: "bold" }}>
-              Siguiente
-            </Text>
-          </TouchableOpacity>
-        </ImageBackground>
+        
 
         <ImageBackground
           source={require("../../../assets/fondoSlides.jpg")}

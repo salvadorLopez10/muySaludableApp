@@ -38,6 +38,7 @@ export const CarouselField: React.FC<CarouselFieldProps> = ({ images }) => {
             /> */}
 
           <Swiper
+            key={images.length}
             autoplay={false}
             loop={true}
             showsPagination={true}
@@ -50,15 +51,23 @@ export const CarouselField: React.FC<CarouselFieldProps> = ({ images }) => {
             nextButton={<Text style={styles.buttonText}>›</Text>}
             prevButton={<Text style={styles.buttonText}>‹</Text>}
           >
-              {images.map((item) => (
-                  <View key={item.id} style={styles.slide}>
-                      <Image
+            
+              { images.length ? (
+                  images.map((item) => (
+                    <View key={item.id} style={styles.slide}>
+                        <Image
                           source={{ uri: item.image_url }}
                           style={styles.image}
                           resizeMode="cover"
                       />
+                    </View>
+                  ))
+                ) : (
+                  <View style={styles.slide}>
+                      <Text style={styles.text}>No hay imágenes disponibles</Text>
                   </View>
-              ))}
+                )
+              }
           </Swiper>
         </View>
   )
@@ -109,5 +118,11 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: 'bold',
   },
+  text: {
+    fontSize: 14,
+    fontFamily: "Gotham-Ultra",
+    marginVertical: 5,
+    color: "#2E2A21",
+  }
 
 });
